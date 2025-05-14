@@ -17,7 +17,9 @@ public class ControllerRumble : MonoBehaviour
 
     public void Rumble(float strength, float duration)
     {
-        if (playerInput.currentControlScheme != "Gamepad")
+        var isController = playerInput.currentControlScheme != "Xbox" || playerInput.currentControlScheme != "PlayStation";
+
+        if (!isController)
         {
             return;
         }

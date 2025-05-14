@@ -37,7 +37,14 @@ public class CameraLayerSwitchBasedOnPlayer : MonoBehaviour
 
     private void Update()
     {
-        mouseCinemachineInputAxisController.enabled = playerInput.currentControlScheme == "Keyboard&Mouse";
-        controllerCinemachineInputAxisController.enabled = playerInput.currentControlScheme == "Gamepad";
+        var keyboardAndMouse = "Keyboard&Mouse";
+        var isKeyboardAndMouse = playerInput.currentControlScheme == keyboardAndMouse;
+
+        var xboxGamepad = "Xbox";
+        var playStationGamepad = "PlayStation";
+        var isController = playerInput.currentControlScheme == xboxGamepad || playerInput.currentControlScheme == playStationGamepad;
+
+        mouseCinemachineInputAxisController.enabled = isKeyboardAndMouse;
+        controllerCinemachineInputAxisController.enabled = isController;
     }
 }

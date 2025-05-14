@@ -28,24 +28,23 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    private void FixedUpdate()
+    {
+        Move(MoveInput);
+        ApplyGravity();
+        UpdateRotationBasedOnCamera();
+    }
+
+    private void UpdateRotationBasedOnCamera()
     {
         if (camera == null)
         {
             return;
         }
 
-        // snap y rotation to camera y rotation
-
         var cameraRotation = camera.transform.rotation.eulerAngles;
         var cameraYRotation = Quaternion.Euler(0, cameraRotation.y, 0);
-        transform.rotation = cameraYRotation;
-    }
-
-    private void FixedUpdate()
-    {
-        Move(MoveInput);
-        ApplyGravity();
+        _rigidbody.rotation = cameraYRotation;
     }
 
     private void ApplyGravity()
@@ -82,30 +81,38 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void Move(Vector2 moveInput)
     {
-        var horizontalVelocity = new Vector3
-        {
-            x = _rigidbody.linearVelocity.x,
-            z = _rigidbody.linearVelocity.z
-        };
-
-        var horizontalClampedVelocity = horizontalVelocity.normalized * (horizontalVelocity.magnitude / topSpeed);
-
         var horizontalInput = transform.right * moveInput.x;
         var verticalInput = transform.forward * moveInput.y;
-        var inputDirection = (horizontalInput + verticalInput).normalized;
+        var inputDirection = horizontalInput + verticalInput;
 
-        Vector3 finalForce;
+        var targetHorizontalVelocity = inputDirection * topSpeed;
+        var rigidbodyVelocity = _rigidbody.linearVelocity;
 
-        if (inputDirection != Vector3.zero)
+        var horizontalRigidbodyVelocity = new Vector3
         {
-            finalForce = (inputDirection - horizontalClampedVelocity) * acceleration;
+            x = rigidbodyVelocity.x,
+            z = rigidbodyVelocity.z
+        };
+
+        var horizontalVelocity = Vector3.zero;
+
+        if (inputDirection == Vector3.zero)
+        {
+            horizontalVelocity = Vector3.MoveTowards(horizontalRigidbodyVelocity, Vector3.up * rigidbodyVelocity.y, deceleration * Time.fixedDeltaTime);
         }
         else
         {
-            finalForce = -horizontalClampedVelocity * deceleration;
+            horizontalVelocity = Vector3.MoveTowards(horizontalRigidbodyVelocity, targetHorizontalVelocity, acceleration * Time.fixedDeltaTime);
         }
 
-        _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
+        var targetVelocity = new Vector3
+        {
+            x = horizontalVelocity.x,
+            y = rigidbodyVelocity.y,
+            z = horizontalVelocity.z
+        };
+
+        _rigidbody.linearVelocity = targetVelocity;
     }
 
     public void Jump()
