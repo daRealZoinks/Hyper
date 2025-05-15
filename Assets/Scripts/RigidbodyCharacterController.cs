@@ -5,12 +5,15 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody))]
 public class RigidbodyCharacterController : MonoBehaviour
 {
-    public float acceleration = 5f;
-    public float topSpeed = 5f;
-    public float deceleration = 5f;
+    public float acceleration = 60f;
+    public float topSpeed = 8f;
+    public float deceleration = 60f;
 
-    public float jumpHeight = 3f;
-    public float gravityScale = 2f;
+    public float airControl = 1f;
+    public float airBreak = 1f;
+
+    public float jumpHeight = 2f;
+    public float gravityScale = 1.5f;
 
     public new Camera camera;
 
@@ -19,7 +22,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public Vector2 MoveInput { private get; set; }
 
-    public bool Grounded { get; private set; }
+    public bool IsGrounded { get; private set; }
 
     private Rigidbody _rigidbody;
 
@@ -49,7 +52,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (Grounded)
+        if (IsGrounded)
         {
             return;
         }
@@ -57,6 +60,7 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody.AddForce(gravity, ForceMode.Acceleration);
     }
 
+    // Under construction
     private void OnCollisionEnter(Collision collision)
     {
         List<ContactPoint> _contacts = new();
@@ -65,7 +69,7 @@ public class RigidbodyCharacterController : MonoBehaviour
         {
             if (_contacts[i].normal.y > 0.5f)
             {
-                Grounded = true;
+                IsGrounded = true;
 
                 OnLanded.Invoke();
 
@@ -76,48 +80,45 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        Grounded = false;
+        List<ContactPoint> _contacts = new();
+        int contactCount = collision.GetContacts(_contacts);
+        for (int i = 0; i < contactCount; i++)
+        {
+            if (_contacts[i].normal.y > 0.5f)
+            {
+                IsGrounded = false;
+                return;
+            }
+        }
     }
 
     private void Move(Vector2 moveInput)
     {
-        var horizontalInput = transform.right * moveInput.x;
-        var verticalInput = transform.forward * moveInput.y;
-        var inputDirection = horizontalInput + verticalInput;
-
-        var targetHorizontalVelocity = inputDirection * topSpeed;
-        var rigidbodyVelocity = _rigidbody.linearVelocity;
+        var inputDirection = transform.right * moveInput.x + transform.forward * moveInput.y;
 
         var horizontalRigidbodyVelocity = new Vector3
         {
-            x = rigidbodyVelocity.x,
-            z = rigidbodyVelocity.z
+            x = _rigidbody.linearVelocity.x,
+            z = _rigidbody.linearVelocity.z
         };
 
-        var horizontalVelocity = Vector3.zero;
+        var horizontalClampedRigidbodyVelocity = horizontalRigidbodyVelocity.normalized * Mathf.Clamp01(horizontalRigidbodyVelocity.magnitude / topSpeed);
 
-        if (inputDirection == Vector3.zero)
+        Vector3 finalForce = inputDirection - horizontalClampedRigidbodyVelocity;
+
+        finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
+
+        if (!IsGrounded)
         {
-            horizontalVelocity = Vector3.MoveTowards(horizontalRigidbodyVelocity, Vector3.up * rigidbodyVelocity.y, deceleration * Time.fixedDeltaTime);
+            finalForce *= (inputDirection != Vector3.zero) ? airControl : airBreak;
         }
-        else
-        {
-            horizontalVelocity = Vector3.MoveTowards(horizontalRigidbodyVelocity, targetHorizontalVelocity, acceleration * Time.fixedDeltaTime);
-        }
 
-        var targetVelocity = new Vector3
-        {
-            x = horizontalVelocity.x,
-            y = rigidbodyVelocity.y,
-            z = horizontalVelocity.z
-        };
-
-        _rigidbody.linearVelocity = targetVelocity;
+        _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
     }
 
     public void Jump()
     {
-        if (Grounded == false)
+        if (IsGrounded == false)
         {
             return;
         }
@@ -133,6 +134,6 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         _rigidbody.AddForce(jumpForce, ForceMode.VelocityChange);
 
-        Grounded = false;
+        IsGrounded = false;
     }
 }

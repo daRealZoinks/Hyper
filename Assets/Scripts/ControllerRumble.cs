@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,12 +11,12 @@ public class ControllerRumble : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
     }
 
-    public void Rumble()
+    public async void QuickRumble()
     {
-        Rumble(0.4f, 0.1f);
+        await RumbleAsync(0.4f, 0.1f);
     }
 
-    public void Rumble(float strength, float duration)
+    public async Task RumbleAsync(float strength, float duration)
     {
         var isController = playerInput.currentControlScheme != "Xbox" || playerInput.currentControlScheme != "PlayStation";
 
@@ -28,15 +29,18 @@ public class ControllerRumble : MonoBehaviour
 
         foreach (var device in devices)
         {
-            if (device is Gamepad gamepad)
-            {
-                if (gamepad == Gamepad.current)
-                {
-                    // Rumble the gamepad
-                    gamepad.SetMotorSpeeds(2 / 3f * strength, 1 / 3f * strength);
-                    Invoke(nameof(StopRumble), duration);
-                }
-            }
+            if (device is not Gamepad gamepad) continue;
+
+            if (gamepad != Gamepad.current) continue;
+
+
+            var lowFrequency = 1f / 3f * strength;
+            var highFrequency = 2f / 3f * strength;
+
+            gamepad.SetMotorSpeeds(lowFrequency, highFrequency);
+            await Awaitable.WaitForSecondsAsync(duration);
+            StopRumble();
+            return;
         }
     }
 

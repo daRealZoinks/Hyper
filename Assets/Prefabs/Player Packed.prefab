@@ -219,10 +219,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6bfcb767f27a7c4bbdbb98a6c437b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 45
+  acceleration: 60
   topSpeed: 8
-  deceleration: 45
-  jumpHeight: 3
+  deceleration: 120
+  airControl: 0.5
+  airBreak: 0
+  jumpHeight: 2
   gravityScale: 1.5
   camera: {fileID: 7492384026624369319}
   OnJump:
@@ -233,7 +235,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4221880724104738831}
         m_TargetAssemblyTypeName: ControllerRumble, Assembly-CSharp
-        m_MethodName: Rumble
+        m_MethodName: QuickRumble
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -904,7 +906,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1003,7 +1005,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1821447387310042499
 Transform:
   m_ObjectHideFlags: 0
