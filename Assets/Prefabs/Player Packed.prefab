@@ -222,7 +222,7 @@ MonoBehaviour:
   acceleration: 60
   topSpeed: 8
   deceleration: 120
-  airControl: 0.5
+  airControl: 0.25
   airBreak: 0
   jumpHeight: 2
   gravityScale: 1.5

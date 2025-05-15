@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -38,6 +37,39 @@ public class RigidbodyCharacterController : MonoBehaviour
         UpdateRotationBasedOnCamera();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        foreach (var contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
+            {
+                if (!IsGrounded)
+                {
+                    IsGrounded = true;
+                    OnLanded?.Invoke();
+                }
+                break;
+            }
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        foreach (var contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
+            {
+                IsGrounded = true;
+                break;
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        IsGrounded = false;
+    }
+
     private void UpdateRotationBasedOnCamera()
     {
         if (camera == null)
@@ -58,38 +90,6 @@ public class RigidbodyCharacterController : MonoBehaviour
         }
         var gravity = Physics.gravity * (gravityScale - 1);
         _rigidbody.AddForce(gravity, ForceMode.Acceleration);
-    }
-
-    // Under construction
-    private void OnCollisionEnter(Collision collision)
-    {
-        List<ContactPoint> _contacts = new();
-        int contactCount = collision.GetContacts(_contacts);
-        for (int i = 0; i < contactCount; i++)
-        {
-            if (_contacts[i].normal.y > 0.5f)
-            {
-                IsGrounded = true;
-
-                OnLanded.Invoke();
-
-                return;
-            }
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        List<ContactPoint> _contacts = new();
-        int contactCount = collision.GetContacts(_contacts);
-        for (int i = 0; i < contactCount; i++)
-        {
-            if (_contacts[i].normal.y > 0.5f)
-            {
-                IsGrounded = false;
-                return;
-            }
-        }
     }
 
     private void Move(Vector2 moveInput)
