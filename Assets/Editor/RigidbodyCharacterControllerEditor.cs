@@ -24,6 +24,13 @@ public class RigidbodyCharacterControllerEditor : Editor
         _controller.airControl = EditorGUILayout.FloatField("Air Control", _controller.airControl);
         _controller.airBreak = EditorGUILayout.FloatField("Air Break", _controller.airBreak);
 
+        EditorGUILayout.LabelField("Wall running", EditorStyles.boldLabel);
+        _controller.wallRunInitialImpulse = EditorGUILayout.FloatField("Wall Run Initial Impulse", _controller.wallRunInitialImpulse);
+        _controller.wallCheckDistance = EditorGUILayout.FloatField("Wall Check Distance", _controller.wallCheckDistance);
+        _controller.wallJumpHeight = EditorGUILayout.FloatField("Wall Jump Height", _controller.wallJumpHeight);
+        _controller.wallJumpSideForce = EditorGUILayout.FloatField("Wall Jump Side Force", _controller.wallJumpSideForce);
+        _controller.wallJumpForwardForce = EditorGUILayout.FloatField("Wall Jump Forward Force", _controller.wallJumpForwardForce);
+
         EditorGUILayout.LabelField("References", EditorStyles.boldLabel);
         _controller.camera = (Camera)EditorGUILayout.ObjectField("Camera", _controller.camera, typeof(Camera), true);
 
