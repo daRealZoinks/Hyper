@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(RigidbodyCharacterController))]
 public class InputManager : MonoBehaviour
 {
+    public GrapplingGun grapplingGun;
+
     private RigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
@@ -30,5 +32,26 @@ public class InputManager : MonoBehaviour
         }
 
         _rigidbodyCharacterController.Jump();
+    }
+
+    public void OnGrapple(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
+        {
+            case InputActionPhase.Disabled:
+                break;
+            case InputActionPhase.Waiting:
+                break;
+            case InputActionPhase.Started:
+                grapplingGun.StartGrapple();
+                break;
+            case InputActionPhase.Performed:
+                break;
+            case InputActionPhase.Canceled:
+                grapplingGun.StopGrapple();
+                break;
+            default:
+                break;
+        }
     }
 }
