@@ -2,7 +2,16 @@ using UnityEngine;
 
 public class Respawn : MonoBehaviour
 {
-    public Transform checkpoint;
+    private Checkpoint checkpoint;
+
+    private void Awake()
+    {
+        checkpoint = FindFirstObjectByType<Checkpoint>();
+        if (checkpoint == null)
+        {
+            Debug.LogError("No Checkpoint found in the scene.");
+        }
+    }
 
     private void Update()
     {
@@ -14,7 +23,7 @@ public class Respawn : MonoBehaviour
 
     private void RespawnAtCheckpoint()
     {
-        transform.position = checkpoint.position;
+        transform.position = checkpoint.transform.position;
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
     }
 }
