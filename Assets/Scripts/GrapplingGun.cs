@@ -3,7 +3,6 @@ using UnityEngine;
 public class GrapplingGun : MonoBehaviour
 {
     public int maxDistance = 100;
-    public Transform gunTip;
     public new Transform camera;
     public GameObject player;
 
@@ -48,7 +47,7 @@ public class GrapplingGun : MonoBehaviour
 
     private void LateUpdate()
     {
-        lineRenderer.SetPosition(0, gunTip.position);
+        lineRenderer.SetPosition(0, transform.position);
         lineRenderer.SetPosition(1, grapplePoint);
     }
 
