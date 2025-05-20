@@ -31,6 +31,9 @@ public class RigidbodyCharacterController : MonoBehaviour
     public bool IsWallRight { get; private set; }
     public bool IsWallLeft { get; private set; }
 
+    public bool HasWallRunRight { get; private set; }
+    public bool HasWallRunLeft { get; private set; }
+
     private Rigidbody _rigidbody;
     private CapsuleCollider _collider;
 
@@ -53,8 +56,15 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         if (!IsGrounded)
         {
-            CheckForWallRight();
-            CheckForWallLeft();
+            if (!HasWallRunRight)
+            {
+                CheckForWallRight();
+            }
+
+            if (!HasWallRunLeft)
+            {
+                CheckForWallLeft();
+            }
         }
         else
         {
@@ -86,6 +96,8 @@ public class RigidbodyCharacterController : MonoBehaviour
             if (contact.normal.y > 0.5f)
             {
                 IsGrounded = true;
+                HasWallRunLeft = false;
+                HasWallRunRight = false;
                 break;
             }
         }
@@ -124,7 +136,11 @@ public class RigidbodyCharacterController : MonoBehaviour
         var boostForce = Vector3.zero;
 
         if (IsWallRight && !wasWallRight)
+        {
             boostForce = -Vector3.Cross(_rightHitInfo.normal, transform.up) * wallRunInitialImpulse;
+            HasWallRunLeft = false;
+            HasWallRunRight = true;
+        }
 
         _rigidbody.AddForce(boostForce, ForceMode.VelocityChange);
 
@@ -147,7 +163,11 @@ public class RigidbodyCharacterController : MonoBehaviour
         var boostForce = Vector3.zero;
 
         if (IsWallLeft && !wasWallLeft)
+        {
             boostForce = Vector3.Cross(_leftHitInfo.normal, transform.up) * wallRunInitialImpulse;
+            HasWallRunLeft = true;
+            HasWallRunRight = false;
+        }
 
         _rigidbody.AddForce(boostForce, ForceMode.VelocityChange);
 
