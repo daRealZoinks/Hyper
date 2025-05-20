@@ -71,7 +71,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 250107373915108671}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 75
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -545,14 +545,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2524fbac4f6742e42bdec1604ca50935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 1000
+  maxDistance: 50
   camera: {fileID: 6067421093723207318}
   player: {fileID: 250107373915108671}
-  maxDistanceFromPoint: 1
-  minDistanceFromPoint: 0
-  spring: 4.5
+  maxDistanceFromPoint: 0.5
+  minDistanceFromPoint: 0.1
+  spring: 8
   damper: 7
-  massScale: 4.5
+  massScale: 75
 --- !u!1 &2583516301988014523
 GameObject:
   m_ObjectHideFlags: 0
