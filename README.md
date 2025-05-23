@@ -1,3 +1,5 @@
-# 1st Person Project
+# Project Skyscraper
 
-This is a new first person local and online multi-player game. Work in progress
+This is a new first person local and online multi-player parkour racing game.
+
+Work in progress
