@@ -244,7 +244,7 @@
                 {
                     "name": "",
                     "id": "d916783b-f981-4fa6-b474-de2596d4912f",
-                    "path": "<XInputController>/leftTrigger",
+                    "path": "<XInputController>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Xbox",
@@ -255,7 +255,7 @@
                 {
                     "name": "",
                     "id": "50c47fc7-0167-4895-bda4-a7abdc8f2d3a",
-                    "path": "<DualShockGamepad>/leftTrigger",
+                    "path": "<DualShockGamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";PlayStation",
