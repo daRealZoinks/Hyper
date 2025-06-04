@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6307755992762486862}
   - component: {fileID: 4221880724104738831}
   - component: {fileID: 3835998098059943154}
+  - component: {fileID: 5741402555865847128}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -292,6 +293,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26ed2a29f3398846a36a1fc0fe20ea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5741402555865847128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd17096dc6bb47d46a34131933f85ede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grapplingGun: {fileID: 2570354993396164369}
+  isGrapplingEnabled: 0
 --- !u!1 &799509202643606066
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +420,7 @@ GameObject:
   - component: {fileID: 1099215110878933991}
   - component: {fileID: 2570354993396164369}
   m_Layer: 0
-  m_Name: Gun Model
+  m_Name: Grappling Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -421,7 +436,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0.5}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3288815666661448872}
@@ -790,7 +805,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6517757529428791751}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.10969667, y: -0.37951383, z: 0.04537291, w: 0.9175387}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -869,7 +884,7 @@ MonoBehaviour:
   ReferenceFrame: 0
   RecenterTarget: 0
   PanAxis:
-    Value: 0
+    Value: -44.942085
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -879,7 +894,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 0
+    Value: 13.635316
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1027,7 +1042,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6680287346084219529}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.10969667, y: -0.37951383, z: 0.04537291, w: 0.9175387}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class GrapplingGun : MonoBehaviour
 {
+    public bool GrapplingEnabled { get; internal set; }
+
     public int maxDistance = 100;
     public new Transform camera;
     public GameObject player;
@@ -22,8 +24,24 @@ public class GrapplingGun : MonoBehaviour
         StopGrapple();
     }
 
+    private void Update()
+    {
+        if (!GrapplingEnabled)
+        {
+            StopGrapple();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(1, grapplePoint);
+    }
+
     public void StartGrapple()
     {
+        if (!GrapplingEnabled) return;
+
         if (Physics.Raycast(camera.position, camera.forward, out var hit, maxDistance))
         {
             grapplePoint = hit.point;
@@ -43,12 +61,6 @@ public class GrapplingGun : MonoBehaviour
 
             lineRenderer.enabled = true;
         }
-    }
-
-    private void LateUpdate()
-    {
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, grapplePoint);
     }
 
     public void StopGrapple()
