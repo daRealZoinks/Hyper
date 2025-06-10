@@ -1,4 +1,4 @@
-# Project Skyscraper
+# Hyper
 
 This is a new first person local and online multi-player parkour racing game.
 
