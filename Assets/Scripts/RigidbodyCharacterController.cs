@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class RigidbodyCharacterController : MonoBehaviour
 {
     public float acceleration = 60f;
     public float topSpeed = 8f;
-    public float deceleration = 60f;
+    public float deceleration = 120f;
 
     public float airControl = 1f;
     public float airBreak = 1f;
@@ -54,6 +55,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         UpdateRotationBasedOnCamera();
 
+        /*
         if (!IsGrounded)
         {
             if (!HasWallRunRight)
@@ -71,6 +73,7 @@ public class RigidbodyCharacterController : MonoBehaviour
             IsWallRight = false;
             IsWallLeft = false;
         }
+        */
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -120,6 +123,7 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody.rotation = cameraYRotation;
     }
 
+    /*
     private void CheckForWallRight()
     {
         var wasWallRight = IsWallRight;
@@ -173,6 +177,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         if (IsWallLeft) _rigidbody.AddForce(-_leftHitInfo.normal, ForceMode.Acceleration);
     }
+    */
 
     private void ApplyGravity()
     {
