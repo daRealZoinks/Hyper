@@ -199,9 +199,7 @@ public class RigidbodyCharacterController : MonoBehaviour
             z = _rigidbody.linearVelocity.z
         };
 
-        var horizontalClampedRigidbodyVelocity = horizontalRigidbodyVelocity.normalized * Mathf.Clamp01(horizontalRigidbodyVelocity.magnitude / topSpeed);
-
-        Vector3 finalForce = inputDirection - horizontalClampedRigidbodyVelocity;
+        var finalForce = inputDirection - horizontalRigidbodyVelocity / topSpeed;
 
         finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
 
