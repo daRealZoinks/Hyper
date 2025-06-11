@@ -215,9 +215,9 @@ public class RigidbodyCharacterController : MonoBehaviour
     {
         if (IsGrounded)
         {
-            OnJump.Invoke();
-
             ExecuteJump();
+
+            OnJump.Invoke();
         }
         else
         {
@@ -230,15 +230,12 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void ExecuteJump()
     {
-        var jumpForce = Vector3.up * Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y * gravityScale);
-
         _rigidbody.linearVelocity = new Vector3()
         {
             x = _rigidbody.linearVelocity.x,
+            y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y * gravityScale),
             z = _rigidbody.linearVelocity.z
         };
-
-        _rigidbody.AddForce(jumpForce, ForceMode.VelocityChange);
 
         IsGrounded = false;
     }
