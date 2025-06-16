@@ -15,11 +15,14 @@ public class RigidbodyCharacterController : MonoBehaviour
     public float jumpHeight = 2f;
     public float gravityScale = 1.5f;
 
+    public float wallDetectionAngleThreshold = 0.9f;
+
     public float wallRunInitialImpulse = 5f;
-    public float wallCheckDistance = 0.75f;
     public float wallJumpHeight = 1.5f;
     public float wallJumpSideForce = 4f;
     public float wallJumpForwardForce = 1f;
+
+    public float wallRunGravity = 0.75f; // Lower gravity while wallrunning
 
     public new Camera camera;
 
@@ -30,9 +33,16 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public Vector2 MoveInput { private get; set; }
 
-    public bool IsGrounded { get; private set; }
-    public bool IsWallRight { get; private set; }
-    public bool IsWallLeft { get; private set; }
+    private bool IsGrounded;
+
+
+    private bool isTouchingWallOnRight;
+    private bool isTouchingWallOnLeft;
+
+    private bool isWallRunningOnRightWall;
+    private bool isWallRunningOnLeftWall;
+
+    private bool isWallRunning;
 
     private Vector3 wallNormal;
 
@@ -49,7 +59,12 @@ public class RigidbodyCharacterController : MonoBehaviour
     {
         Move(MoveInput);
 
-        ApplyGravity();
+        CheckIfIsWallRunning();
+
+        if (!IsGrounded)
+        {
+            ApplyCustomGravity(isWallRunning ? wallRunGravity : gravityScale);
+        }
 
         UpdateRotationBasedOnCamera();
     }
@@ -60,88 +75,87 @@ public class RigidbodyCharacterController : MonoBehaviour
         {
             if (contact.normal.y > 0.5f)
             {
-                Debug.DrawLine(contact.point, contact.point + contact.normal, Color.green, 1f);
-
                 if (!IsGrounded)
                 {
                     IsGrounded = true;
                     OnLanded?.Invoke();
+                    continue;
                 }
-                break;
+            }
+
+            var topCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * (_collider.height / 2);
+            var middleCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * 0.1f;
+
+            if (contact.point.y <= topCollisionPoint.y && contact.point.y >= middleCollisionPoint.y)
+            {
+                isTouchingWallOnRight = Vector3.Dot(contact.normal, -transform.right) > wallDetectionAngleThreshold;
+                isTouchingWallOnLeft = Vector3.Dot(contact.normal, transform.right) > wallDetectionAngleThreshold;
+
+                if (!IsGrounded)
+                {
+                    var force = Vector3.zero;
+
+                    if (isTouchingWallOnRight)
+                    {
+                        OnStartedWallRunningRight?.Invoke();
+                        force = Vector3.Cross(-wallNormal, Vector3.up) * wallRunInitialImpulse;
+
+                        Debug.DrawLine(contact.point, contact.point - wallNormal, Color.red, 2f);
+                    }
+
+                    if (isTouchingWallOnLeft)
+                    {
+                        OnStartedWallRunningLeft?.Invoke();
+                        force = Vector3.Cross(wallNormal, Vector3.up) * wallRunInitialImpulse;
+
+                        Debug.DrawLine(contact.point, contact.point + wallNormal, Color.red, 2f);
+                    }
+
+                    Debug.DrawLine(contact.point, contact.point + Vector3.up, Color.green, 2f);
+
+                    Debug.DrawLine(contact.point, contact.point + force, Color.blue, 2f);
+
+                    _rigidbody.AddForce(force, ForceMode.VelocityChange);
+                }
             }
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
+        isWallRunningOnRightWall = false;
+        isWallRunningOnLeftWall = false;
+
         foreach (var contact in collision.contacts)
         {
             if (contact.normal.y > 0.5f)
             {
                 IsGrounded = true;
-                IsWallRight = false;
-                IsWallLeft = false;
-                break;
-            }
-
-            if (IsGrounded) return;
-
-            const float wallThreshold = 0.9f; // temporary
-
-            var topCollisionPoint = transform.position + _collider.center + Vector3.up * (_collider.height / 2 - _collider.radius);
-            var middleCollisionPoint = transform.position + _collider.center + Vector3.up * 0.1f;
-
-            if (contact.point.y > topCollisionPoint.y || contact.point.y < middleCollisionPoint.y)
-            {
+                wallNormal = Vector3.zero;
                 continue;
             }
 
-            CheckWallRight(contact, wallThreshold);
-            CheckWallLeft(contact, wallThreshold);
-        }
-    }
+            var topCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * (_collider.height / 2);
+            var middleCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * 0.1f;
 
-    private void CheckWallLeft(ContactPoint contact, float wallThreshold)
-    {
-        var wasWallLeft = IsWallLeft;
-        IsWallLeft = Vector3.Dot(contact.normal, transform.right) > wallThreshold;
+            if (contact.point.y <= topCollisionPoint.y && contact.point.y >= middleCollisionPoint.y)
+            {
+                isTouchingWallOnRight = Vector3.Dot(contact.normal, -transform.right) > wallDetectionAngleThreshold;
+                isTouchingWallOnLeft = Vector3.Dot(contact.normal, transform.right) > wallDetectionAngleThreshold;
 
-        if (IsWallLeft)
-        {
-            // currently touching the wall on the left side
-        }
-
-        if (!wasWallLeft && IsWallLeft)
-        {
-            var forwardForce = Vector3.Cross(contact.normal, transform.up) * wallRunInitialImpulse;
-            _rigidbody.AddForce(forwardForce, ForceMode.VelocityChange);
-
-            OnStartedWallRunningLeft?.Invoke();
-        }
-    }
-
-    private void CheckWallRight(ContactPoint contact, float wallThreshold)
-    {
-        var wasWallRight = IsWallRight;
-        IsWallRight = Vector3.Dot(contact.normal, -transform.right) > wallThreshold;
-
-        if (IsWallRight)
-        {
-            // currently touching the wall on the right side
-        }
-
-        if (!wasWallRight && IsWallRight)
-        {
-            var forwardForce = Vector3.Cross(-contact.normal, transform.up) * wallRunInitialImpulse;
-            _rigidbody.AddForce(forwardForce, ForceMode.VelocityChange);
-
-            OnStartedWallRunningRight?.Invoke();
+                wallNormal = contact.normal;
+            }
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
         IsGrounded = false;
+
+        isTouchingWallOnRight = false;
+        isTouchingWallOnLeft = false;
+
+        wallNormal = Vector3.zero;
     }
 
     private void UpdateRotationBasedOnCamera()
@@ -156,12 +170,8 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody.rotation = cameraYRotation;
     }
 
-    private void ApplyGravity()
+    private void ApplyCustomGravity(float gravityScale)
     {
-        if (IsGrounded)
-        {
-            return;
-        }
         var gravity = Physics.gravity * (gravityScale - 1);
         _rigidbody.AddForce(gravity, ForceMode.Acceleration);
     }
@@ -180,7 +190,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
 
-        if (!IsGrounded)
+        if (!IsGrounded && !isWallRunning)
         {
             finalForce *= (inputDirection != Vector3.zero) ? airControl : airBreak;
         }
@@ -188,21 +198,25 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
     }
 
+    private void CheckIfIsWallRunning()
+    {
+        isWallRunningOnRightWall = isTouchingWallOnRight && !IsGrounded;
+        isWallRunningOnLeftWall = isTouchingWallOnLeft && !IsGrounded;
+
+        isWallRunning = isWallRunningOnRightWall || isWallRunningOnLeftWall;
+    }
+
     public void Jump()
     {
         if (IsGrounded)
         {
             ExecuteJump();
-
             OnJump.Invoke();
         }
-        else
-        {
-            if (IsWallRight || IsWallLeft)
-            {
-                ExecuteWallJump();
-            }
-        }
+        // else if (IsWallRunning)
+        // {
+        //     ExecuteWallJump();
+        // }
     }
 
     private void ExecuteJump()
@@ -219,12 +233,9 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void ExecuteWallJump()
     {
-        var sideForce = Vector3.zero;
-        if (IsWallRight) sideForce = _rightHitInfo.normal * wallJumpSideForce;
-        if (IsWallLeft) sideForce = _leftHitInfo.normal * wallJumpSideForce;
-
+        // Use the stored wall normal for the jump
+        var sideForce = wallNormal * wallJumpSideForce;
         var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * gravityScale * wallJumpHeight);
-
         var forwardForce = transform.forward * wallJumpForwardForce;
 
         var finalForce = sideForce + jumpForce + forwardForce;
@@ -237,7 +248,8 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         _rigidbody.AddForce(finalForce, ForceMode.VelocityChange);
 
-        IsWallRight = false;
-        IsWallLeft = false;
+        isWallRunningOnRightWall = false;
+        isWallRunningOnLeftWall = false;
+        wallNormal = Vector3.zero;
     }
 }

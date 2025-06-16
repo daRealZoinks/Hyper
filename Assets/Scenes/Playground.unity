@@ -3384,14 +3384,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6307755992762486862, guid: 84e1a590ea56dff45a50370e1b7dec42, type: 3}
-      propertyPath: wallRunGravity
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6307755992762486862, guid: 84e1a590ea56dff45a50370e1b7dec42, type: 3}
-      propertyPath: wallRunInitialImpulse
-      value: 200
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

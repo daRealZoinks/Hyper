@@ -246,7 +246,7 @@ MonoBehaviour:
   jumpHeight: 2
   gravityScale: 1.5
   wallDetectionAngleThreshold: 0.9
-  wallRunInitialImpulse: 5
+  wallRunInitialImpulse: 200
   wallJumpHeight: 1.5
   wallJumpSideForce: 4
   wallJumpForwardForce: 1
