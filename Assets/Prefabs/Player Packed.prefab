@@ -17,6 +17,9 @@ GameObject:
   - component: {fileID: 4221880724104738831}
   - component: {fileID: 3835998098059943154}
   - component: {fileID: 5741402555865847128}
+  - component: {fileID: 9174427740881968565}
+  - component: {fileID: 5575856456840538790}
+  - component: {fileID: 6167397094199149244}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -238,37 +241,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6bfcb767f27a7c4bbdbb98a6c437b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 60
-  topSpeed: 8
-  deceleration: 120
-  airControl: 0.25
-  airBreak: 0
-  jumpHeight: 2
   gravityScale: 1.5
   wallRunInitialImpulse: 5
   wallCheckDistance: 0.75
   wallJumpHeight: 1.5
   wallJumpSideForce: 4
   wallJumpForwardForce: 1
-  camera: {fileID: 7492384026624369319}
-  OnJump:
-    m_PersistentCalls:
-      m_Calls: []
-  OnLanded:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4221880724104738831}
-        m_TargetAssemblyTypeName: ControllerRumble, Assembly-CSharp
-        m_MethodName: QuickRumble
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &4221880724104738831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +285,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grapplingGun: {fileID: 2570354993396164369}
   isGrapplingEnabled: 0
+--- !u!114 &9174427740881968565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e37d810bbe7ba04596436c320707b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnLanded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4221880724104738831}
+        m_TargetAssemblyTypeName: ControllerRumble, Assembly-CSharp
+        m_MethodName: QuickRumble
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5575856456840538790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc05bf51aa01b94983ab4d02a0642bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acceleration: 60
+  topSpeed: 8
+  deceleration: 120
+  airControl: 0.5
+  airBreak: 0
+--- !u!114 &6167397094199149244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63acb2cb938ddaa49b6e49ecfed7b66e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpHeight: 2
+  jumpBufferTime: 0.15
+  coyoteTime: 0.15
+  OnJump:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &799509202643606066
 GameObject:
   m_ObjectHideFlags: 0

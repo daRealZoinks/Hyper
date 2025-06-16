@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        _rigidbodyCharacterController.Jump();
+        _rigidbodyCharacterController.JumpPressed = true;
     }
 
     public void OnGrapple(InputAction.CallbackContext context)
