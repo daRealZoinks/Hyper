@@ -22,6 +22,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     public float wallJumpForwardForce = 1f;
 
     public float jumpBufferTime = 0.15f; // Buffer duration in seconds
+    public float coyoteTime = 0.15f; // Duration in seconds
 
     public new Camera camera;
 
@@ -45,6 +46,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     // Jump buffering fields
     private float _jumpBufferCounter = -1f;
+    private float _coyoteTimeCounter = 0f;
 
     private void Awake()
     {
@@ -60,12 +62,19 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         UpdateRotationBasedOnCamera();
 
+        // Update coyote time counter
+        if (IsGrounded)
+            _coyoteTimeCounter = coyoteTime;
+        else if (_coyoteTimeCounter > 0f)
+            _coyoteTimeCounter -= Time.fixedDeltaTime;
+
         // Handle buffered jump
-        if (_jumpBufferCounter > 0f && IsGrounded)
+        if (_jumpBufferCounter > 0f && (_coyoteTimeCounter > 0f))
         {
             ExecuteJump();
             OnJump?.Invoke();
             _jumpBufferCounter = -1f;
+            _coyoteTimeCounter = 0f;
         }
 
         if (_jumpBufferCounter > 0f)
@@ -209,10 +218,11 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public void Jump()
     {
-        if (IsGrounded)
+        if (_coyoteTimeCounter > 0f)
         {
             ExecuteJump();
             OnJump?.Invoke();
+            _coyoteTimeCounter = 0f;
         }
         else
         {
