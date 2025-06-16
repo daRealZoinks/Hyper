@@ -21,6 +21,8 @@ public class RigidbodyCharacterController : MonoBehaviour
     public float wallJumpSideForce = 4f;
     public float wallJumpForwardForce = 1f;
 
+    public float jumpBufferTime = 0.15f; // Buffer duration in seconds
+
     public new Camera camera;
 
     public UnityEvent OnJump;
@@ -41,6 +43,9 @@ public class RigidbodyCharacterController : MonoBehaviour
     private RaycastHit _rightHitInfo;
     private RaycastHit _leftHitInfo;
 
+    // Jump buffering fields
+    private float _jumpBufferCounter = -1f;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -55,25 +60,16 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         UpdateRotationBasedOnCamera();
 
-        /*
-        if (!IsGrounded)
+        // Handle buffered jump
+        if (_jumpBufferCounter > 0f && IsGrounded)
         {
-            if (!HasWallRunRight)
-            {
-                CheckForWallRight();
-            }
+            ExecuteJump();
+            OnJump?.Invoke();
+            _jumpBufferCounter = -1f;
+        }
 
-            if (!HasWallRunLeft)
-            {
-                CheckForWallLeft();
-            }
-        }
-        else
-        {
-            IsWallRight = false;
-            IsWallLeft = false;
-        }
-        */
+        if (_jumpBufferCounter > 0f)
+            _jumpBufferCounter -= Time.fixedDeltaTime;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -216,14 +212,18 @@ public class RigidbodyCharacterController : MonoBehaviour
         if (IsGrounded)
         {
             ExecuteJump();
-
-            OnJump.Invoke();
+            OnJump?.Invoke();
         }
         else
         {
             if (IsWallRight || IsWallLeft)
             {
                 ExecuteWallJump();
+            }
+            else
+            {
+                // Start jump buffer
+                _jumpBufferCounter = jumpBufferTime;
             }
         }
     }
