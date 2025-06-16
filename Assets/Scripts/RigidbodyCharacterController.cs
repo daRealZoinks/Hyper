@@ -21,6 +21,9 @@ public class RigidbodyCharacterController : MonoBehaviour
     public float wallJumpSideForce = 4f;
     public float wallJumpForwardForce = 1f;
 
+    public float jumpBufferTime = 0.15f; // Buffer duration in seconds
+    public float coyoteTime = 0.15f; // Duration in seconds
+
     public new Camera camera;
 
     public UnityEvent OnJump;
@@ -41,6 +44,10 @@ public class RigidbodyCharacterController : MonoBehaviour
     private RaycastHit _rightHitInfo;
     private RaycastHit _leftHitInfo;
 
+    // Jump buffering fields
+    private float _jumpBufferCounter = -1f;
+    private float _coyoteTimeCounter = 0f;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -55,25 +62,23 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         UpdateRotationBasedOnCamera();
 
-        /*
-        if (!IsGrounded)
-        {
-            if (!HasWallRunRight)
-            {
-                CheckForWallRight();
-            }
+        // Update coyote time counter
+        if (IsGrounded)
+            _coyoteTimeCounter = coyoteTime;
+        else if (_coyoteTimeCounter > 0f)
+            _coyoteTimeCounter -= Time.fixedDeltaTime;
 
-            if (!HasWallRunLeft)
-            {
-                CheckForWallLeft();
-            }
-        }
-        else
+        // Handle buffered jump
+        if (_jumpBufferCounter > 0f && (_coyoteTimeCounter > 0f))
         {
-            IsWallRight = false;
-            IsWallLeft = false;
+            ExecuteJump();
+            OnJump?.Invoke();
+            _jumpBufferCounter = -1f;
+            _coyoteTimeCounter = 0f;
         }
-        */
+
+        if (_jumpBufferCounter > 0f)
+            _jumpBufferCounter -= Time.fixedDeltaTime;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -213,17 +218,22 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public void Jump()
     {
-        if (IsGrounded)
+        if (_coyoteTimeCounter > 0f)
         {
             ExecuteJump();
-
-            OnJump.Invoke();
+            OnJump?.Invoke();
+            _coyoteTimeCounter = 0f;
         }
         else
         {
             if (IsWallRight || IsWallLeft)
             {
                 ExecuteWallJump();
+            }
+            else
+            {
+                // Start jump buffer
+                _jumpBufferCounter = jumpBufferTime;
             }
         }
     }
