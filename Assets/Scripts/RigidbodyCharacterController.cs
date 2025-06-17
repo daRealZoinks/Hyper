@@ -69,6 +69,11 @@ public class RigidbodyCharacterController : MonoBehaviour
             ApplyCustomGravity(gravityScale);
         }
 
+        UpdateCurrentInputPayload();
+    }
+
+    private void UpdateCurrentInputPayload()
+    {
         currentInputPayload = new InputPayload
         {
             MoveInput = MoveInput,
