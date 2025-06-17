@@ -10,8 +10,8 @@ public class JumpManager : MonoBehaviour
 
     public UnityEvent OnJump;
 
-    private float _jumpBufferCounter = 0.15f;
-    private float _coyoteTimeCounter = 0.15f;
+    private float _jumpBufferCounter;
+    private float _coyoteTimeCounter;
 
     private Rigidbody _rigidbody;
     private GroundedManager _groundedManager;
@@ -38,6 +38,8 @@ public class JumpManager : MonoBehaviour
         {
             ExecuteJump();
             OnJump?.Invoke();
+            _coyoteTimeCounter = 0f;
+            _jumpBufferCounter = 0f;
         }
     }
 
@@ -46,6 +48,13 @@ public class JumpManager : MonoBehaviour
         if (_jumpBufferCounter > 0f)
         {
             _jumpBufferCounter -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            if (_jumpBufferCounter < 0f)
+            {
+                _jumpBufferCounter = 0f;
+            }
         }
     }
 
@@ -61,6 +70,13 @@ public class JumpManager : MonoBehaviour
             {
                 _coyoteTimeCounter -= Time.fixedDeltaTime;
             }
+            else
+            {
+                if (_coyoteTimeCounter < 0f)
+                {
+                    _coyoteTimeCounter = 0f;
+                }
+            }
         }
     }
 
@@ -74,7 +90,7 @@ public class JumpManager : MonoBehaviour
         _rigidbody.linearVelocity = new Vector3()
         {
             x = _rigidbody.linearVelocity.x,
-            y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y * _rigidbodyCharacterController.gravityScale),
+            y = Mathf.Sqrt(-2f * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * jumpHeight),
             z = _rigidbody.linearVelocity.z
         };
     }
