@@ -11,11 +11,18 @@ public class MovementManager : MonoBehaviour
 
     private Rigidbody _rigidbody;
     private GroundedManager _groundedManager;
+    private RigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _groundedManager = GetComponent<GroundedManager>();
+        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+    }
+
+    private void FixedUpdate()
+    {
+        Move(_rigidbodyCharacterController.currentInputPayload.MoveInput);
     }
 
     public void Move(Vector2 moveInput)

@@ -7,8 +7,6 @@ public class RigidbodyCharacterController : MonoBehaviour
 {
     public float gravityScale = 1.5f;
 
-    public bool IsGrounded => _groundedManager.IsGrounded;
-
     public Vector2 MoveInput { private get; set; }
     public bool JumpPressed { private get; set; }
 
@@ -24,8 +22,6 @@ public class RigidbodyCharacterController : MonoBehaviour
     private Camera _camera;
 
     private GroundedManager _groundedManager;
-    private MovementManager _movementManager;
-    private JumpManager _jumpManager;
 
 
 
@@ -60,8 +56,6 @@ public class RigidbodyCharacterController : MonoBehaviour
         _camera = GetComponent<PlayerInput>().camera;
 
         _groundedManager = GetComponent<GroundedManager>();
-        _movementManager = GetComponent<MovementManager>();
-        _jumpManager = GetComponent<JumpManager>();
 
         _collider = GetComponent<CapsuleCollider>();
     }
@@ -70,7 +64,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     {
         UpdateRotationBasedOnCamera();
 
-        if (!IsGrounded)
+        if (!_groundedManager.IsGrounded)
         {
             ApplyCustomGravity(gravityScale);
         }
@@ -83,14 +77,8 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         if (JumpPressed)
         {
-            JumpPressed = false; // Reset jump pressed state
+            JumpPressed = false;
         }
-
-
-
-
-
-        _movementManager.Move(MoveInput);
     }
 
     private void UpdateRotationBasedOnCamera()
