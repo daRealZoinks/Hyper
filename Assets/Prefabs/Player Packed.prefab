@@ -14,12 +14,12 @@ GameObject:
   - component: {fileID: 509104130093213351}
   - component: {fileID: 2639626806727421639}
   - component: {fileID: 6307755992762486862}
-  - component: {fileID: 4221880724104738831}
-  - component: {fileID: 3835998098059943154}
-  - component: {fileID: 5741402555865847128}
   - component: {fileID: 9174427740881968565}
   - component: {fileID: 5575856456840538790}
   - component: {fileID: 6167397094199149244}
+  - component: {fileID: 4221880724104738831}
+  - component: {fileID: 3835998098059943154}
+  - component: {fileID: 5741402555865847128}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -247,44 +247,6 @@ MonoBehaviour:
   wallJumpHeight: 1.5
   wallJumpSideForce: 4
   wallJumpForwardForce: 1
---- !u!114 &4221880724104738831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250107373915108671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df34d49e4c196ba43adae85b36316424, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3835998098059943154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250107373915108671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f26ed2a29f3398846a36a1fc0fe20ea3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5741402555865847128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250107373915108671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd17096dc6bb47d46a34131933f85ede, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grapplingGun: {fileID: 2570354993396164369}
-  isGrapplingEnabled: 0
 --- !u!114 &9174427740881968565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +309,44 @@ MonoBehaviour:
   OnJump:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4221880724104738831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df34d49e4c196ba43adae85b36316424, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3835998098059943154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f26ed2a29f3398846a36a1fc0fe20ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5741402555865847128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd17096dc6bb47d46a34131933f85ede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grapplingGun: {fileID: 2570354993396164369}
+  isGrapplingEnabled: 0
 --- !u!1 &799509202643606066
 GameObject:
   m_ObjectHideFlags: 0
