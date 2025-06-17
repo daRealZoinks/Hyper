@@ -1,19 +1,36 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 public class RigidbodyCharacterController : MonoBehaviour
 {
-    public float acceleration = 60f;
-    public float topSpeed = 8f;
-    public float deceleration = 120f;
-
-    public float airControl = 1f;
-    public float airBreak = 1f;
-
-    public float jumpHeight = 2f;
     public float gravityScale = 1.5f;
+
+    public Vector2 MoveInput { private get; set; }
+    public bool JumpPressed { private get; set; }
+
+    public struct InputPayload
+    {
+        public Vector2 MoveInput;
+        public bool JumpPressed;
+    }
+
+    public InputPayload currentInputPayload;
+
+    private Rigidbody _rigidbody;
+    private Camera _camera;
+
+    private GroundedManager _groundedManager;
+
+
+
+
+
+
+
+
 
     public float wallDetectionAngleThreshold = 0.9f;
 
@@ -24,16 +41,13 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public float wallRunGravity = 0.75f; // Lower gravity while wallrunning
 
-    public new Camera camera;
-
-    public UnityEvent OnJump;
-    public UnityEvent OnLanded;
     public UnityEvent OnStartedWallRunningRight;
     public UnityEvent OnStartedWallRunningLeft;
 
-    public Vector2 MoveInput { private get; set; }
 
     private bool IsGrounded;
+    public bool IsWallRight { get; private set; }
+    public bool IsWallLeft { get; private set; }
 
 
     private bool isTouchingWallOnRight;
@@ -46,42 +60,50 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private Vector3 wallNormal;
 
-    private Rigidbody _rigidbody;
     private CapsuleCollider _collider;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _camera = GetComponent<PlayerInput>().camera;
+
+        _groundedManager = GetComponent<GroundedManager>();
+
         _collider = GetComponent<CapsuleCollider>();
     }
 
     private void FixedUpdate()
     {
-        Move(MoveInput);
+        UpdateRotationBasedOnCamera();
+
+        if (!_groundedManager.IsGrounded)
+        {
+            ApplyCustomGravity(gravityScale);
+        }
 
         CheckIfIsWallRunning();
 
-        if (!IsGrounded)
-        {
-            ApplyCustomGravity(isWallRunning ? wallRunGravity : gravityScale);
-        }
+        UpdateCurrentInputPayload();
+    }
 
-        UpdateRotationBasedOnCamera();
+    private void UpdateCurrentInputPayload()
+    {
+        currentInputPayload = new InputPayload
+        {
+            MoveInput = MoveInput,
+            JumpPressed = JumpPressed
+        };
+
+        if (JumpPressed)
+        {
+            JumpPressed = false;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         foreach (var contact in collision.contacts)
         {
-            if (contact.normal.y > 0.5f)
-            {
-                if (!IsGrounded)
-                {
-                    IsGrounded = true;
-                    OnLanded?.Invoke();
-                    continue;
-                }
-            }
 
             var topCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * (_collider.height / 2);
             var middleCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * 0.1f;
@@ -160,12 +182,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void UpdateRotationBasedOnCamera()
     {
-        if (camera == null)
-        {
-            return;
-        }
-
-        var cameraRotation = camera.transform.rotation.eulerAngles;
+        var cameraRotation = _camera.transform.rotation.eulerAngles;
         var cameraYRotation = Quaternion.Euler(0, cameraRotation.y, 0);
         _rigidbody.rotation = cameraYRotation;
     }
@@ -176,27 +193,6 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody.AddForce(gravity, ForceMode.Acceleration);
     }
 
-    private void Move(Vector2 moveInput)
-    {
-        var inputDirection = transform.right * moveInput.x + transform.forward * moveInput.y;
-
-        var horizontalRigidbodyVelocity = new Vector3
-        {
-            x = _rigidbody.linearVelocity.x,
-            z = _rigidbody.linearVelocity.z
-        };
-
-        var finalForce = inputDirection - horizontalRigidbodyVelocity / topSpeed;
-
-        finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
-
-        if (!IsGrounded && !isWallRunning)
-        {
-            finalForce *= (inputDirection != Vector3.zero) ? airControl : airBreak;
-        }
-
-        _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
-    }
 
     private void CheckIfIsWallRunning()
     {
@@ -206,30 +202,6 @@ public class RigidbodyCharacterController : MonoBehaviour
         isWallRunning = isWallRunningOnRightWall || isWallRunningOnLeftWall;
     }
 
-    public void Jump()
-    {
-        if (IsGrounded)
-        {
-            ExecuteJump();
-            OnJump.Invoke();
-        }
-        // else if (IsWallRunning)
-        // {
-        //     ExecuteWallJump();
-        // }
-    }
-
-    private void ExecuteJump()
-    {
-        _rigidbody.linearVelocity = new Vector3()
-        {
-            x = _rigidbody.linearVelocity.x,
-            y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y * gravityScale),
-            z = _rigidbody.linearVelocity.z
-        };
-
-        IsGrounded = false;
-    }
 
     private void ExecuteWallJump()
     {
