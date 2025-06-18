@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class JumpManager : MonoBehaviour
+public class GroundJumpManager : MonoBehaviour
 {
     public float jumpHeight = 2f;
 
@@ -26,11 +26,6 @@ public class JumpManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_rigidbodyCharacterController.currentInputPayload.JumpPressed)
-        {
-            ResetJumpBuffer();
-        }
-
         UpdateCoyoteTimeCounter();
         UpdateJumpBufferCounter();
 
