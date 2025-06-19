@@ -92,7 +92,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
@@ -245,18 +245,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravityScale: 1.5
-  wallDetectionAngleThreshold: 0.9
-  wallRunInitialImpulse: 200
-  wallJumpHeight: 1.5
-  wallJumpSideForce: 4
-  wallJumpForwardForce: 1
-  wallRunGravity: 0.75
-  OnStartedWallRunningRight:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStartedWallRunningLeft:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &9174427740881968565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,6 +301,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 039940dd94ac1c041b26b7848b055fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallDetectionAngleThreshold: 0.9
+  wallRunInitialImpulse: 5
+  wallRunGravity: 0.75
+  OnStartedWallRunningRight:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStartedWallRunningLeft:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6167397094199149244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,6 +352,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2184e916e54aec848ab7c1fcb277fbe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallJumpHeight: 1.5
+  wallJumpSideForce: 4
+  wallJumpForwardForce: 1
+  jumpBufferTime: 0.15
+  OnWallJump:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4221880724104738831
 MonoBehaviour:
   m_ObjectHideFlags: 0

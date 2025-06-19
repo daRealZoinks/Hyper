@@ -22,6 +22,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     private Camera _camera;
 
     private GroundedManager _groundedManager;
+    private WallRunManager _wallRunManager;
 
     private void Awake()
     {
@@ -29,13 +30,14 @@ public class RigidbodyCharacterController : MonoBehaviour
         _camera = GetComponent<PlayerInput>().camera;
 
         _groundedManager = GetComponent<GroundedManager>();
+        _wallRunManager = GetComponent<WallRunManager>();
     }
 
     private void FixedUpdate()
     {
         UpdateRotationBasedOnCamera();
 
-        if (!_groundedManager.IsGrounded)
+        if (!_groundedManager.IsGrounded && !_wallRunManager.IsWallRunning)
         {
             ApplyCustomGravity(gravityScale);
         }
@@ -66,7 +68,6 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void ApplyCustomGravity(float gravityScale)
     {
-        var gravity = Physics.gravity * (gravityScale - 1);
-        _rigidbody.AddForce(gravity, ForceMode.Acceleration);
+        _rigidbody.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
     }
 }
