@@ -23,7 +23,7 @@ public class WallJumpManager : MonoBehaviour
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
     }
-    /*
+
     private void FixedUpdate()
     {
         UpdateJumpBufferCounter();
@@ -51,10 +51,14 @@ public class WallJumpManager : MonoBehaviour
         }
     }
 
+    public void ResetJumpBuffer()
+    {
+        _jumpBufferCounter = jumpBufferTime;
+    }
+
     private void ExecuteWallJump()
     {
-        // Use the stored wall normal for the jump
-        var sideForce = wallNormal * wallJumpSideForce;
+        var sideForce = _wallRunManager.WallNormal * wallJumpSideForce;
         var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * wallJumpHeight);
         var forwardForce = transform.forward * wallJumpForwardForce;
 
@@ -67,10 +71,5 @@ public class WallJumpManager : MonoBehaviour
         };
 
         _rigidbody.AddForce(finalForce, ForceMode.VelocityChange);
-
-        isWallRunningOnRightWall = false;
-        isWallRunningOnLeftWall = false;
-        wallNormal = Vector3.zero;
     }
-    */
 }

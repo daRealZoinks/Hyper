@@ -5,10 +5,13 @@ public class WallRunManager : MonoBehaviour
 {
     public float wallDetectionAngleThreshold = 0.9f;
 
+    public float wallRunAscendingGravity = 1f;
+    public float wallRunDescendingGravity = 0.25f;
+
     public Vector3 WallNormal { get; private set; }
 
-    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded && !hasWallRunOnRight;
-    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded && !hasWallRunOnLeft;
+    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded;// && !hasWallRunOnRight;
+    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded;// && !hasWallRunOnLeft;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
     private bool isTouchingWallOnRight;
@@ -34,9 +37,6 @@ public class WallRunManager : MonoBehaviour
 
 
     public float wallRunInitialImpulse = 5f;
-
-
-    public float wallRunGravity = 0.75f; // Lower gravity while wallrunning
 
 
 
@@ -78,16 +78,12 @@ public class WallRunManager : MonoBehaviour
                 {
                     OnStartedWallRunningRight?.Invoke();
                     force = Vector3.Cross(-WallNormal, Vector3.up) * wallRunInitialImpulse;
-                    hasWallRunOnRight = true;
-                    hasWallRunOnLeft = false;
                 }
 
                 if (!wasWallRunningOnLeftWall && IsWallRunningOnLeftWall)
                 {
                     OnStartedWallRunningLeft?.Invoke();
                     force = Vector3.Cross(WallNormal, Vector3.up) * wallRunInitialImpulse;
-                    hasWallRunOnLeft = true;
-                    hasWallRunOnRight = false;
                 }
 
                 _rigidbody.AddForce(force, ForceMode.VelocityChange);
@@ -97,6 +93,18 @@ public class WallRunManager : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
+        if (IsWallRunningOnRightWall)
+        {
+            hasWallRunOnRight = true;
+            hasWallRunOnLeft = false;
+        }
+
+        if (IsWallRunningOnLeftWall)
+        {
+            hasWallRunOnLeft = true;
+            hasWallRunOnRight = false;
+        }
+
         isTouchingWallOnRight = false;
         isTouchingWallOnLeft = false;
 
@@ -105,8 +113,14 @@ public class WallRunManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.Log($"IsWallRunning: {IsWallRunning}");
+        Debug.Log($"IsWallRunningOnRightWall: {IsWallRunningOnRightWall}");
+        Debug.Log($"IsWallRunningOnLeftWall: {IsWallRunningOnLeftWall}");
+
         if (IsWallRunning)
         {
+            var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? wallRunAscendingGravity : wallRunDescendingGravity;
+
             ApplyWallRunGravity(wallRunGravity);
         }
 
@@ -121,7 +135,8 @@ public class WallRunManager : MonoBehaviour
 
     private void ApplyWallRunGravity(float wallRunGravity)
     {
-        _rigidbody.AddForce(Physics.gravity * wallRunGravity, ForceMode.Acceleration);
+        Vector3 gravity = Physics.gravity * wallRunGravity;
+        _rigidbody.AddForce(gravity, ForceMode.Acceleration);
     }
 
     private void UpdateReferenceCollisionPoints()
