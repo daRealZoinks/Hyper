@@ -287,7 +287,7 @@ MonoBehaviour:
   acceleration: 60
   topSpeed: 8
   deceleration: 120
-  airControl: 0.5
+  airControl: 0.25
   airBreak: 0
 --- !u!114 &2252465026680502150
 MonoBehaviour:
