@@ -87,7 +87,7 @@ public class WallRunManager : MonoBehaviour
                     force = Vector3.Cross(WallNormal, Vector3.up) * wallRunInitialImpulse;
                 }
 
-                _rigidbody.AddForce(force, ForceMode.VelocityChange);
+                // _rigidbody.AddForce(force, ForceMode.VelocityChange);
             }
         }
     }
