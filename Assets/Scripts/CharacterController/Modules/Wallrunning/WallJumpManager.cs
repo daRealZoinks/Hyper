@@ -11,14 +11,19 @@ public class WallJumpManager : MonoBehaviour
 
     public UnityEvent OnWallJump;
 
+    private bool _wasLastWallJumpRight;
+    private bool _wasLastWallJumpLeft;
+
     private float _jumpBufferCounter;
 
+    private GroundedManager _groundedManager;
     private WallRunManager _wallRunManager;
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private Rigidbody _rigidbody;
 
     private void Awake()
     {
+        _groundedManager = GetComponent<GroundedManager>();
         _wallRunManager = GetComponent<WallRunManager>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -28,25 +33,35 @@ public class WallJumpManager : MonoBehaviour
     {
         UpdateJumpBufferCounter();
 
+        if (_groundedManager.IsGrounded)
+        {
+            _wasLastWallJumpRight = false;
+            _wasLastWallJumpLeft = false;
+        }
+
         if (_wallRunManager.IsWallRunning && _jumpBufferCounter > 0f)
         {
-            ExecuteWallJump();
-            OnWallJump?.Invoke();
-
-            if (_wallRunManager.IsWallRunningOnRightWall)
+            if (_wallRunManager.IsWallRunningOnRightWall && !_wasLastWallJumpRight)
             {
-                _wallRunManager.HasWallRunOnRight = true;
-                _wallRunManager.HasWallRunOnLeft = false;
+                _wasLastWallJumpRight = true;
+                _wasLastWallJumpLeft = false;
+                WallJump();
             }
 
-            if (_wallRunManager.IsWallRunningOnLeftWall)
+            if (_wallRunManager.IsWallRunningOnLeftWall && !_wasLastWallJumpLeft)
             {
-                _wallRunManager.HasWallRunOnLeft = true;
-                _wallRunManager.HasWallRunOnRight = false;
+                _wasLastWallJumpLeft = true;
+                _wasLastWallJumpRight = false;
+                WallJump();
             }
-
-            _jumpBufferCounter = 0f;
         }
+    }
+
+    private void WallJump()
+    {
+        ExecuteWallJump();
+        OnWallJump?.Invoke();
+        _jumpBufferCounter = 0f;
     }
 
     private void UpdateJumpBufferCounter()
@@ -80,6 +95,7 @@ public class WallJumpManager : MonoBehaviour
         _rigidbody.linearVelocity = new Vector3()
         {
             x = _rigidbody.linearVelocity.x,
+            y = 0,
             z = _rigidbody.linearVelocity.z
         };
 

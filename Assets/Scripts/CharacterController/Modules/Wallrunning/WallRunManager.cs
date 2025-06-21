@@ -8,53 +8,30 @@ public class WallRunManager : MonoBehaviour
     public float wallRunAscendingGravity = 1f;
     public float wallRunDescendingGravity = 0.25f;
 
-    public bool HasWallRunOnRight { get; set; }
-    public bool HasWallRunOnLeft { get; set; }
+    public UnityEvent OnStartedWallRunningRight;
+    public UnityEvent OnStartedWallRunningLeft;
 
     public Vector3 WallNormal { get; private set; }
 
-    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded && !HasWallRunOnRight;
-    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded && !HasWallRunOnLeft;
+    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded;
+    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
     private bool isTouchingWallOnRight;
     private bool isTouchingWallOnLeft;
 
-
-    private Vector3 topCollisionPoint;
-    private Vector3 middleCollisionPoint;
+    private Vector3 minimumHeightCollisionPoint;
 
     private GroundedManager _groundedManager;
+    private MovementManager _movementManager;
     private Rigidbody _rigidbody;
     private CapsuleCollider _collider;
-
-
-
-
-
-
-
-
-
-
-    public float wallRunInitialImpulse = 5f;
-
-
-
-    public UnityEvent OnStartedWallRunningRight;
-    public UnityEvent OnStartedWallRunningLeft;
-
-
-
-
-
-
-
 
 
     private void Awake()
     {
         _groundedManager = GetComponent<GroundedManager>();
+        _movementManager = GetComponent<MovementManager>();
         _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
     }
@@ -63,7 +40,7 @@ public class WallRunManager : MonoBehaviour
     {
         foreach (var contact in collision.contacts)
         {
-            if (contact.point.y <= topCollisionPoint.y && contact.point.y >= middleCollisionPoint.y)
+            if (contact.point.y >= minimumHeightCollisionPoint.y)
             {
                 var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
                 var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
@@ -73,21 +50,15 @@ public class WallRunManager : MonoBehaviour
 
                 WallNormal = contact.normal;
 
-                var force = Vector3.zero;
-
                 if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
                 {
                     OnStartedWallRunningRight?.Invoke();
-                    force = Vector3.Cross(-WallNormal, Vector3.up) * wallRunInitialImpulse;
                 }
 
                 if (!wasWallRunningOnLeftWall && IsWallRunningOnLeftWall)
                 {
                     OnStartedWallRunningLeft?.Invoke();
-                    force = Vector3.Cross(WallNormal, Vector3.up) * wallRunInitialImpulse;
                 }
-
-                // _rigidbody.AddForce(force, ForceMode.VelocityChange);
             }
         }
     }
@@ -102,6 +73,8 @@ public class WallRunManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        _movementManager.enabled = !IsWallRunning;
+
         if (IsWallRunning)
         {
             var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? wallRunAscendingGravity : wallRunDescendingGravity;
@@ -109,13 +82,7 @@ public class WallRunManager : MonoBehaviour
             ApplyWallRunGravity(wallRunGravity);
         }
 
-        if (_groundedManager.IsGrounded)
-        {
-            HasWallRunOnRight = false;
-            HasWallRunOnLeft = false;
-        }
-
-        UpdateReferenceCollisionPoints();
+        RefreshMinimumHeightCollisionPoint();
     }
 
     private void ApplyWallRunGravity(float wallRunGravity)
@@ -124,9 +91,8 @@ public class WallRunManager : MonoBehaviour
         _rigidbody.AddForce(gravity, ForceMode.Acceleration);
     }
 
-    private void UpdateReferenceCollisionPoints()
+    private void RefreshMinimumHeightCollisionPoint()
     {
-        topCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * (_collider.height / 2);
-        middleCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * 0.1f;
+        minimumHeightCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * 0.1f;
     }
 }
