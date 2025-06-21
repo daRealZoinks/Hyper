@@ -32,6 +32,19 @@ public class WallJumpManager : MonoBehaviour
         {
             ExecuteWallJump();
             OnWallJump?.Invoke();
+
+            if (_wallRunManager.IsWallRunningOnRightWall)
+            {
+                _wallRunManager.HasWallRunOnRight = true;
+                _wallRunManager.HasWallRunOnLeft = false;
+            }
+
+            if (_wallRunManager.IsWallRunningOnLeftWall)
+            {
+                _wallRunManager.HasWallRunOnLeft = true;
+                _wallRunManager.HasWallRunOnRight = false;
+            }
+
             _jumpBufferCounter = 0f;
         }
     }

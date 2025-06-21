@@ -8,17 +8,18 @@ public class WallRunManager : MonoBehaviour
     public float wallRunAscendingGravity = 1f;
     public float wallRunDescendingGravity = 0.25f;
 
+    public bool HasWallRunOnRight { get; set; }
+    public bool HasWallRunOnLeft { get; set; }
+
     public Vector3 WallNormal { get; private set; }
 
-    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded;// && !hasWallRunOnRight;
-    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded;// && !hasWallRunOnLeft;
+    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded && !HasWallRunOnRight;
+    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded && !HasWallRunOnLeft;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
     private bool isTouchingWallOnRight;
     private bool isTouchingWallOnLeft;
 
-    private bool hasWallRunOnRight;
-    private bool hasWallRunOnLeft;
 
     private Vector3 topCollisionPoint;
     private Vector3 middleCollisionPoint;
@@ -93,18 +94,6 @@ public class WallRunManager : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (IsWallRunningOnRightWall)
-        {
-            hasWallRunOnRight = true;
-            hasWallRunOnLeft = false;
-        }
-
-        if (IsWallRunningOnLeftWall)
-        {
-            hasWallRunOnLeft = true;
-            hasWallRunOnRight = false;
-        }
-
         isTouchingWallOnRight = false;
         isTouchingWallOnLeft = false;
 
@@ -113,10 +102,6 @@ public class WallRunManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log($"IsWallRunning: {IsWallRunning}");
-        Debug.Log($"IsWallRunningOnRightWall: {IsWallRunningOnRightWall}");
-        Debug.Log($"IsWallRunningOnLeftWall: {IsWallRunningOnLeftWall}");
-
         if (IsWallRunning)
         {
             var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? wallRunAscendingGravity : wallRunDescendingGravity;
@@ -126,8 +111,8 @@ public class WallRunManager : MonoBehaviour
 
         if (_groundedManager.IsGrounded)
         {
-            hasWallRunOnRight = false;
-            hasWallRunOnLeft = false;
+            HasWallRunOnRight = false;
+            HasWallRunOnLeft = false;
         }
 
         UpdateReferenceCollisionPoints();
