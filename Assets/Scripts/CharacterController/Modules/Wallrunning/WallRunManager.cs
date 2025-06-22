@@ -12,6 +12,7 @@ public class WallRunManager : MonoBehaviour
     public UnityEvent OnStartedWallRunningLeft;
 
     public Vector3 WallNormal { get; private set; }
+    public GameObject WallRunningWall { get; private set; }
 
     public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded;
     public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded;
@@ -53,11 +54,13 @@ public class WallRunManager : MonoBehaviour
                 if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
                 {
                     OnStartedWallRunningRight?.Invoke();
+                    WallRunningWall = collision.gameObject;
                 }
 
                 if (!wasWallRunningOnLeftWall && IsWallRunningOnLeftWall)
                 {
                     OnStartedWallRunningLeft?.Invoke();
+                    WallRunningWall = collision.gameObject;
                 }
             }
         }

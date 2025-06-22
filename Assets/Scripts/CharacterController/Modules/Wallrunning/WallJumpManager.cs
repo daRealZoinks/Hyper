@@ -8,13 +8,14 @@ public class WallJumpManager : MonoBehaviour
     public float wallJumpForwardForce = 1f;
 
     public float jumpBufferTime = 0.15f;
+    public float sameWallJumpCooldown = 2.5f;
 
     public UnityEvent OnWallJump;
 
-    private bool _wasLastWallJumpRight;
-    private bool _wasLastWallJumpLeft;
+    private GameObject lastWallJumped;
 
     private float _jumpBufferCounter;
+    private float _sameWallJumpCooldownCounter;
 
     private GroundedManager _groundedManager;
     private WallRunManager _wallRunManager;
@@ -32,26 +33,22 @@ public class WallJumpManager : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateJumpBufferCounter();
+        UpdateSameWallJumpCooldownCounter();
 
         if (_groundedManager.IsGrounded)
         {
-            _wasLastWallJumpRight = false;
-            _wasLastWallJumpLeft = false;
+            lastWallJumped = null;
+            _sameWallJumpCooldownCounter = 0f;
         }
 
         if (_wallRunManager.IsWallRunning && _jumpBufferCounter > 0f)
         {
-            if (_wallRunManager.IsWallRunningOnRightWall && !_wasLastWallJumpRight)
-            {
-                _wasLastWallJumpRight = true;
-                _wasLastWallJumpLeft = false;
-                WallJump();
-            }
+            var currentWall = _wallRunManager.WallRunningWall;
 
-            if (_wallRunManager.IsWallRunningOnLeftWall && !_wasLastWallJumpLeft)
+            if (!currentWall || currentWall != lastWallJumped || _sameWallJumpCooldownCounter <= 0f)
             {
-                _wasLastWallJumpLeft = true;
-                _wasLastWallJumpRight = false;
+                lastWallJumped = currentWall;
+                _sameWallJumpCooldownCounter = sameWallJumpCooldown;
                 WallJump();
             }
         }
@@ -75,6 +72,20 @@ public class WallJumpManager : MonoBehaviour
             if (_jumpBufferCounter < 0f)
             {
                 _jumpBufferCounter = 0f;
+            }
+        }
+    }
+    private void UpdateSameWallJumpCooldownCounter()
+    {
+        if (_sameWallJumpCooldownCounter > 0f)
+        {
+            _sameWallJumpCooldownCounter -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            if (_sameWallJumpCooldownCounter < 0f)
+            {
+                _sameWallJumpCooldownCounter = 0f;
             }
         }
     }
