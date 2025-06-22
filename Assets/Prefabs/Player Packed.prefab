@@ -304,6 +304,7 @@ MonoBehaviour:
   wallDetectionAngleThreshold: 0.9
   wallRunAscendingGravity: 1
   wallRunDescendingGravity: 0.25
+  wallStickForce: 10
   OnStartedWallRunningRight:
     m_PersistentCalls:
       m_Calls: []
@@ -354,7 +355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallJumpHeight: 1.5
   wallJumpSideForce: 4
-  wallJumpForwardForce: 1
+  wallJumpForwardForce: 5
   jumpBufferTime: 0.15
   sameWallJumpCooldown: 2.5
   OnWallJump:

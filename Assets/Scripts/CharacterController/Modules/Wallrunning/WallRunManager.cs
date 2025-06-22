@@ -8,14 +8,17 @@ public class WallRunManager : MonoBehaviour
     public float wallRunAscendingGravity = 1f;
     public float wallRunDescendingGravity = 0.25f;
 
+    public float wallStickForce = 10f;
+
     public UnityEvent OnStartedWallRunningRight;
     public UnityEvent OnStartedWallRunningLeft;
 
     public Vector3 WallNormal { get; private set; }
     public GameObject WallRunningWall { get; private set; }
 
-    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded;
-    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded;
+    public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.y > 0;
+    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded && IsMovingForward;
+    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded && IsMovingForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
     private bool isTouchingWallOnRight;
@@ -25,14 +28,15 @@ public class WallRunManager : MonoBehaviour
 
     private GroundedManager _groundedManager;
     private MovementManager _movementManager;
+    private RigidbodyCharacterController _rigidbodyCharacterController;
     private Rigidbody _rigidbody;
     private CapsuleCollider _collider;
-
 
     private void Awake()
     {
         _groundedManager = GetComponent<GroundedManager>();
         _movementManager = GetComponent<MovementManager>();
+        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
     }
@@ -83,9 +87,15 @@ public class WallRunManager : MonoBehaviour
             var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? wallRunAscendingGravity : wallRunDescendingGravity;
 
             ApplyWallRunGravity(wallRunGravity);
+            ApplyWallStickForce();
         }
 
         RefreshMinimumHeightCollisionPoint();
+    }
+
+    private void ApplyWallStickForce()
+    {
+        _rigidbody.AddForce(-WallNormal * wallStickForce, ForceMode.Acceleration);
     }
 
     private void ApplyWallRunGravity(float wallRunGravity)

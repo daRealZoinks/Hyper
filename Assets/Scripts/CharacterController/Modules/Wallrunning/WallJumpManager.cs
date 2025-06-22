@@ -5,7 +5,7 @@ public class WallJumpManager : MonoBehaviour
 {
     public float wallJumpHeight = 1.5f;
     public float wallJumpSideForce = 4f;
-    public float wallJumpForwardForce = 1f;
+    public float wallJumpForwardForce = 5f;
 
     public float jumpBufferTime = 0.15f;
     public float sameWallJumpCooldown = 2.5f;
