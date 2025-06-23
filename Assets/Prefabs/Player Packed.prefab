@@ -302,8 +302,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallDetectionAngleThreshold: 0.9
-  wallRunAscendingGravity: 1
-  wallRunDescendingGravity: 0.25
+  wallRunAscendingGravity: 1.25
+  wallRunDescendingGravity: 0.75
   wallStickForce: 10
   OnStartedWallRunningRight:
     m_PersistentCalls:

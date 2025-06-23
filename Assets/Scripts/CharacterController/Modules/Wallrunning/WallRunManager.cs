@@ -5,8 +5,8 @@ public class WallRunManager : MonoBehaviour
 {
     public float wallDetectionAngleThreshold = 0.9f;
 
-    public float wallRunAscendingGravity = 1f;
-    public float wallRunDescendingGravity = 0.25f;
+    public float wallRunAscendingGravity = 1.25f;
+    public float wallRunDescendingGravity = 0.75f;
 
     public float wallStickForce = 10f;
 
