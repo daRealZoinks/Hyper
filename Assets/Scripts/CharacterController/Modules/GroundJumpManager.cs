@@ -33,9 +33,19 @@ public class GroundJumpManager : MonoBehaviour
         {
             ExecuteJump();
             OnJump?.Invoke();
-            _coyoteTimeCounter = 0f;
-            _jumpBufferCounter = 0f;
+            CancelCoyoteTimeCounter();
+            CancelJumpBufferCounter();
         }
+    }
+
+    private void CancelCoyoteTimeCounter()
+    {
+        _coyoteTimeCounter = 0f;
+    }
+
+    private void CancelJumpBufferCounter()
+    {
+        _jumpBufferCounter = 0f;
     }
 
     private void UpdateJumpBufferCounter()
@@ -55,11 +65,7 @@ public class GroundJumpManager : MonoBehaviour
 
     private void UpdateCoyoteTimeCounter()
     {
-        if (_groundedManager.IsGrounded)
-        {
-            _coyoteTimeCounter = coyoteTime;
-        }
-        else
+        if (!_groundedManager.IsGrounded)
         {
             if (_coyoteTimeCounter > 0f)
             {
@@ -75,9 +81,14 @@ public class GroundJumpManager : MonoBehaviour
         }
     }
 
-    public void ResetJumpBuffer()
+    public void ResetJumpBufferCounter()
     {
         _jumpBufferCounter = jumpBufferTime;
+    }
+
+    public void ResetCoyoteTimeCounter()
+    {
+        _coyoteTimeCounter = coyoteTime;
     }
 
     public void ExecuteJump()

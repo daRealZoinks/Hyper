@@ -19,7 +19,7 @@ public class JumpManager : MonoBehaviour
     {
         if (_rigidbodyCharacterController.currentInputPayload.JumpPressed)
         {
-            _groundJumpManager.ResetJumpBuffer();
+            _groundJumpManager.ResetJumpBufferCounter();
             if (!_groundedManager.IsGrounded)
             {
                 _wallJumpManager.ResetJumpBuffer();
