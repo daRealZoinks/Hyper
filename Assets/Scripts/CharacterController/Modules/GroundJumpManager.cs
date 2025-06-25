@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class JumpManager : MonoBehaviour
+public class GroundJumpManager : MonoBehaviour
 {
     public float jumpHeight = 2f;
 
@@ -26,11 +26,6 @@ public class JumpManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_rigidbodyCharacterController.currentInputPayload.JumpPressed)
-        {
-            ResetJumpBuffer();
-        }
-
         UpdateCoyoteTimeCounter();
         UpdateJumpBufferCounter();
 
@@ -38,9 +33,19 @@ public class JumpManager : MonoBehaviour
         {
             ExecuteJump();
             OnJump?.Invoke();
-            _coyoteTimeCounter = 0f;
-            _jumpBufferCounter = 0f;
+            CancelCoyoteTimeCounter();
+            CancelJumpBufferCounter();
         }
+    }
+
+    private void CancelCoyoteTimeCounter()
+    {
+        _coyoteTimeCounter = 0f;
+    }
+
+    private void CancelJumpBufferCounter()
+    {
+        _jumpBufferCounter = 0f;
     }
 
     private void UpdateJumpBufferCounter()
@@ -60,11 +65,7 @@ public class JumpManager : MonoBehaviour
 
     private void UpdateCoyoteTimeCounter()
     {
-        if (_groundedManager.IsGrounded)
-        {
-            _coyoteTimeCounter = coyoteTime;
-        }
-        else
+        if (!_groundedManager.IsGrounded)
         {
             if (_coyoteTimeCounter > 0f)
             {
@@ -80,9 +81,14 @@ public class JumpManager : MonoBehaviour
         }
     }
 
-    public void ResetJumpBuffer()
+    public void ResetJumpBufferCounter()
     {
         _jumpBufferCounter = jumpBufferTime;
+    }
+
+    public void ResetCoyoteTimeCounter()
+    {
+        _coyoteTimeCounter = coyoteTime;
     }
 
     public void ExecuteJump()

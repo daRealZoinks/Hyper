@@ -6,7 +6,7 @@ public class MovementManager : MonoBehaviour
     public float topSpeed = 8f;
     public float deceleration = 120f;
 
-    public float airControl = 0.5f;
+    public float airControl = 0.25f;
     public float airBreak = 0f;
 
     private Rigidbody _rigidbody;
