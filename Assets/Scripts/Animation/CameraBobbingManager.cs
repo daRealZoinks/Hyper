@@ -7,6 +7,7 @@ public class CameraBobbingManager : MonoBehaviour
     public MovementManager movementManager;
     public GroundedManager groundedManager;
     public WallRunManager wallRunManager;
+    public SlidingManager slidingManager;
 
     private CinemachineBasicMultiChannelPerlin _cinemachineBasicMultiChannelPerlin;
 
@@ -19,7 +20,7 @@ public class CameraBobbingManager : MonoBehaviour
     {
         var intensity = 0f;
 
-        if (groundedManager.IsGrounded || wallRunManager.IsWallRunning)
+        if ((groundedManager.IsGrounded || wallRunManager.IsWallRunning) && !slidingManager.IsSliding)
         {
             var rigidbodyHorizontalVelocity = new Vector3
             {
