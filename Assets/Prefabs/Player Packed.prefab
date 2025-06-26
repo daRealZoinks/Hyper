@@ -404,8 +404,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravityScale: 1.5
-  acceleration: 6
-  topSpeed: 1
+  acceleration: 3
+  topSpeed: 0
   deceleration: 1
   slidingCapsuleColliderHeight: 1
   slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}

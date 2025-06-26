@@ -3,9 +3,9 @@ using UnityEngine;
 public class SlidingManager : MonoBehaviour
 {
     public float gravityScale = 1.5f;
-    public float acceleration = 6f;
-    public float topSpeed = 1f;
-    public float deceleration = 12f;
+    public float acceleration = 3f;
+    public float topSpeed = 0f;
+    public float deceleration = 1f;
     public float slidingCapsuleColliderHeight = 1f;
     public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
     public Vector3 slidingCameraHolderPosition = new(0f, 0.25f, 0f);
@@ -83,9 +83,34 @@ public class SlidingManager : MonoBehaviour
 
         var finalForce = inputDirection - horizontalClampedVelocity;
 
-        finalForce *= (inputDirection != Vector3.zero || _groundedManager.GroundNormal != Vector3.up) ? acceleration : deceleration;
+        if (inputDirection != Vector3.zero)
+        {
+            if (_rigidbody.linearVelocity.magnitude > 0.01f)
+            {
+                finalForce *= acceleration;
+            }
+        }
+        else
+        {
+            if (_groundedManager.GroundNormal == Vector3.up)
+            {
+                finalForce *= deceleration;
+            }
+        }
 
-        _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
+        if (!_groundedManager.IsGrounded)
+        {
+            finalForce = Vector3.zero;
+        }
+
+        if (_rigidbody.linearVelocity.magnitude > 0.2f)
+        {
+            _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
+        }
+        else
+        {
+            _rigidbody.linearVelocity = Vector3.zero;
+        }
     }
 
     private void StartSliding()
