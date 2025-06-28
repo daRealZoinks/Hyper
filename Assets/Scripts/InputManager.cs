@@ -34,6 +34,17 @@ public class InputManager : MonoBehaviour
         _rigidbodyCharacterController.JumpPressed = true;
     }
 
+    public void OnSlide(InputAction.CallbackContext context)
+    {
+        var slide = context.phase switch
+        {
+            InputActionPhase.Started or InputActionPhase.Performed => true,
+            InputActionPhase.Disabled or InputActionPhase.Waiting or InputActionPhase.Canceled or _ => false,
+        };
+
+        _rigidbodyCharacterController.Sliding = slide;
+    }
+
     public void OnGrapple(InputAction.CallbackContext context)
     {
         switch (context.phase)

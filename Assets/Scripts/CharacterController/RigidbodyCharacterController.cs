@@ -9,11 +9,13 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public Vector2 MoveInput { private get; set; }
     public bool JumpPressed { private get; set; }
+    public bool Sliding { private get; set; }
 
     public struct InputPayload
     {
         public Vector2 MoveInput;
         public bool JumpPressed;
+        public bool Sliding;
     }
 
     public InputPayload currentInputPayload;
@@ -23,6 +25,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private GroundedManager _groundedManager;
     private WallRunManager _wallRunManager;
+    private SlidingManager _slidingManager;
 
     private void Awake()
     {
@@ -31,13 +34,14 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         _groundedManager = GetComponent<GroundedManager>();
         _wallRunManager = GetComponent<WallRunManager>();
+        _slidingManager = GetComponent<SlidingManager>();
     }
 
     private void FixedUpdate()
     {
         UpdateRotationBasedOnCamera();
 
-        if (!_groundedManager.IsGrounded && !_wallRunManager.IsWallRunning)
+        if (!_groundedManager.IsGrounded && !_wallRunManager.IsWallRunning && !_slidingManager.IsSliding)
         {
             ApplyCustomGravity(gravityScale);
         }
@@ -50,7 +54,8 @@ public class RigidbodyCharacterController : MonoBehaviour
         currentInputPayload = new InputPayload
         {
             MoveInput = MoveInput,
-            JumpPressed = JumpPressed
+            JumpPressed = JumpPressed,
+            Sliding = Sliding,
         };
 
         if (JumpPressed)

@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 6167397094199149244}
   - component: {fileID: 1445355023004454487}
   - component: {fileID: 3501951543994579889}
+  - component: {fileID: 8880941185909121492}
   - component: {fileID: 4221880724104738831}
   - component: {fileID: 3835998098059943154}
   - component: {fileID: 5741402555865847128}
@@ -214,6 +215,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 106c80d8-d809-4e9c-8770-a6c95611f71d
     m_ActionName: 'Player/Grapple[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2639626806727421639}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnSlide
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d7e43195-933e-474b-acc8-b7a234daa2a0
+    m_ActionName: Player/Slide
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -257,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e37d810bbe7ba04596436c320707b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SlopeLimit: 45
   OnLanded:
     m_PersistentCalls:
       m_Calls:
@@ -315,8 +333,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallDetectionAngleThreshold: 0.9
   wallRunAscendingGravity: 1.25
-  wallRunDescendingGravity: 0.75
+  wallRunDescendingGravity: 0.25
   wallStickForce: 10
+  wallRunMinimumSpeed: 10
   OnStartedWallRunningRight:
     m_PersistentCalls:
       m_Calls: []
@@ -367,12 +386,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallJumpHeight: 1.5
   wallJumpSideForce: 4
-  wallJumpForwardForce: 5
+  wallJumpForwardForce: 3
   jumpBufferTime: 0.15
   sameWallJumpCooldown: 2.5
   OnWallJump:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8880941185909121492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c7f60d402f6a4242a3bcc8201555f49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravityScale: 1.5
+  acceleration: 3
+  topSpeed: 0
+  deceleration: 1
+  slidingCapsuleColliderHeight: 1
+  slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
+  slidingCameraHolderPosition: {x: 0, y: 0.25, z: 0}
+  _cameraHolder: {fileID: 351759601881261647}
 --- !u!114 &4221880724104738831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -911,7 +950,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6517757529428791751}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1042,6 +1081,7 @@ MonoBehaviour:
   movementManager: {fileID: 5575856456840538790}
   groundedManager: {fileID: 9174427740881968565}
   wallRunManager: {fileID: 2252465026680502150}
+  slidingManager: {fileID: 8880941185909121492}
 --- !u!114 &656803543515659055
 MonoBehaviour:
   m_ObjectHideFlags: 0

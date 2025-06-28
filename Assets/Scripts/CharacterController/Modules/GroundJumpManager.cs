@@ -93,11 +93,18 @@ public class GroundJumpManager : MonoBehaviour
 
     public void ExecuteJump()
     {
-        _rigidbody.linearVelocity = new Vector3()
+        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * jumpHeight);
+
+        if (_rigidbody.linearVelocity.y < 0)
         {
-            x = _rigidbody.linearVelocity.x,
-            y = Mathf.Sqrt(-2f * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * jumpHeight),
-            z = _rigidbody.linearVelocity.z
-        };
+            _rigidbody.linearVelocity = new Vector3()
+            {
+                x = _rigidbody.linearVelocity.x,
+                y = 0,
+                z = _rigidbody.linearVelocity.z
+            };
+        }
+
+        _rigidbody.AddForce(jumpForce, ForceMode.VelocityChange);
     }
 }

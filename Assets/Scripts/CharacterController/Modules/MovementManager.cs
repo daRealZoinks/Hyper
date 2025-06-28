@@ -41,9 +41,13 @@ public class MovementManager : MonoBehaviour
 
         finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
 
-        if (!_groundedManager.IsGrounded)
+        if (_groundedManager.IsGrounded)
         {
-            finalForce *= (inputDirection != Vector3.zero) ? airControl : airBreak;
+            finalForce = Vector3.ProjectOnPlane(finalForce, _groundedManager.GroundNormal);
+        }
+        else
+        {
+            finalForce *= inputDirection != Vector3.zero ? airControl : airBreak;
         }
 
         _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
