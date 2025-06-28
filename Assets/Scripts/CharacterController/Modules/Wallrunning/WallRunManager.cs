@@ -32,7 +32,7 @@ public class WallRunManager : MonoBehaviour
     private MovementManager _movementManager;
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private Rigidbody _rigidbody;
-    private CapsuleCollider _collider;
+    private CapsuleCollider _capsuleCollider;
 
     private void Awake()
     {
@@ -40,7 +40,7 @@ public class WallRunManager : MonoBehaviour
         _movementManager = GetComponent<MovementManager>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
-        _collider = GetComponent<CapsuleCollider>();
+        _capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     private void OnCollisionStay(Collision collision)
@@ -109,7 +109,7 @@ public class WallRunManager : MonoBehaviour
 
     private void RefreshMinimumHeightCollisionPoint()
     {
-        minimumHeightCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * 0.1f;
+        minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
     }
 
     private void ApplyMinimumSpeed()
