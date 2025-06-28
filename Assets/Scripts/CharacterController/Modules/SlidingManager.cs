@@ -22,8 +22,8 @@ public class SlidingManager : MonoBehaviour
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private GroundedManager _groundedManager;
     private MovementManager _movementManager;
-    private JumpManager _jumpManager;
     private WallRunManager _wallRunManager;
+    private WallJumpManager _wallJumpManager;
 
     private void Awake()
     {
@@ -36,9 +36,9 @@ public class SlidingManager : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _groundedManager = GetComponent<GroundedManager>();
-        _jumpManager = GetComponent<JumpManager>();
         _movementManager = GetComponent<MovementManager>();
         _wallRunManager = GetComponent<WallRunManager>();
+        _wallJumpManager = GetComponent<WallJumpManager>();
     }
 
     private void FixedUpdate()
@@ -83,41 +83,45 @@ public class SlidingManager : MonoBehaviour
 
         var finalForce = inputDirection - horizontalClampedVelocity;
 
-        if (inputDirection != Vector3.zero)
+        if (_groundedManager.IsGrounded)
         {
-            if (_rigidbody.linearVelocity.magnitude > 0.01f)
+            if (inputDirection != Vector3.zero)
             {
-                finalForce *= acceleration;
+                if (_rigidbody.linearVelocity.magnitude > 0.01f)
+                {
+                    finalForce *= acceleration;
+                }
             }
-        }
-        else
-        {
+            else
+            {
+                if (_groundedManager.GroundNormal == Vector3.up)
+                {
+                    finalForce *= deceleration;
+                }
+            }
+
             if (_groundedManager.GroundNormal == Vector3.up)
             {
-                finalForce *= deceleration;
+                if (_rigidbody.linearVelocity.magnitude > 0.2f)
+                {
+                    if (!float.IsNaN(finalForce.x) && !float.IsNaN(finalForce.y) && !float.IsNaN(finalForce.z))
+                    {
+                        _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
+                    }
+                }
+                else
+                {
+                    _rigidbody.linearVelocity = Vector3.zero;
+                }
             }
-        }
-
-        if (!_groundedManager.IsGrounded)
-        {
-            finalForce = Vector3.zero;
-        }
-
-        if (_rigidbody.linearVelocity.magnitude > 0.2f)
-        {
-            _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
-        }
-        else
-        {
-            _rigidbody.linearVelocity = Vector3.zero;
         }
     }
 
     private void StartSliding()
     {
         _movementManager.enabled = false;
-        _jumpManager.enabled = false;
         _wallRunManager.enabled = false;
+        _wallJumpManager.enabled = false;
         _cameraHolder.localPosition = slidingCameraHolderPosition;
         _capsuleCollider.height = slidingCapsuleColliderHeight;
         _capsuleCollider.center = slidingCapsuleColliderCenter;
@@ -126,8 +130,8 @@ public class SlidingManager : MonoBehaviour
     private void StopSliding()
     {
         _movementManager.enabled = true;
-        _jumpManager.enabled = true;
         _wallRunManager.enabled = true;
+        _wallJumpManager.enabled = true;
         _cameraHolder.localPosition = _cameraHolderOriginalPosition;
         _capsuleCollider.height = _capsuleColliderOriginalHeight;
         _capsuleCollider.center = _capsuleColliderOriginalCenter;
