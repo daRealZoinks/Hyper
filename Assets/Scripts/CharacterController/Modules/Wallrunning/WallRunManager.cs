@@ -10,6 +10,8 @@ public class WallRunManager : MonoBehaviour
 
     public float wallStickForce = 10f;
 
+    public float wallRunMinimumSpeed = 10f;
+
     public UnityEvent OnStartedWallRunningRight;
     public UnityEvent OnStartedWallRunningLeft;
 
@@ -69,7 +71,6 @@ public class WallRunManager : MonoBehaviour
             }
         }
     }
-
     private void OnCollisionExit(Collision collision)
     {
         isTouchingWallOnRight = false;
@@ -88,6 +89,7 @@ public class WallRunManager : MonoBehaviour
 
             ApplyWallRunGravity(wallRunGravity);
             ApplyWallStickForce();
+            ApplyMinimumSpeed();
         }
 
         RefreshMinimumHeightCollisionPoint();
@@ -107,5 +109,15 @@ public class WallRunManager : MonoBehaviour
     private void RefreshMinimumHeightCollisionPoint()
     {
         minimumHeightCollisionPoint = _rigidbody.position + _collider.center + Vector3.up * 0.1f;
+    }
+
+    private void ApplyMinimumSpeed()
+    {
+        if (_rigidbody.linearVelocity.magnitude < wallRunMinimumSpeed)
+        {
+            var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(_rigidbody.transform.forward, WallNormal).normalized;
+
+            _rigidbody.linearVelocity = forwardDirectionAlongSideWall * wallRunMinimumSpeed + Vector3.up * _rigidbody.linearVelocity.y;
+        }
     }
 }
