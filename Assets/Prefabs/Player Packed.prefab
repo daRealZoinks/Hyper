@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 1445355023004454487}
   - component: {fileID: 3501951543994579889}
   - component: {fileID: 8880941185909121492}
+  - component: {fileID: 2522985502675862427}
   - component: {fileID: 4221880724104738831}
   - component: {fileID: 3835998098059943154}
   - component: {fileID: 5741402555865847128}
@@ -412,6 +413,18 @@ MonoBehaviour:
   slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
   slidingCameraHolderPosition: {x: 0, y: 0.25, z: 0}
   _cameraHolder: {fileID: 351759601881261647}
+--- !u!114 &2522985502675862427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f63ab6dd9cfd9e44b2b91d387c2e47e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4221880724104738831
 MonoBehaviour:
   m_ObjectHideFlags: 0
