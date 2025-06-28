@@ -71,6 +71,7 @@ public class WallRunManager : MonoBehaviour
             }
         }
     }
+
     private void OnCollisionExit(Collision collision)
     {
         isTouchingWallOnRight = false;
