@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,6 +19,9 @@ public class MantleManager : MonoBehaviour
     private SlidingManager _slidingManager;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
+
+    private Vector3 _storedVelocity;
+    private bool _isMantling;
 
     private void Awake()
     {
@@ -66,10 +70,37 @@ public class MantleManager : MonoBehaviour
 
     private void Mantle()
     {
-        _rigidbody.MovePosition(transform.position + transform.forward + transform.up);
-        // TODO: make a transition in the future and store the velocity to apply it
+        if (_isMantling) return;
 
-        _rigidbody.linearVelocity = transform.forward * _movementManager.topSpeed;
+        var start = transform.position;
+        var end = start + transform.forward + transform.up;
+
+        _storedVelocity = transform.forward * _movementManager.topSpeed;
+
+        var mantleVelocity = _movementManager.topSpeed;
+        StartCoroutine(MantleTransition(start, end, mantleVelocity));
+    }
+
+    private IEnumerator MantleTransition(Vector3 start, Vector3 end, float velocity)
+    {
+        _isMantling = true;
+        var distance = Vector3.Distance(start, end);
+        var traveled = 0f;
+
+        while (traveled < distance)
+        {
+            var step = velocity * Time.fixedDeltaTime;
+            traveled += step;
+            var t = Mathf.Clamp01(traveled / distance);
+            transform.position = Vector3.Lerp(start, end, t);
+            yield return new WaitForFixedUpdate();
+        }
+
+        transform.position = end;
+
+        _rigidbody.linearVelocity = _storedVelocity;
+
+        _isMantling = false;
     }
 
     private void FixedUpdate()

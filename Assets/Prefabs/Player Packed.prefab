@@ -443,6 +443,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86aa5a070d0848245bf2e7efde046501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallDetectionAngleThreshold: 0.9
+  OnMantle:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4221880724104738831
 MonoBehaviour:
   m_ObjectHideFlags: 0
