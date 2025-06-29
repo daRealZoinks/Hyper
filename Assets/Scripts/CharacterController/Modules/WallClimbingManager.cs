@@ -38,7 +38,7 @@ public class WallClimbingManager : MonoBehaviour
             {
                 var wasWallClimbing = IsWallClimbing;
 
-                isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold;
+                isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold && contact.normal.y == 0;
 
                 if (!wasWallClimbing && IsWallClimbing)
                 {

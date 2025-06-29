@@ -36,7 +36,7 @@ public class MantleManager : MonoBehaviour
 
         foreach (var contact in collision.contacts)
         {
-            isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold;
+            isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold && contact.normal.y == 0;
 
             if (isTouchingWallInFront && !_groundedManager.IsGrounded && IsMovingForward && !_slidingManager.IsSliding)
             {
