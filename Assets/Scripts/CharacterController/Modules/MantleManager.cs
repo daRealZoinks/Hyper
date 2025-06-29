@@ -31,8 +31,8 @@ public class MantleManager : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        ContactPoint? touchingAboveMaximumHeight = null;
         ContactPoint? touchingBelowMaximumHeight = null;
+        ContactPoint? touchingAboveMaximumHeight = null;
 
         foreach (var contact in collision.contacts)
         {
@@ -42,21 +42,17 @@ public class MantleManager : MonoBehaviour
             {
                 if (contact.point.y <= maximumHeightCollisionPoint.y)
                 {
-                    Debug.DrawLine(contact.point, contact.point + contact.normal, Color.green, 2f);
                     touchingBelowMaximumHeight = contact;
                 }
                 else
                 {
-                    Debug.DrawLine(contact.point, contact.point + contact.normal, Color.red, 2f);
                     touchingAboveMaximumHeight = contact;
                 }
             }
         }
 
-        if (touchingAboveMaximumHeight == null && touchingBelowMaximumHeight != null)
+        if (touchingBelowMaximumHeight != null && touchingAboveMaximumHeight == null)
         {
-            Debug.Log("Mantle.");
-
             OnMantle?.Invoke();
 
             Mantle();
@@ -70,7 +66,8 @@ public class MantleManager : MonoBehaviour
 
     private void Mantle()
     {
-        _rigidbody.MovePosition(transform.position + transform.forward + transform.up); // make a transition in the future and store the velocity to apply it
+        _rigidbody.MovePosition(transform.position + transform.forward + transform.up);
+        // TODO: make a transition in the future and store the velocity to apply it
 
         _rigidbody.linearVelocity = transform.forward * _movementManager.topSpeed;
     }
