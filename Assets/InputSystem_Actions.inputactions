@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Slide",
+                    "type": "Button",
+                    "id": "d7e43195-933e-474b-acc8-b7a234daa2a0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Grapple",
                     "type": "Button",
                     "id": "106c80d8-d809-4e9c-8770-a6c95611f71d",
@@ -260,6 +269,39 @@
                     "processors": "",
                     "groups": ";PlayStation",
                     "action": "Grapple",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9093db20-969c-45cd-b189-19ad60c34114",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9ef446c4-8d4b-400b-801a-5583bf6b7303",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Xbox",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5e5c5b06-5839-47d0-b44c-8959687f0399",
+                    "path": "<DualShockGamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";PlayStation",
+                    "action": "Slide",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

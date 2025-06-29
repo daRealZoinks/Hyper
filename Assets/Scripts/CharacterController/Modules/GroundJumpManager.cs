@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class JumpManager : MonoBehaviour
+public class GroundJumpManager : MonoBehaviour
 {
     public float jumpHeight = 2f;
 
@@ -26,11 +26,6 @@ public class JumpManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_rigidbodyCharacterController.currentInputPayload.JumpPressed)
-        {
-            ResetJumpBuffer();
-        }
-
         UpdateCoyoteTimeCounter();
         UpdateJumpBufferCounter();
 
@@ -38,9 +33,19 @@ public class JumpManager : MonoBehaviour
         {
             ExecuteJump();
             OnJump?.Invoke();
-            _coyoteTimeCounter = 0f;
-            _jumpBufferCounter = 0f;
+            CancelCoyoteTimeCounter();
+            CancelJumpBufferCounter();
         }
+    }
+
+    private void CancelCoyoteTimeCounter()
+    {
+        _coyoteTimeCounter = 0f;
+    }
+
+    private void CancelJumpBufferCounter()
+    {
+        _jumpBufferCounter = 0f;
     }
 
     private void UpdateJumpBufferCounter()
@@ -60,11 +65,7 @@ public class JumpManager : MonoBehaviour
 
     private void UpdateCoyoteTimeCounter()
     {
-        if (_groundedManager.IsGrounded)
-        {
-            _coyoteTimeCounter = coyoteTime;
-        }
-        else
+        if (!_groundedManager.IsGrounded)
         {
             if (_coyoteTimeCounter > 0f)
             {
@@ -80,18 +81,30 @@ public class JumpManager : MonoBehaviour
         }
     }
 
-    public void ResetJumpBuffer()
+    public void ResetJumpBufferCounter()
     {
         _jumpBufferCounter = jumpBufferTime;
     }
 
+    public void ResetCoyoteTimeCounter()
+    {
+        _coyoteTimeCounter = coyoteTime;
+    }
+
     public void ExecuteJump()
     {
-        _rigidbody.linearVelocity = new Vector3()
+        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * jumpHeight);
+
+        if (_rigidbody.linearVelocity.y < 0)
         {
-            x = _rigidbody.linearVelocity.x,
-            y = Mathf.Sqrt(-2f * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * jumpHeight),
-            z = _rigidbody.linearVelocity.z
-        };
+            _rigidbody.linearVelocity = new Vector3()
+            {
+                x = _rigidbody.linearVelocity.x,
+                y = 0,
+                z = _rigidbody.linearVelocity.z
+            };
+        }
+
+        _rigidbody.AddForce(jumpForce, ForceMode.VelocityChange);
     }
 }

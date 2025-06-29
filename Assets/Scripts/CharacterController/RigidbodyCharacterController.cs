@@ -9,11 +9,13 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public Vector2 MoveInput { private get; set; }
     public bool JumpPressed { private get; set; }
+    public bool Sliding { private get; set; }
 
     public struct InputPayload
     {
         public Vector2 MoveInput;
         public bool JumpPressed;
+        public bool Sliding;
     }
 
     public InputPayload currentInputPayload;
@@ -22,33 +24,8 @@ public class RigidbodyCharacterController : MonoBehaviour
     private Camera _camera;
 
     private GroundedManager _groundedManager;
-
-
-
-
-
-
-
-
-
-    public float wallRunInitialImpulse = 5f;
-    public float wallCheckDistance = 0.75f;
-    public float wallJumpHeight = 1.5f;
-    public float wallJumpSideForce = 4f;
-    public float wallJumpForwardForce = 1f;
-
-
-
-    public bool IsWallRight { get; private set; }
-    public bool IsWallLeft { get; private set; }
-
-    public bool HasWallRunRight { get; private set; }
-    public bool HasWallRunLeft { get; private set; }
-
-    private CapsuleCollider _collider;
-
-    private RaycastHit _rightHitInfo;
-    private RaycastHit _leftHitInfo;
+    private WallRunManager _wallRunManager;
+    private SlidingManager _slidingManager;
 
     private void Awake()
     {
@@ -56,15 +33,15 @@ public class RigidbodyCharacterController : MonoBehaviour
         _camera = GetComponent<PlayerInput>().camera;
 
         _groundedManager = GetComponent<GroundedManager>();
-
-        _collider = GetComponent<CapsuleCollider>();
+        _wallRunManager = GetComponent<WallRunManager>();
+        _slidingManager = GetComponent<SlidingManager>();
     }
 
     private void FixedUpdate()
     {
         UpdateRotationBasedOnCamera();
 
-        if (!_groundedManager.IsGrounded)
+        if (!_groundedManager.IsGrounded && !_wallRunManager.IsWallRunning && !_slidingManager.IsSliding)
         {
             ApplyCustomGravity(gravityScale);
         }
@@ -77,7 +54,8 @@ public class RigidbodyCharacterController : MonoBehaviour
         currentInputPayload = new InputPayload
         {
             MoveInput = MoveInput,
-            JumpPressed = JumpPressed
+            JumpPressed = JumpPressed,
+            Sliding = Sliding,
         };
 
         if (JumpPressed)
@@ -95,7 +73,6 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void ApplyCustomGravity(float gravityScale)
     {
-        var gravity = Physics.gravity * (gravityScale - 1);
-        _rigidbody.AddForce(gravity, ForceMode.Acceleration);
+        _rigidbody.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
     }
 }
