@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class WallClimbingManager : MonoBehaviour
 {
     public float wallDetectionAngleThreshold = 0.9f;
+    public float wallClimbMaxHeight = 4f;
 
     public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.y > 0;
     public bool IsWallClimbing => isTouchingWallInFront && !_groundedManager.IsGrounded && IsMovingForward;
@@ -16,6 +17,7 @@ public class WallClimbingManager : MonoBehaviour
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private GroundedManager _groundedManager;
+    private GroundJumpManager _groundJumpManager;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
 
@@ -23,6 +25,7 @@ public class WallClimbingManager : MonoBehaviour
     {
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _groundedManager = GetComponent<GroundedManager>();
+        _groundJumpManager = GetComponent<GroundJumpManager>();
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
     }
@@ -40,8 +43,10 @@ public class WallClimbingManager : MonoBehaviour
                 if (!wasWallClimbing && IsWallClimbing)
                 {
                     OnStartedWallClimbing?.Invoke();
-                    // push player upwards based on how high up he is
-                    // calculate how high up he is based on his velocity
+                    if (_rigidbody.linearVelocity.y > 0)
+                    {
+                        ApplyWallClimbUpwardForce();
+                    }
                 }
             }
         }
@@ -50,6 +55,32 @@ public class WallClimbingManager : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         isTouchingWallInFront = false;
+    }
+
+    private void ApplyWallClimbUpwardForce()
+    {
+        var upwardsVelocity = _rigidbody.linearVelocity.y;
+        var gravity = Physics.gravity.y * _rigidbodyCharacterController.gravityScale;
+        var currentAirHeight = _groundJumpManager.jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+
+        if (currentAirHeight < 0)
+        {
+            currentAirHeight = 0;
+        }
+
+        var heightDifference = wallClimbMaxHeight - currentAirHeight;
+
+        if (heightDifference > 0)
+        {
+            var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
+
+            _rigidbody.linearVelocity = new Vector3
+            {
+                x = _rigidbody.linearVelocity.x,
+                y = upwardForce,
+                z = _rigidbody.linearVelocity.z
+            };
+        }
     }
 
     private void FixedUpdate()

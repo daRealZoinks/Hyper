@@ -425,6 +425,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f63ab6dd9cfd9e44b2b91d387c2e47e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallDetectionAngleThreshold: 0.9
+  wallClimbMaxHeight: 4
+  OnStartedWallClimbing:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4221880724104738831
 MonoBehaviour:
   m_ObjectHideFlags: 0
