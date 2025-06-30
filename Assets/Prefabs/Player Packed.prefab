@@ -480,6 +480,7 @@ MonoBehaviour:
   slidingCapsuleColliderHeight: 1
   slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
   slidingCameraHolderPosition: {x: 0, y: 0.25, z: 0}
+  slideTransitionDuration: 0.25
   _cameraHolder: {fileID: 351759601881261647}
 --- !u!114 &2522985502675862427
 MonoBehaviour:
@@ -1183,7 +1184,7 @@ MonoBehaviour:
   movementModule: {fileID: 5575856456840538790}
   groundCheckModule: {fileID: 9174427740881968565}
   wallRunModule: {fileID: 2252465026680502150}
-  slidingManager: {fileID: 8880941185909121492}
+  slidingModule: {fileID: 8880941185909121492}
 --- !u!114 &656803543515659055
 MonoBehaviour:
   m_ObjectHideFlags: 0

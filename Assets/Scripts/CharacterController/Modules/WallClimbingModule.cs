@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class WallClimbingManager : MonoBehaviour
+public class WallClimbingModule : MonoBehaviour
 {
     public float wallDetectionAngleThreshold = 0.9f;
     public float wallClimbMaxHeight = 4f;
