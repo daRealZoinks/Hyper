@@ -19,8 +19,21 @@ public class WallRunModule : MonoBehaviour
     public GameObject WallRunningWall { get; private set; }
 
     public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.7f;
-    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundCheckModule.IsGrounded && IsMovingForward;
-    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundCheckModule.IsGrounded && IsMovingForward;
+    public bool IsVelocityForward
+    {
+        get
+        {
+            var horizontalVelocity = new Vector3
+            {
+                x = _rigidbody.linearVelocity.x,
+                z = _rigidbody.linearVelocity.z
+            };
+
+            return Vector3.Dot(horizontalVelocity.normalized, transform.forward) > 0.7f;
+        }
+    }
+    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundCheckModule.IsGrounded && IsMovingForward && IsVelocityForward;
+    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundCheckModule.IsGrounded && IsMovingForward && IsVelocityForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
     private bool isTouchingWallOnRight;
@@ -29,7 +42,7 @@ public class WallRunModule : MonoBehaviour
     private Vector3 minimumHeightCollisionPoint;
 
     private GroundCheckModule _groundCheckModule;
-    private MovementManager _movementManager;
+    private MovementModule _movementModule;
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
@@ -37,7 +50,7 @@ public class WallRunModule : MonoBehaviour
     private void Awake()
     {
         _groundCheckModule = GetComponent<GroundCheckModule>();
-        _movementManager = GetComponent<MovementManager>();
+        _movementModule = GetComponent<MovementModule>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
@@ -82,7 +95,7 @@ public class WallRunModule : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _movementManager.enabled = !IsWallRunning;
+        _movementModule.enabled = !IsWallRunning;
 
         if (IsWallRunning)
         {
