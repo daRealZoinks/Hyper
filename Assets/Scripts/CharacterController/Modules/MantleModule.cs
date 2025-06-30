@@ -16,7 +16,7 @@ public class MantleModule : MonoBehaviour
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private MovementModule _movementModule;
     private GroundCheckModule _groundCheckModule;
-    private SlidingManager _slidingManager;
+    private SlidingModule _slidingModule;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
 
@@ -28,7 +28,7 @@ public class MantleModule : MonoBehaviour
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _movementModule = GetComponent<MovementModule>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
-        _slidingManager = GetComponent<SlidingManager>();
+        _slidingModule = GetComponent<SlidingModule>();
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
     }
@@ -42,7 +42,7 @@ public class MantleModule : MonoBehaviour
         {
             isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold && contact.normal.y == 0;
 
-            if (isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !_slidingManager.IsSliding)
+            if (isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !_slidingModule.IsSliding)
             {
                 if (contact.point.y <= maximumHeightCollisionPoint.y)
                 {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SlidingManager : MonoBehaviour
+public class SlidingModule : MonoBehaviour
 {
     public float gravityScale = 2f;
     public float acceleration = 3f;

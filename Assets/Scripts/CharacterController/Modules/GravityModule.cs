@@ -8,7 +8,7 @@ public class GravityModule : MonoBehaviour
 
     private GroundCheckModule _groundCheckModule;
     private WallRunModule _wallRunModule;
-    private SlidingManager _slidingManager;
+    private SlidingModule _slidingModule;
 
     private void Awake()
     {
@@ -16,16 +16,16 @@ public class GravityModule : MonoBehaviour
 
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _wallRunModule = GetComponent<WallRunModule>();
-        _slidingManager = GetComponent<SlidingManager>();
+        _slidingModule = GetComponent<SlidingModule>();
     }
 
     private void FixedUpdate()
     {
         var gravityScale = defaultGravityScale;
 
-        if (_slidingManager.IsSliding)
+        if (_slidingModule.IsSliding)
         {
-            gravityScale = _slidingManager.gravityScale;
+            gravityScale = _slidingModule.gravityScale;
         }
         else
         {
