@@ -12,13 +12,13 @@ public class GroundJumpManager : MonoBehaviour
     private float _coyoteTimeCounter;
 
     private Rigidbody _rigidbody;
-    private GroundCheckModule _groundedManager;
+    private GroundCheckModule _groundCheckModule;
     private GravityModule _gravityModule;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _groundedManager = GetComponent<GroundCheckModule>();
+        _groundCheckModule = GetComponent<GroundCheckModule>();
         _gravityModule = GetComponent<GravityModule>();
     }
 
@@ -29,7 +29,7 @@ public class GroundJumpManager : MonoBehaviour
 
     public void Jump()
     {
-        if (_coyoteTimeCounter > 0f || _groundedManager.IsGrounded)
+        if (_coyoteTimeCounter > 0f || _groundCheckModule.IsGrounded)
         {
             ExecuteJump();
             OnJump?.Invoke();
@@ -44,7 +44,7 @@ public class GroundJumpManager : MonoBehaviour
 
     private void UpdateCoyoteTimeCounter()
     {
-        if (!_groundedManager.IsGrounded)
+        if (!_groundCheckModule.IsGrounded)
         {
             if (_coyoteTimeCounter > 0f)
             {

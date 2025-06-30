@@ -1181,8 +1181,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 260055356930566399}
   movementManager: {fileID: 5575856456840538790}
-  groundedManager: {fileID: 9174427740881968565}
-  wallRunManager: {fileID: 2252465026680502150}
+  groundCheckModule: {fileID: 9174427740881968565}
+  wallRunModule: {fileID: 2252465026680502150}
   slidingManager: {fileID: 8880941185909121492}
 --- !u!114 &656803543515659055
 MonoBehaviour:

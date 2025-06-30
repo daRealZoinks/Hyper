@@ -6,7 +6,7 @@ public class GravityModule : MonoBehaviour
 
     private Rigidbody _rigidbody;
 
-    private GroundCheckModule _groundedManager;
+    private GroundCheckModule _groundCheckModule;
     private WallRunModule _wallRunModule;
     private SlidingManager _slidingManager;
 
@@ -14,7 +14,7 @@ public class GravityModule : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
 
-        _groundedManager = GetComponent<GroundCheckModule>();
+        _groundCheckModule = GetComponent<GroundCheckModule>();
         _wallRunModule = GetComponent<WallRunModule>();
         _slidingManager = GetComponent<SlidingManager>();
     }
@@ -37,7 +37,7 @@ public class GravityModule : MonoBehaviour
             }
             else
             {
-                if (_groundedManager.IsGrounded)
+                if (_groundCheckModule.IsGrounded)
                 {
                     return;
                 }

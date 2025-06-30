@@ -20,7 +20,7 @@ public class SlidingManager : MonoBehaviour
     private CapsuleCollider _capsuleCollider;
     private Rigidbody _rigidbody;
     private RigidbodyCharacterController _rigidbodyCharacterController;
-    private GroundCheckModule _groundedManager;
+    private GroundCheckModule _groundCheckModule;
     private MovementManager _movementManager;
     private WallRunModule _wallRunModule;
     private WallJumpModule _wallJumpModule;
@@ -35,7 +35,7 @@ public class SlidingManager : MonoBehaviour
 
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
-        _groundedManager = GetComponent<GroundCheckModule>();
+        _groundCheckModule = GetComponent<GroundCheckModule>();
         _movementManager = GetComponent<MovementManager>();
         _wallRunModule = GetComponent<WallRunModule>();
         _wallJumpModule = GetComponent<WallJumpModule>();
@@ -75,7 +75,7 @@ public class SlidingManager : MonoBehaviour
 
         var finalForce = inputDirection - horizontalClampedVelocity;
 
-        if (_groundedManager.IsGrounded)
+        if (_groundCheckModule.IsGrounded)
         {
             if (inputDirection != Vector3.zero)
             {
@@ -86,13 +86,13 @@ public class SlidingManager : MonoBehaviour
             }
             else
             {
-                if (_groundedManager.GroundNormal == Vector3.up)
+                if (_groundCheckModule.GroundNormal == Vector3.up)
                 {
                     finalForce *= deceleration;
                 }
             }
 
-            if (_groundedManager.GroundNormal == Vector3.up)
+            if (_groundCheckModule.GroundNormal == Vector3.up)
             {
                 if (_rigidbody.linearVelocity.magnitude > 0.2f)
                 {

@@ -19,8 +19,8 @@ public class WallRunModule : MonoBehaviour
     public GameObject WallRunningWall { get; private set; }
 
     public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.7f;
-    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded && IsMovingForward;
-    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded && IsMovingForward;
+    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundCheckModule.IsGrounded && IsMovingForward;
+    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundCheckModule.IsGrounded && IsMovingForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
     private bool isTouchingWallOnRight;
@@ -28,7 +28,7 @@ public class WallRunModule : MonoBehaviour
 
     private Vector3 minimumHeightCollisionPoint;
 
-    private GroundCheckModule _groundedManager;
+    private GroundCheckModule _groundCheckModule;
     private MovementManager _movementManager;
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private Rigidbody _rigidbody;
@@ -36,7 +36,7 @@ public class WallRunModule : MonoBehaviour
 
     private void Awake()
     {
-        _groundedManager = GetComponent<GroundCheckModule>();
+        _groundCheckModule = GetComponent<GroundCheckModule>();
         _movementManager = GetComponent<MovementManager>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();

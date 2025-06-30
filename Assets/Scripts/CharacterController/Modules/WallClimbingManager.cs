@@ -7,7 +7,7 @@ public class WallClimbingManager : MonoBehaviour
     public float wallClimbMaxHeight = 4f;
 
     public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.9f;
-    public bool IsWallClimbing => isTouchingWallInFront && !_groundedManager.IsGrounded && IsMovingForward && hasTouchedGroundSinceLastWallClimb;
+    public bool IsWallClimbing => isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && hasTouchedGroundSinceLastWallClimb;
 
     public UnityEvent OnStartedWallClimbing;
 
@@ -18,7 +18,7 @@ public class WallClimbingManager : MonoBehaviour
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private GravityModule _gravityModule;
-    private GroundCheckModule _groundedManager;
+    private GroundCheckModule _groundCheckModule;
     private GroundJumpManager _groundJumpManager;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
@@ -27,7 +27,7 @@ public class WallClimbingManager : MonoBehaviour
     {
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _gravityModule = GetComponent<GravityModule>();
-        _groundedManager = GetComponent<GroundCheckModule>();
+        _groundCheckModule = GetComponent<GroundCheckModule>();
         _groundJumpManager = GetComponent<GroundJumpManager>();
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
@@ -92,7 +92,7 @@ public class WallClimbingManager : MonoBehaviour
         RefreshMinimumHeightCollisionPoint();
 
         // Reset flag if grounded
-        if (_groundedManager.IsGrounded)
+        if (_groundCheckModule.IsGrounded)
         {
             hasTouchedGroundSinceLastWallClimb = true;
         }

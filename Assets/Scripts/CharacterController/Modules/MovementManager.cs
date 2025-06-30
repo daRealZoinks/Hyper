@@ -10,13 +10,13 @@ public class MovementManager : MonoBehaviour
     public float airBreak = 0f;
 
     private Rigidbody _rigidbody;
-    private GroundCheckModule _groundedManager;
+    private GroundCheckModule _groundCheckModule;
     private RigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _groundedManager = GetComponent<GroundCheckModule>();
+        _groundCheckModule = GetComponent<GroundCheckModule>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
     }
 
@@ -41,9 +41,9 @@ public class MovementManager : MonoBehaviour
 
         finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
 
-        if (_groundedManager.IsGrounded)
+        if (_groundCheckModule.IsGrounded)
         {
-            finalForce = Vector3.ProjectOnPlane(finalForce, _groundedManager.GroundNormal);
+            finalForce = Vector3.ProjectOnPlane(finalForce, _groundCheckModule.GroundNormal);
         }
         else
         {

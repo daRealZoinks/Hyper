@@ -16,14 +16,14 @@ public class WallJumpModule : MonoBehaviour
 
     private float _sameWallJumpCooldownCounter;
 
-    private GroundCheckModule _groundedManager;
+    private GroundCheckModule _groundCheckModule;
     private WallRunModule _wallRunModule;
     private GravityModule _gravityModule;
     private Rigidbody _rigidbody;
 
     private void Awake()
     {
-        _groundedManager = GetComponent<GroundCheckModule>();
+        _groundCheckModule = GetComponent<GroundCheckModule>();
         _wallRunModule = GetComponent<WallRunModule>();
         _gravityModule = GetComponent<GravityModule>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -33,7 +33,7 @@ public class WallJumpModule : MonoBehaviour
     {
         UpdateSameWallJumpCooldownCounter();
 
-        if (_groundedManager.IsGrounded)
+        if (_groundCheckModule.IsGrounded)
         {
             lastWallJumped = null;
             CancelSameWallJumpCooldownCounter();
