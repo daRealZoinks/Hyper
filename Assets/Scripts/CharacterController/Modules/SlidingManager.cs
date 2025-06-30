@@ -21,7 +21,7 @@ public class SlidingManager : MonoBehaviour
     private Rigidbody _rigidbody;
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private GroundCheckModule _groundCheckModule;
-    private MovementManager _movementManager;
+    private MovementModule _movementModule;
     private WallRunModule _wallRunModule;
     private WallJumpModule _wallJumpModule;
 
@@ -36,7 +36,7 @@ public class SlidingManager : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
-        _movementManager = GetComponent<MovementManager>();
+        _movementModule = GetComponent<MovementModule>();
         _wallRunModule = GetComponent<WallRunModule>();
         _wallJumpModule = GetComponent<WallJumpModule>();
     }
@@ -112,7 +112,7 @@ public class SlidingManager : MonoBehaviour
     private void StartSliding()
     {
         IsSliding = true;
-        _movementManager.enabled = false;
+        _movementModule.enabled = false;
         _wallRunModule.enabled = false;
         _wallJumpModule.enabled = false;
         _cameraHolder.localPosition = slidingCameraHolderPosition;
@@ -122,7 +122,7 @@ public class SlidingManager : MonoBehaviour
 
     private void StopSliding()
     {
-        _movementManager.enabled = true;
+        _movementModule.enabled = true;
         _wallRunModule.enabled = true;
         _wallJumpModule.enabled = true;
         _cameraHolder.localPosition = _cameraHolderOriginalPosition;

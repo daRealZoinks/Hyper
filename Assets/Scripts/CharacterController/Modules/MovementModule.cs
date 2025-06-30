@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MovementManager : MonoBehaviour
+public class MovementModule : MonoBehaviour
 {
     public float acceleration = 60f;
     public float topSpeed = 8f;

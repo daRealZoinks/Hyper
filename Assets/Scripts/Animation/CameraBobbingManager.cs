@@ -4,7 +4,7 @@ using UnityEngine;
 public class CameraBobbingManager : MonoBehaviour
 {
     public new Rigidbody rigidbody;
-    public MovementManager movementManager;
+    public MovementModule movementModule;
     public GroundCheckModule groundCheckModule;
     public WallRunModule wallRunModule;
     public SlidingManager slidingManager;
@@ -28,7 +28,7 @@ public class CameraBobbingManager : MonoBehaviour
                 z = rigidbody.linearVelocity.z
             };
 
-            var speed = rigidbodyHorizontalVelocity.magnitude / movementManager.topSpeed;
+            var speed = rigidbodyHorizontalVelocity.magnitude / movementModule.topSpeed;
             intensity = Mathf.Clamp(speed, 0f, 1f);
         }
 

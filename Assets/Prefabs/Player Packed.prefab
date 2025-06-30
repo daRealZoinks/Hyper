@@ -1180,7 +1180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 260055356930566399}
-  movementManager: {fileID: 5575856456840538790}
+  movementModule: {fileID: 5575856456840538790}
   groundCheckModule: {fileID: 9174427740881968565}
   wallRunModule: {fileID: 2252465026680502150}
   slidingManager: {fileID: 8880941185909121492}

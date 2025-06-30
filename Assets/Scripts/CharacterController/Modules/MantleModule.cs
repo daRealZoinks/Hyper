@@ -14,7 +14,7 @@ public class MantleModule : MonoBehaviour
     private bool isTouchingWallInFront;
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
-    private MovementManager _movementManager;
+    private MovementModule _movementModule;
     private GroundCheckModule _groundCheckModule;
     private SlidingManager _slidingManager;
     private Rigidbody _rigidbody;
@@ -26,7 +26,7 @@ public class MantleModule : MonoBehaviour
     private void Awake()
     {
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
-        _movementManager = GetComponent<MovementManager>();
+        _movementModule = GetComponent<MovementModule>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _slidingManager = GetComponent<SlidingManager>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -75,9 +75,9 @@ public class MantleModule : MonoBehaviour
         var start = transform.position;
         var end = start + transform.forward + transform.up;
 
-        _storedVelocity = transform.forward * _movementManager.topSpeed;
+        _storedVelocity = transform.forward * _movementModule.topSpeed;
 
-        var mantleVelocity = _movementManager.topSpeed;
+        var mantleVelocity = _movementModule.topSpeed;
         StartCoroutine(MantleTransition(start, end, mantleVelocity));
     }
 
