@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class JumpManager : MonoBehaviour
+public class JumpModule : MonoBehaviour
 {
     public float jumpBufferTime = 0.15f;
 

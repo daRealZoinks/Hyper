@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MantleManager : MonoBehaviour
+public class MantleModule : MonoBehaviour
 {
     public float wallDetectionAngleThreshold = 0.9f;
 
