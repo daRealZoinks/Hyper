@@ -17,14 +17,14 @@ public class WallJumpModule : MonoBehaviour
     private float _sameWallJumpCooldownCounter;
 
     private GroundCheckModule _groundedManager;
-    private WallRunManager _wallRunManager;
+    private WallRunModule _wallRunModule;
     private GravityModule _gravityModule;
     private Rigidbody _rigidbody;
 
     private void Awake()
     {
         _groundedManager = GetComponent<GroundCheckModule>();
-        _wallRunManager = GetComponent<WallRunManager>();
+        _wallRunModule = GetComponent<WallRunModule>();
         _gravityModule = GetComponent<GravityModule>();
         _rigidbody = GetComponent<Rigidbody>();
     }
@@ -52,20 +52,20 @@ public class WallJumpModule : MonoBehaviour
 
     public void WallJump()
     {
-        var currentWall = _wallRunManager.WallRunningWall;
+        var currentWall = _wallRunModule.WallRunningWall;
 
-        if ((!currentWall || currentWall != lastWallJumped || _sameWallJumpCooldownCounter <= 0f) && _wallRunManager.IsWallRunning)
+        if ((!currentWall || currentWall != lastWallJumped || _sameWallJumpCooldownCounter <= 0f) && _wallRunModule.IsWallRunning)
         {
             lastWallJumped = currentWall;
             ResetSameWallJumpCooldownCounter();
             ExecuteWallJump();
 
-            if (_wallRunManager.IsWallRunningOnRightWall)
+            if (_wallRunModule.IsWallRunningOnRightWall)
             {
                 OnRightWallJump?.Invoke();
             }
 
-            if (_wallRunManager.IsWallRunningOnLeftWall)
+            if (_wallRunModule.IsWallRunningOnLeftWall)
             {
                 OnLeftWallJump?.Invoke();
             }
@@ -89,7 +89,7 @@ public class WallJumpModule : MonoBehaviour
 
     private void ExecuteWallJump()
     {
-        var sideForce = _wallRunManager.WallNormal * wallJumpSideForce;
+        var sideForce = _wallRunModule.WallNormal * wallJumpSideForce;
         var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * _gravityModule.defaultGravityScale * wallJumpHeight);
         var forwardForce = transform.forward * wallJumpForwardForce;
 

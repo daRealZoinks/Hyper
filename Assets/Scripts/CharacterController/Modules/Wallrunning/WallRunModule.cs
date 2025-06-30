@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class WallRunManager : MonoBehaviour
+public class WallRunModule : MonoBehaviour
 {
     public float wallDetectionAngleThreshold = 0.9f;
 

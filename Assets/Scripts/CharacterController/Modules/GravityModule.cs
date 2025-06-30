@@ -7,7 +7,7 @@ public class GravityModule : MonoBehaviour
     private Rigidbody _rigidbody;
 
     private GroundCheckModule _groundedManager;
-    private WallRunManager _wallRunManager;
+    private WallRunModule _wallRunModule;
     private SlidingManager _slidingManager;
 
     private void Awake()
@@ -15,7 +15,7 @@ public class GravityModule : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
 
         _groundedManager = GetComponent<GroundCheckModule>();
-        _wallRunManager = GetComponent<WallRunManager>();
+        _wallRunModule = GetComponent<WallRunModule>();
         _slidingManager = GetComponent<SlidingManager>();
     }
 
@@ -29,9 +29,9 @@ public class GravityModule : MonoBehaviour
         }
         else
         {
-            if (_wallRunManager.IsWallRunning)
+            if (_wallRunModule.IsWallRunning)
             {
-                var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? _wallRunManager.wallRunAscendingGravity : _wallRunManager.wallRunDescendingGravity;
+                var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? _wallRunModule.wallRunAscendingGravity : _wallRunModule.wallRunDescendingGravity;
 
                 gravityScale = wallRunGravity;
             }
