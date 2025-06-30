@@ -5,7 +5,7 @@ public class CameraBobbingManager : MonoBehaviour
 {
     public new Rigidbody rigidbody;
     public MovementManager movementManager;
-    public GroundedManager groundedManager;
+    public GroundCheckModule groundedManager;
     public WallRunManager wallRunManager;
     public SlidingManager slidingManager;
 

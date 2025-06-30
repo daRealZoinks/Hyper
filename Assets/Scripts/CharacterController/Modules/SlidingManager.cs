@@ -20,7 +20,7 @@ public class SlidingManager : MonoBehaviour
     private CapsuleCollider _capsuleCollider;
     private Rigidbody _rigidbody;
     private RigidbodyCharacterController _rigidbodyCharacterController;
-    private GroundedManager _groundedManager;
+    private GroundCheckModule _groundedManager;
     private MovementManager _movementManager;
     private WallRunManager _wallRunManager;
     private WallJumpManager _wallJumpManager;
@@ -35,7 +35,7 @@ public class SlidingManager : MonoBehaviour
 
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
-        _groundedManager = GetComponent<GroundedManager>();
+        _groundedManager = GetComponent<GroundCheckModule>();
         _movementManager = GetComponent<MovementManager>();
         _wallRunManager = GetComponent<WallRunManager>();
         _wallJumpManager = GetComponent<WallJumpManager>();
@@ -45,7 +45,6 @@ public class SlidingManager : MonoBehaviour
     {
         if (IsSliding)
         {
-            ApplyCustomGravity(gravityScale);
             Move(_rigidbodyCharacterController.currentInputPayload.MoveInput);
         }
 
@@ -60,11 +59,6 @@ public class SlidingManager : MonoBehaviour
                 StopSliding();
             }
         }
-    }
-
-    private void ApplyCustomGravity(float gravityScale)
-    {
-        _rigidbody.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
     }
 
     private void Move(Vector2 moveInput)

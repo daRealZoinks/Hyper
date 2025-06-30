@@ -10,13 +10,13 @@ public class MovementManager : MonoBehaviour
     public float airBreak = 0f;
 
     private Rigidbody _rigidbody;
-    private GroundedManager _groundedManager;
+    private GroundCheckModule _groundedManager;
     private RigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _groundedManager = GetComponent<GroundedManager>();
+        _groundedManager = GetComponent<GroundCheckModule>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
     }
 

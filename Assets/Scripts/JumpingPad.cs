@@ -15,7 +15,7 @@ public class JumpingPad : MonoBehaviour
                 if (rigidbody)
                 {
                     var jumpVector = jumpForce;
-                    jumpVector.y = Mathf.Sqrt(2 * Physics.gravity.magnitude * gravityModule.gravityScale * jumpVector.y);
+                    jumpVector.y = Mathf.Sqrt(2 * Physics.gravity.magnitude * gravityModule.defaultGravityScale * jumpVector.y);
 
                     rigidbody.linearVelocity = jumpVector;
                 }

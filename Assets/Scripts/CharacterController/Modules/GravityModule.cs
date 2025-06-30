@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class GravityModule : MonoBehaviour
 {
-    public float gravityScale = 1.5f;
+    public float defaultGravityScale = 1.5f;
 
     private Rigidbody _rigidbody;
 
-    private GroundedManager _groundedManager;
+    private GroundCheckModule _groundedManager;
     private WallRunManager _wallRunManager;
     private SlidingManager _slidingManager;
 
@@ -14,17 +14,37 @@ public class GravityModule : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
 
-        _groundedManager = GetComponent<GroundedManager>();
+        _groundedManager = GetComponent<GroundCheckModule>();
         _wallRunManager = GetComponent<WallRunManager>();
         _slidingManager = GetComponent<SlidingManager>();
     }
 
     private void FixedUpdate()
     {
-        if (!_groundedManager.IsGrounded && !_wallRunManager.IsWallRunning && !_slidingManager.IsSliding)
+        var gravityScale = defaultGravityScale;
+
+        if (_slidingManager.IsSliding)
         {
-            ApplyCustomGravity(gravityScale);
+            gravityScale = _slidingManager.gravityScale;
         }
+        else
+        {
+            if (_wallRunManager.IsWallRunning)
+            {
+                var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? _wallRunManager.wallRunAscendingGravity : _wallRunManager.wallRunDescendingGravity;
+
+                gravityScale = wallRunGravity;
+            }
+            else
+            {
+                if (_groundedManager.IsGrounded)
+                {
+                    return;
+                }
+            }
+        }
+
+        ApplyCustomGravity(gravityScale);
     }
 
     private void ApplyCustomGravity(float gravityScale)

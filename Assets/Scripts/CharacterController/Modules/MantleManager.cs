@@ -15,7 +15,7 @@ public class MantleManager : MonoBehaviour
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private MovementManager _movementManager;
-    private GroundedManager _groundedManager;
+    private GroundCheckModule _groundedManager;
     private SlidingManager _slidingManager;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
@@ -27,7 +27,7 @@ public class MantleManager : MonoBehaviour
     {
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _movementManager = GetComponent<MovementManager>();
-        _groundedManager = GetComponent<GroundedManager>();
+        _groundedManager = GetComponent<GroundCheckModule>();
         _slidingManager = GetComponent<SlidingManager>();
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();

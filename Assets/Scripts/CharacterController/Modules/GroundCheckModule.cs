@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GroundedManager : MonoBehaviour
+public class GroundCheckModule : MonoBehaviour
 {
     public float SlopeLimit = 45f;
     public bool IsGrounded { get; private set; }

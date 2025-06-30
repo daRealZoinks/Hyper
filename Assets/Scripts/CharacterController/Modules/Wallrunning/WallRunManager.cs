@@ -28,7 +28,7 @@ public class WallRunManager : MonoBehaviour
 
     private Vector3 minimumHeightCollisionPoint;
 
-    private GroundedManager _groundedManager;
+    private GroundCheckModule _groundedManager;
     private MovementManager _movementManager;
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private Rigidbody _rigidbody;
@@ -36,7 +36,7 @@ public class WallRunManager : MonoBehaviour
 
     private void Awake()
     {
-        _groundedManager = GetComponent<GroundedManager>();
+        _groundedManager = GetComponent<GroundCheckModule>();
         _movementManager = GetComponent<MovementManager>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -88,7 +88,6 @@ public class WallRunManager : MonoBehaviour
         {
             var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? wallRunAscendingGravity : wallRunDescendingGravity;
 
-            ApplyWallRunGravity(wallRunGravity);
             ApplyWallStickForce();
             ApplyMinimumSpeed();
         }
@@ -99,12 +98,6 @@ public class WallRunManager : MonoBehaviour
     private void ApplyWallStickForce()
     {
         _rigidbody.AddForce(-WallNormal * wallStickForce, ForceMode.Acceleration);
-    }
-
-    private void ApplyWallRunGravity(float wallRunGravity)
-    {
-        Vector3 gravity = Physics.gravity * wallRunGravity;
-        _rigidbody.AddForce(gravity, ForceMode.Acceleration);
     }
 
     private void RefreshMinimumHeightCollisionPoint()

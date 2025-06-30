@@ -14,13 +14,13 @@ public class GroundJumpManager : MonoBehaviour
     private float _coyoteTimeCounter;
 
     private Rigidbody _rigidbody;
-    private GroundedManager _groundedManager;
+    private GroundCheckModule _groundedManager;
     private GravityModule _gravityModule;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _groundedManager = GetComponent<GroundedManager>();
+        _groundedManager = GetComponent<GroundCheckModule>();
         _gravityModule = GetComponent<GravityModule>();
     }
 
@@ -93,7 +93,7 @@ public class GroundJumpManager : MonoBehaviour
 
     public void ExecuteJump()
     {
-        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * _gravityModule.gravityScale * jumpHeight);
+        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * _gravityModule.defaultGravityScale * jumpHeight);
 
         if (_rigidbody.linearVelocity.y < 0)
         {
