@@ -8,14 +8,14 @@ public class JumpManager : MonoBehaviour
 
     private GroundCheckModule _groundedManager;
     private GroundJumpManager _groundJumpManager;
-    private WallJumpManager _wallJumpManager;
+    private WallJumpModule _wallJumpModule;
     private RigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
         _groundedManager = GetComponent<GroundCheckModule>();
         _groundJumpManager = GetComponent<GroundJumpManager>();
-        _wallJumpManager = GetComponent<WallJumpManager>();
+        _wallJumpModule = GetComponent<WallJumpModule>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
     }
 
@@ -34,7 +34,7 @@ public class JumpManager : MonoBehaviour
 
             if (!_groundedManager.IsGrounded)
             {
-                _wallJumpManager.WallJump();
+                _wallJumpModule.WallJump();
             }
         }
     }

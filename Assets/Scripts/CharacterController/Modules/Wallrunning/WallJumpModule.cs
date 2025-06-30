@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class WallJumpManager : MonoBehaviour
+public class WallJumpModule : MonoBehaviour
 {
     public float wallJumpHeight = 1.5f;
     public float wallJumpSideForce = 4f;

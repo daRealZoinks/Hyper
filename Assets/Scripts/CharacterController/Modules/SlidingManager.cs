@@ -23,7 +23,7 @@ public class SlidingManager : MonoBehaviour
     private GroundCheckModule _groundedManager;
     private MovementManager _movementManager;
     private WallRunManager _wallRunManager;
-    private WallJumpManager _wallJumpManager;
+    private WallJumpModule _wallJumpModule;
 
     private void Awake()
     {
@@ -38,7 +38,7 @@ public class SlidingManager : MonoBehaviour
         _groundedManager = GetComponent<GroundCheckModule>();
         _movementManager = GetComponent<MovementManager>();
         _wallRunManager = GetComponent<WallRunManager>();
-        _wallJumpManager = GetComponent<WallJumpManager>();
+        _wallJumpModule = GetComponent<WallJumpModule>();
     }
 
     private void FixedUpdate()
@@ -114,7 +114,7 @@ public class SlidingManager : MonoBehaviour
         IsSliding = true;
         _movementManager.enabled = false;
         _wallRunManager.enabled = false;
-        _wallJumpManager.enabled = false;
+        _wallJumpModule.enabled = false;
         _cameraHolder.localPosition = slidingCameraHolderPosition;
         _capsuleCollider.height = slidingCapsuleColliderHeight;
         _capsuleCollider.center = slidingCapsuleColliderCenter;
@@ -124,7 +124,7 @@ public class SlidingManager : MonoBehaviour
     {
         _movementManager.enabled = true;
         _wallRunManager.enabled = true;
-        _wallJumpManager.enabled = true;
+        _wallJumpModule.enabled = true;
         _cameraHolder.localPosition = _cameraHolderOriginalPosition;
         _capsuleCollider.height = _capsuleColliderOriginalHeight;
         _capsuleCollider.center = _capsuleColliderOriginalCenter;
