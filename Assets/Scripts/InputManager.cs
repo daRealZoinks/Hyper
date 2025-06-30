@@ -65,4 +65,14 @@ public class InputManager : MonoBehaviour
                 break;
         }
     }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.phase != InputActionPhase.Started)
+        {
+            return;
+        }
+
+        Application.Quit();
+    }
 }
