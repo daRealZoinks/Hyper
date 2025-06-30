@@ -19,7 +19,7 @@ public class WallClimbingManager : MonoBehaviour
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private GravityModule _gravityModule;
     private GroundCheckModule _groundCheckModule;
-    private GroundJumpManager _groundJumpManager;
+    private GroundJumpModule _groundJumpModule;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
 
@@ -28,7 +28,7 @@ public class WallClimbingManager : MonoBehaviour
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         _gravityModule = GetComponent<GravityModule>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
-        _groundJumpManager = GetComponent<GroundJumpManager>();
+        _groundJumpModule = GetComponent<GroundJumpModule>();
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
     }
@@ -65,7 +65,7 @@ public class WallClimbingManager : MonoBehaviour
     {
         var upwardsVelocity = _rigidbody.linearVelocity.y;
         var gravity = Physics.gravity.y * _gravityModule.defaultGravityScale;
-        var currentAirHeight = _groundJumpManager.jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+        var currentAirHeight = _groundJumpModule.jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
 
         if (currentAirHeight < 0)
         {

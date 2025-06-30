@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GroundJumpManager : MonoBehaviour
+public class GroundJumpModule : MonoBehaviour
 {
     public float jumpHeight = 2f;
 
