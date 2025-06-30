@@ -7,14 +7,13 @@ public class WallJumpManager : MonoBehaviour
     public float wallJumpSideForce = 4f;
     public float wallJumpForwardForce = 5f;
 
-    public float jumpBufferTime = 0.15f;
     public float sameWallJumpCooldown = 2.5f;
 
-    public UnityEvent OnWallJump;
+    public UnityEvent OnRightWallJump;
+    public UnityEvent OnLeftWallJump;
 
     private GameObject lastWallJumped;
 
-    private float _jumpBufferCounter;
     private float _sameWallJumpCooldownCounter;
 
     private GroundCheckModule _groundedManager;
@@ -32,49 +31,47 @@ public class WallJumpManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdateJumpBufferCounter();
         UpdateSameWallJumpCooldownCounter();
 
         if (_groundedManager.IsGrounded)
         {
             lastWallJumped = null;
-            _sameWallJumpCooldownCounter = 0f;
+            CancelSameWallJumpCooldownCounter();
         }
+    }
 
-        if (_wallRunManager.IsWallRunning && _jumpBufferCounter > 0f)
+    private void ResetSameWallJumpCooldownCounter()
+    {
+        _sameWallJumpCooldownCounter = sameWallJumpCooldown;
+    }
+
+    private void CancelSameWallJumpCooldownCounter()
+    {
+        _sameWallJumpCooldownCounter = 0f;
+    }
+
+    public void WallJump()
+    {
+        var currentWall = _wallRunManager.WallRunningWall;
+
+        if ((!currentWall || currentWall != lastWallJumped || _sameWallJumpCooldownCounter <= 0f) && _wallRunManager.IsWallRunning)
         {
-            var currentWall = _wallRunManager.WallRunningWall;
+            lastWallJumped = currentWall;
+            ResetSameWallJumpCooldownCounter();
+            ExecuteWallJump();
 
-            if (!currentWall || currentWall != lastWallJumped || _sameWallJumpCooldownCounter <= 0f)
+            if (_wallRunManager.IsWallRunningOnRightWall)
             {
-                lastWallJumped = currentWall;
-                _sameWallJumpCooldownCounter = sameWallJumpCooldown;
-                WallJump();
+                OnRightWallJump?.Invoke();
+            }
+
+            if (_wallRunManager.IsWallRunningOnLeftWall)
+            {
+                OnLeftWallJump?.Invoke();
             }
         }
     }
 
-    private void WallJump()
-    {
-        ExecuteWallJump();
-        OnWallJump?.Invoke();
-        _jumpBufferCounter = 0f;
-    }
-
-    private void UpdateJumpBufferCounter()
-    {
-        if (_jumpBufferCounter > 0f)
-        {
-            _jumpBufferCounter -= Time.fixedDeltaTime;
-        }
-        else
-        {
-            if (_jumpBufferCounter < 0f)
-            {
-                _jumpBufferCounter = 0f;
-            }
-        }
-    }
     private void UpdateSameWallJumpCooldownCounter()
     {
         if (_sameWallJumpCooldownCounter > 0f)
@@ -88,11 +85,6 @@ public class WallJumpManager : MonoBehaviour
                 _sameWallJumpCooldownCounter = 0f;
             }
         }
-    }
-
-    public void ResetJumpBuffer()
-    {
-        _jumpBufferCounter = jumpBufferTime;
     }
 
     private void ExecuteWallJump()

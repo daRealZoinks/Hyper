@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877064f765153ea4d82f5f2cac7b7914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravityScale: 1.5
+  defaultGravityScale: 1.5
 --- !u!114 &9174427740881968565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63acb2cb938ddaa49b6e49ecfed7b66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpBufferTime: 0.15
 --- !u!114 &1445355023004454487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,11 +399,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpHeight: 2
-  jumpBufferTime: 0.15
   coyoteTime: 0.15
   OnJump:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6167397094199149244}
+        m_TargetAssemblyTypeName: JumpManager, Assembly-CSharp
+        m_MethodName: CancelJumpBufferCounter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3501951543994579889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,11 +430,37 @@ MonoBehaviour:
   wallJumpHeight: 1.5
   wallJumpSideForce: 4
   wallJumpForwardForce: 3
-  jumpBufferTime: 0.15
   sameWallJumpCooldown: 2.5
-  OnWallJump:
+  OnRightWallJump:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6167397094199149244}
+        m_TargetAssemblyTypeName: JumpManager, Assembly-CSharp
+        m_MethodName: CancelJumpBufferCounter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnLeftWallJump:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6167397094199149244}
+        m_TargetAssemblyTypeName: JumpManager, Assembly-CSharp
+        m_MethodName: CancelJumpBufferCounter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8880941185909121492
 MonoBehaviour:
   m_ObjectHideFlags: 0

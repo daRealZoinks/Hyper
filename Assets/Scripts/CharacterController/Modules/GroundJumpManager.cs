@@ -5,12 +5,10 @@ public class GroundJumpManager : MonoBehaviour
 {
     public float jumpHeight = 2f;
 
-    public float jumpBufferTime = 0.15f;
     public float coyoteTime = 0.15f;
 
     public UnityEvent OnJump;
 
-    private float _jumpBufferCounter;
     private float _coyoteTimeCounter;
 
     private Rigidbody _rigidbody;
@@ -27,40 +25,21 @@ public class GroundJumpManager : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateCoyoteTimeCounter();
-        UpdateJumpBufferCounter();
+    }
 
-        if ((_coyoteTimeCounter > 0f || _groundedManager.IsGrounded) && _jumpBufferCounter > 0f)
+    public void Jump()
+    {
+        if (_coyoteTimeCounter > 0f || _groundedManager.IsGrounded)
         {
             ExecuteJump();
             OnJump?.Invoke();
             CancelCoyoteTimeCounter();
-            CancelJumpBufferCounter();
         }
     }
 
     private void CancelCoyoteTimeCounter()
     {
         _coyoteTimeCounter = 0f;
-    }
-
-    private void CancelJumpBufferCounter()
-    {
-        _jumpBufferCounter = 0f;
-    }
-
-    private void UpdateJumpBufferCounter()
-    {
-        if (_jumpBufferCounter > 0f)
-        {
-            _jumpBufferCounter -= Time.fixedDeltaTime;
-        }
-        else
-        {
-            if (_jumpBufferCounter < 0f)
-            {
-                _jumpBufferCounter = 0f;
-            }
-        }
     }
 
     private void UpdateCoyoteTimeCounter()
@@ -79,11 +58,6 @@ public class GroundJumpManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void ResetJumpBufferCounter()
-    {
-        _jumpBufferCounter = jumpBufferTime;
     }
 
     public void ResetCoyoteTimeCounter()
