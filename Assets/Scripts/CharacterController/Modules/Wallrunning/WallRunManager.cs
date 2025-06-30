@@ -18,7 +18,7 @@ public class WallRunManager : MonoBehaviour
     public Vector3 WallNormal { get; private set; }
     public GameObject WallRunningWall { get; private set; }
 
-    public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.y > 0;
+    public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.7f;
     public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundedManager.IsGrounded && IsMovingForward;
     public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundedManager.IsGrounded && IsMovingForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;

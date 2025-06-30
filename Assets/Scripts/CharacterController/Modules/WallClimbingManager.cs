@@ -6,7 +6,7 @@ public class WallClimbingManager : MonoBehaviour
     public float wallDetectionAngleThreshold = 0.9f;
     public float wallClimbMaxHeight = 4f;
 
-    public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.y > 0;
+    public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.9f;
     public bool IsWallClimbing => isTouchingWallInFront && !_groundedManager.IsGrounded && IsMovingForward && hasTouchedGroundSinceLastWallClimb;
 
     public UnityEvent OnStartedWallClimbing;
