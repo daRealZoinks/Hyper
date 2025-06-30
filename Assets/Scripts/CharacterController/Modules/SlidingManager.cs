@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SlidingManager : MonoBehaviour
 {
-    public float gravityScale = 1.5f;
+    public float gravityScale = 2f;
     public float acceleration = 3f;
     public float topSpeed = 0f;
     public float deceleration = 1f;
