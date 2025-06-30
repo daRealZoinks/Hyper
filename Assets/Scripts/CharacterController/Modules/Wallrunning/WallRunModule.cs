@@ -15,7 +15,7 @@ public class WallRunModule : MonoBehaviour
     public UnityEvent OnStartedWallRunningRight;
     public UnityEvent OnStartedWallRunningLeft;
 
-    public Vector3 WallNormal { get; private set; }
+    public ContactPoint WallContactPoint { get; private set; }
     public GameObject WallRunningWall { get; private set; }
 
     public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.7f;
@@ -55,7 +55,7 @@ public class WallRunModule : MonoBehaviour
                 isTouchingWallOnRight = Vector3.Dot(contact.normal, -transform.right) > wallDetectionAngleThreshold;
                 isTouchingWallOnLeft = Vector3.Dot(contact.normal, transform.right) > wallDetectionAngleThreshold;
 
-                WallNormal = contact.normal;
+                WallContactPoint = contact;
 
                 if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
                 {
@@ -77,7 +77,7 @@ public class WallRunModule : MonoBehaviour
         isTouchingWallOnRight = false;
         isTouchingWallOnLeft = false;
 
-        WallNormal = Vector3.zero;
+        WallContactPoint = new ContactPoint();
     }
 
     private void FixedUpdate()
@@ -97,7 +97,7 @@ public class WallRunModule : MonoBehaviour
 
     private void ApplyWallStickForce()
     {
-        _rigidbody.AddForce(-WallNormal * wallStickForce, ForceMode.Acceleration);
+        _rigidbody.AddForce(-WallContactPoint.normal * wallStickForce, ForceMode.Acceleration);
     }
 
     private void RefreshMinimumHeightCollisionPoint()
@@ -109,7 +109,7 @@ public class WallRunModule : MonoBehaviour
     {
         if (_rigidbody.linearVelocity.magnitude < wallRunMinimumSpeed)
         {
-            var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(_rigidbody.transform.forward, WallNormal).normalized;
+            var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(_rigidbody.transform.forward, WallContactPoint.normal).normalized;
 
             _rigidbody.linearVelocity = forwardDirectionAlongSideWall * wallRunMinimumSpeed + Vector3.up * _rigidbody.linearVelocity.y;
         }

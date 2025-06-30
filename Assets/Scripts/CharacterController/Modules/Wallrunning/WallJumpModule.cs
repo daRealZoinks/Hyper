@@ -89,7 +89,7 @@ public class WallJumpModule : MonoBehaviour
 
     private void ExecuteWallJump()
     {
-        var sideForce = _wallRunModule.WallNormal * wallJumpSideForce;
+        var sideForce = _wallRunModule.WallContactPoint.normal * wallJumpSideForce;
         var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * _gravityModule.defaultGravityScale * wallJumpHeight);
         var forwardForce = transform.forward * wallJumpForwardForce;
 
