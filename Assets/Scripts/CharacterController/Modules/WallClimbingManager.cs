@@ -7,13 +7,14 @@ public class WallClimbingManager : MonoBehaviour
     public float wallClimbMaxHeight = 4f;
 
     public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.y > 0;
-    public bool IsWallClimbing => isTouchingWallInFront && !_groundedManager.IsGrounded && IsMovingForward;
+    public bool IsWallClimbing => isTouchingWallInFront && !_groundedManager.IsGrounded && IsMovingForward && hasTouchedGroundSinceLastWallClimb;
 
     public UnityEvent OnStartedWallClimbing;
 
     private Vector3 minimumHeightCollisionPoint;
 
     private bool isTouchingWallInFront;
+    private bool hasTouchedGroundSinceLastWallClimb = true;
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private GravityModule _gravityModule;
@@ -45,6 +46,7 @@ public class WallClimbingManager : MonoBehaviour
                 if (!wasWallClimbing && IsWallClimbing)
                 {
                     OnStartedWallClimbing?.Invoke();
+                    hasTouchedGroundSinceLastWallClimb = false;
                     if (_rigidbody.linearVelocity.y > 0)
                     {
                         ApplyWallClimbUpwardForce();
@@ -88,6 +90,12 @@ public class WallClimbingManager : MonoBehaviour
     private void FixedUpdate()
     {
         RefreshMinimumHeightCollisionPoint();
+
+        // Reset flag if grounded
+        if (_groundedManager.IsGrounded)
+        {
+            hasTouchedGroundSinceLastWallClimb = true;
+        }
     }
 
     private void RefreshMinimumHeightCollisionPoint()
