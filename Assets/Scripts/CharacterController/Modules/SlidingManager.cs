@@ -52,14 +52,12 @@ public class SlidingManager : MonoBehaviour
         if (_rigidbodyCharacterController.currentInputPayload.Sliding && !IsSliding)
         {
             StartSliding();
-            IsSliding = true;
         }
         else
         {
             if (!_rigidbodyCharacterController.currentInputPayload.Sliding && IsSliding)
             {
                 StopSliding();
-                IsSliding = false;
             }
         }
     }
@@ -119,6 +117,7 @@ public class SlidingManager : MonoBehaviour
 
     private void StartSliding()
     {
+        IsSliding = true;
         _movementManager.enabled = false;
         _wallRunManager.enabled = false;
         _wallJumpManager.enabled = false;
@@ -135,5 +134,6 @@ public class SlidingManager : MonoBehaviour
         _cameraHolder.localPosition = _cameraHolderOriginalPosition;
         _capsuleCollider.height = _capsuleColliderOriginalHeight;
         _capsuleCollider.center = _capsuleColliderOriginalCenter;
+        IsSliding = false;
     }
 }
