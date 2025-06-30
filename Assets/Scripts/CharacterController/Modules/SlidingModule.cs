@@ -9,12 +9,15 @@ public class SlidingModule : MonoBehaviour
     public float slidingCapsuleColliderHeight = 1f;
     public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
     public Vector3 slidingCameraHolderPosition = new(0f, 0.25f, 0f);
+    public float cameraLerpSpeed = 10f;
 
     public bool IsSliding { get; private set; }
 
     private Vector3 _cameraHolderOriginalPosition;
     private float _capsuleColliderOriginalHeight;
     private Vector3 _capsuleColliderOriginalCenter;
+
+    private Vector3 targetCameraHolderPosition;
 
     public Transform _cameraHolder;
     private CapsuleCollider _capsuleCollider;
@@ -32,6 +35,8 @@ public class SlidingModule : MonoBehaviour
         _capsuleCollider = GetComponent<CapsuleCollider>();
         _capsuleColliderOriginalHeight = _capsuleCollider.height;
         _capsuleColliderOriginalCenter = _capsuleCollider.center;
+
+        targetCameraHolderPosition = _cameraHolderOriginalPosition;
 
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
@@ -59,6 +64,8 @@ public class SlidingModule : MonoBehaviour
                 StopSliding();
             }
         }
+
+        _cameraHolder.localPosition = Vector3.Lerp(_cameraHolder.localPosition, targetCameraHolderPosition, Time.fixedDeltaTime * cameraLerpSpeed);
     }
 
     private void Move(Vector2 moveInput)
@@ -115,7 +122,7 @@ public class SlidingModule : MonoBehaviour
         _movementModule.enabled = false;
         _wallRunModule.enabled = false;
         _wallJumpModule.enabled = false;
-        _cameraHolder.localPosition = slidingCameraHolderPosition;
+        targetCameraHolderPosition = slidingCameraHolderPosition;
         _capsuleCollider.height = slidingCapsuleColliderHeight;
         _capsuleCollider.center = slidingCapsuleColliderCenter;
     }
@@ -125,7 +132,7 @@ public class SlidingModule : MonoBehaviour
         _movementModule.enabled = true;
         _wallRunModule.enabled = true;
         _wallJumpModule.enabled = true;
-        _cameraHolder.localPosition = _cameraHolderOriginalPosition;
+        targetCameraHolderPosition = _cameraHolderOriginalPosition;
         _capsuleCollider.height = _capsuleColliderOriginalHeight;
         _capsuleCollider.center = _capsuleColliderOriginalCenter;
         IsSliding = false;
