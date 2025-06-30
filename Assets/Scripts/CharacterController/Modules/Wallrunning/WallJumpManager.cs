@@ -19,14 +19,14 @@ public class WallJumpManager : MonoBehaviour
 
     private GroundedManager _groundedManager;
     private WallRunManager _wallRunManager;
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private GravityModule _gravityModule;
     private Rigidbody _rigidbody;
 
     private void Awake()
     {
         _groundedManager = GetComponent<GroundedManager>();
         _wallRunManager = GetComponent<WallRunManager>();
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _gravityModule = GetComponent<GravityModule>();
         _rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -98,7 +98,7 @@ public class WallJumpManager : MonoBehaviour
     private void ExecuteWallJump()
     {
         var sideForce = _wallRunManager.WallNormal * wallJumpSideForce;
-        var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * wallJumpHeight);
+        var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * _gravityModule.gravityScale * wallJumpHeight);
         var forwardForce = transform.forward * wallJumpForwardForce;
 
         var finalForce = sideForce + jumpForce + forwardForce;

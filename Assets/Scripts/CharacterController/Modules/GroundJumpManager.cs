@@ -15,13 +15,13 @@ public class GroundJumpManager : MonoBehaviour
 
     private Rigidbody _rigidbody;
     private GroundedManager _groundedManager;
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private GravityModule _gravityModule;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _groundedManager = GetComponent<GroundedManager>();
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _gravityModule = GetComponent<GravityModule>();
     }
 
     private void FixedUpdate()
@@ -93,7 +93,7 @@ public class GroundJumpManager : MonoBehaviour
 
     public void ExecuteJump()
     {
-        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * _rigidbodyCharacterController.gravityScale * jumpHeight);
+        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * _gravityModule.gravityScale * jumpHeight);
 
         if (_rigidbody.linearVelocity.y < 0)
         {

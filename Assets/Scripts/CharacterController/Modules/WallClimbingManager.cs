@@ -16,6 +16,7 @@ public class WallClimbingManager : MonoBehaviour
     private bool isTouchingWallInFront;
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
+    private GravityModule _gravityModule;
     private GroundedManager _groundedManager;
     private GroundJumpManager _groundJumpManager;
     private Rigidbody _rigidbody;
@@ -24,6 +25,7 @@ public class WallClimbingManager : MonoBehaviour
     private void Awake()
     {
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _gravityModule = GetComponent<GravityModule>();
         _groundedManager = GetComponent<GroundedManager>();
         _groundJumpManager = GetComponent<GroundJumpManager>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -60,7 +62,7 @@ public class WallClimbingManager : MonoBehaviour
     private void ApplyWallClimbUpwardForce()
     {
         var upwardsVelocity = _rigidbody.linearVelocity.y;
-        var gravity = Physics.gravity.y * _rigidbodyCharacterController.gravityScale;
+        var gravity = Physics.gravity.y * _gravityModule.gravityScale;
         var currentAirHeight = _groundJumpManager.jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
 
         if (currentAirHeight < 0)
