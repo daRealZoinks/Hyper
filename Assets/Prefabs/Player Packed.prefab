@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8375304374309771822}
   - component: {fileID: 9174427740881968565}
   - component: {fileID: 5575856456840538790}
+  - component: {fileID: 7088769833007950923}
   - component: {fileID: 2252465026680502150}
   - component: {fileID: 6167397094199149244}
   - component: {fileID: 1445355023004454487}
@@ -350,6 +351,18 @@ MonoBehaviour:
   deceleration: 120
   airControl: 0.25
   airBreak: 0
+--- !u!114 &7088769833007950923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796f3fa7a115af945ab7128c23ee428b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2252465026680502150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,7 +493,7 @@ MonoBehaviour:
   slidingCapsuleColliderHeight: 1
   slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
   slidingCameraHolderPosition: {x: 0, y: 0.25, z: 0}
-  slideTransitionDuration: 0.25
+  cameraLerpSpeed: 10
   _cameraHolder: {fileID: 351759601881261647}
 --- !u!114 &2522985502675862427
 MonoBehaviour:

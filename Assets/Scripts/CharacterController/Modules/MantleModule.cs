@@ -75,9 +75,9 @@ public class MantleModule : MonoBehaviour
         var start = transform.position;
         var end = start + transform.forward + transform.up;
 
-        _storedVelocity = transform.forward * _movementModule.topSpeed;
+        _storedVelocity = transform.forward * _movementModule.currentTopSpeed;
 
-        var mantleVelocity = _movementModule.topSpeed;
+        var mantleVelocity = _movementModule.currentTopSpeed;
         StartCoroutine(MantleTransition(start, end, mantleVelocity));
     }
 

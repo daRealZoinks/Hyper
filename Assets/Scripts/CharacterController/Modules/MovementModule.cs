@@ -2,26 +2,43 @@ using UnityEngine;
 
 public class MovementModule : MonoBehaviour
 {
-    public float acceleration = 60f;
-    public float topSpeed = 8f;
-    public float deceleration = 120f;
-
     public float airControl = 0.25f;
     public float airBreak = 0f;
 
+    public float currentAcceleration;
+    public float currentTopSpeed;
+    public float currentDeceleration;
+
     private Rigidbody _rigidbody;
     private GroundCheckModule _groundCheckModule;
+    private SlidingModule _slidingModule;
+    private GroundMovementModule _groundMovementModule;
     private RigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
+        _slidingModule = GetComponent<SlidingModule>();
+        _groundMovementModule = GetComponent<GroundMovementModule>();
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
     }
 
     private void FixedUpdate()
     {
+        if (_slidingModule.IsSliding)
+        {
+            currentAcceleration = _slidingModule.acceleration;
+            currentTopSpeed = _slidingModule.topSpeed;
+            currentDeceleration = _slidingModule.deceleration;
+        }
+        else
+        {
+            currentAcceleration = _groundMovementModule.acceleration;
+            currentTopSpeed = _groundMovementModule.topSpeed;
+            currentDeceleration = _groundMovementModule.deceleration;
+        }
+
         Move(_rigidbodyCharacterController.currentInputPayload.MoveInput);
     }
 
@@ -35,11 +52,11 @@ public class MovementModule : MonoBehaviour
             z = _rigidbody.linearVelocity.z
         };
 
-        var horizontalClampedVelocity = horizontalRigidbodyVelocity.normalized * Mathf.Clamp01(horizontalRigidbodyVelocity.magnitude / topSpeed);
+        var horizontalClampedVelocity = horizontalRigidbodyVelocity.normalized * Mathf.Clamp01(horizontalRigidbodyVelocity.magnitude / currentTopSpeed);
 
         var finalForce = inputDirection - horizontalClampedVelocity;
 
-        finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
+        finalForce *= (inputDirection != Vector3.zero) ? currentAcceleration : currentDeceleration;
 
         if (_groundCheckModule.IsGrounded)
         {
@@ -50,6 +67,16 @@ public class MovementModule : MonoBehaviour
             finalForce *= inputDirection != Vector3.zero ? airControl : airBreak;
         }
 
-        _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
+        if (inputDirection == Vector3.zero && horizontalRigidbodyVelocity.magnitude < 0.05)
+        {
+            _rigidbody.linearVelocity = Vector3.up * _rigidbody.linearVelocity.y;
+        }
+        else
+        {
+            if (!float.IsNaN(finalForce.x) && !float.IsNaN(finalForce.y) && !float.IsNaN(finalForce.z))
+            {
+                _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
+            }
+        }
     }
 }
