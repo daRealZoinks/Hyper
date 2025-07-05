@@ -217,6 +217,17 @@
                 },
                 {
                     "name": "",
+                    "id": "b1fc29b9-a6eb-446b-b7bd-5730abae8292",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "3bd1368b-bb32-453e-a5af-14ce716cfe44",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
