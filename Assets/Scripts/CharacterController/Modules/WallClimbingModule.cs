@@ -7,14 +7,14 @@ public class WallClimbingModule : MonoBehaviour
     public float wallClimbMaxHeight = 4f;
 
     public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.9f;
-    public bool IsWallClimbing => isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && hasTouchedGroundSinceLastWallClimb;
+    public bool IsWallClimbing => isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !hasWallClimbedSinceLastNegativeVelocity;
 
     public UnityEvent OnStartedWallClimbing;
 
     private Vector3 minimumHeightCollisionPoint;
 
     private bool isTouchingWallInFront;
-    private bool hasTouchedGroundSinceLastWallClimb = true;
+    private bool hasWallClimbedSinceLastNegativeVelocity = false;
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
     private GravityModule _gravityModule;
@@ -43,13 +43,18 @@ public class WallClimbingModule : MonoBehaviour
 
                 isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold && contact.normal.y == 0;
 
-                if (!wasWallClimbing && IsWallClimbing)
+                if (!wasWallClimbing && isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !hasWallClimbedSinceLastNegativeVelocity)
                 {
-                    OnStartedWallClimbing?.Invoke();
-                    hasTouchedGroundSinceLastWallClimb = false;
-                    if (_rigidbody.linearVelocity.y > 0)
+                    float forceToAdd = GetWallClimbAdditiveForce();
+                    if (forceToAdd > 0f)
                     {
-                        ApplyWallClimbUpwardForce();
+                        OnStartedWallClimbing?.Invoke();
+                        hasWallClimbedSinceLastNegativeVelocity = true;
+                        _rigidbody.linearVelocity = new Vector3(
+                            _rigidbody.linearVelocity.x,
+                            _rigidbody.linearVelocity.y + forceToAdd,
+                            _rigidbody.linearVelocity.z
+                        );
                     }
                 }
             }
@@ -61,7 +66,7 @@ public class WallClimbingModule : MonoBehaviour
         isTouchingWallInFront = false;
     }
 
-    private void ApplyWallClimbUpwardForce()
+    private float GetWallClimbAdditiveForce()
     {
         var upwardsVelocity = _rigidbody.linearVelocity.y;
         var gravity = Physics.gravity.y * _gravityModule.defaultGravityScale;
@@ -77,24 +82,19 @@ public class WallClimbingModule : MonoBehaviour
         if (heightDifference > 0)
         {
             var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
-
-            _rigidbody.linearVelocity = new Vector3
-            {
-                x = _rigidbody.linearVelocity.x,
-                y = upwardForce,
-                z = _rigidbody.linearVelocity.z
-            };
+            var forceToAdd = upwardForce - upwardsVelocity;
+            return forceToAdd > 0f ? forceToAdd : 0f;
         }
+        return 0f;
     }
 
     private void FixedUpdate()
     {
         RefreshMinimumHeightCollisionPoint();
 
-        // Reset flag if grounded
-        if (_groundCheckModule.IsGrounded)
+        if (hasWallClimbedSinceLastNegativeVelocity && _rigidbody.linearVelocity.y < 0f)
         {
-            hasTouchedGroundSinceLastWallClimb = true;
+            hasWallClimbedSinceLastNegativeVelocity = false;
         }
     }
 
