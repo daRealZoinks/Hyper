@@ -6,7 +6,7 @@ public class MantleModule : MonoBehaviour
 {
     public float wallDetectionAngleThreshold = 0.9f;
 
-    public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.y > 0;
+    public bool IsMovingForward => _rigidbodyCharacterController.CurrentInputPayload.MoveInput.y > 0;
     public UnityEvent OnMantle;
 
     private Vector3 maximumHeightCollisionPoint;

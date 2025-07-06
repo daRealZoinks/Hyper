@@ -18,7 +18,7 @@ public class WallRunModule : MonoBehaviour
     public ContactPoint WallContactPoint { get; private set; }
     public GameObject WallRunningWall { get; private set; }
 
-    public bool IsMovingForward => _rigidbodyCharacterController.currentInputPayload.MoveInput.normalized.y > 0.7f;
+    public bool IsMovingForward => _rigidbodyCharacterController.CurrentInputPayload.MoveInput.normalized.y > 0.7f;
     public bool IsVelocityForward
     {
         get

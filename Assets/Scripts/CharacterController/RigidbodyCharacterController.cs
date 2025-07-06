@@ -1,8 +1,10 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class RigidbodyCharacterController : MonoBehaviour
 {
+    [SerializeField]
+    private new Camera camera;
+
     public Vector2 MoveInput { private get; set; }
     public bool JumpPressed { private get; set; }
     public bool Sliding { private get; set; }
@@ -14,15 +16,13 @@ public class RigidbodyCharacterController : MonoBehaviour
         public bool Sliding;
     }
 
-    public InputPayload currentInputPayload;
+    public InputPayload CurrentInputPayload;
 
     private Rigidbody _rigidbody;
-    private Camera _camera;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _camera = GetComponent<PlayerInput>().camera;
     }
 
     private void FixedUpdate()
@@ -34,7 +34,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void UpdateCurrentInputPayload()
     {
-        currentInputPayload = new InputPayload
+        CurrentInputPayload = new InputPayload
         {
             MoveInput = MoveInput,
             JumpPressed = JumpPressed,
@@ -49,7 +49,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void UpdateRotationBasedOnCamera()
     {
-        var cameraRotation = _camera.transform.rotation.eulerAngles;
+        var cameraRotation = camera.transform.rotation.eulerAngles;
         var cameraYRotation = Quaternion.Euler(0, cameraRotation.y, 0);
         _rigidbody.rotation = cameraYRotation;
     }

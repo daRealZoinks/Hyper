@@ -40,13 +40,13 @@ public class SlidingModule : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_rigidbodyCharacterController.currentInputPayload.Sliding && !IsSliding)
+        if (_rigidbodyCharacterController.CurrentInputPayload.Sliding && !IsSliding)
         {
             StartSliding();
         }
         else
         {
-            if (!_rigidbodyCharacterController.currentInputPayload.Sliding && IsSliding)
+            if (!_rigidbodyCharacterController.CurrentInputPayload.Sliding && IsSliding)
             {
                 StopSliding();
             }

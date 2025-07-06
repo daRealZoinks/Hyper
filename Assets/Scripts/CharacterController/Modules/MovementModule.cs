@@ -39,7 +39,7 @@ public class MovementModule : MonoBehaviour
             currentDeceleration = _groundMovementModule.deceleration;
         }
 
-        Move(_rigidbodyCharacterController.currentInputPayload.MoveInput);
+        Move(_rigidbodyCharacterController.CurrentInputPayload.MoveInput);
     }
 
     public void Move(Vector2 moveInput)

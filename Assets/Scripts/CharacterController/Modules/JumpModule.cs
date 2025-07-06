@@ -23,7 +23,7 @@ public class JumpModule : MonoBehaviour
     {
         UpdateJumpBufferCounter();
 
-        if (_rigidbodyCharacterController.currentInputPayload.JumpPressed)
+        if (_rigidbodyCharacterController.CurrentInputPayload.JumpPressed)
         {
             ResetJumpBufferCounter();
         }
