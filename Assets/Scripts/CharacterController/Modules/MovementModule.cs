@@ -2,11 +2,16 @@ using UnityEngine;
 
 public class MovementModule : MonoBehaviour
 {
-    public float airControl = 0.25f;
-    public float airBreak = 0f;
+    [SerializeField]
+    private float airControl = 0.25f;
+    [SerializeField]
+    private float airBreak = 0f;
 
+    [HideInInspector]
     public float currentAcceleration;
+    [HideInInspector]
     public float currentTopSpeed;
+    [HideInInspector]
     public float currentDeceleration;
 
     private Rigidbody _rigidbody;
