@@ -281,6 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6bfcb767f27a7c4bbdbb98a6c437b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 7492384026624369319}
 --- !u!114 &8375304374309771822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,11 +347,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc05bf51aa01b94983ab4d02a0642bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 60
-  topSpeed: 8
-  deceleration: 120
   airControl: 0.25
   airBreak: 0
+  currentAcceleration: 0
+  currentTopSpeed: 0
+  currentDeceleration: 0
 --- !u!114 &7088769833007950923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,6 +364,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 796f3fa7a115af945ab7128c23ee428b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  acceleration: 60
+  topSpeed: 8
+  deceleration: 120
 --- !u!114 &2252465026680502150
 MonoBehaviour:
   m_ObjectHideFlags: 0
