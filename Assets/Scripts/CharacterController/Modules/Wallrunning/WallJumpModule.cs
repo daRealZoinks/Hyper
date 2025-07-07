@@ -3,11 +3,14 @@ using UnityEngine.Events;
 
 public class WallJumpModule : MonoBehaviour
 {
-    public float wallJumpHeight = 1.5f;
-    public float wallJumpSideForce = 4f;
-    public float wallJumpForwardForce = 5f;
-
-    public float sameWallJumpCooldown = 2.5f;
+    [SerializeField]
+    private float wallJumpHeight = 1.5f;
+    [SerializeField]
+    private float wallJumpSideForce = 4f;
+    [SerializeField]
+    private float wallJumpForwardForce = 5f;
+    [SerializeField]
+    private float sameWallJumpCooldown = 2.5f;
 
     public UnityEvent OnRightWallJump;
     public UnityEvent OnLeftWallJump;
@@ -98,7 +101,6 @@ public class WallJumpModule : MonoBehaviour
         _rigidbody.linearVelocity = new Vector3()
         {
             x = _rigidbody.linearVelocity.x,
-            y = 0,
             z = _rigidbody.linearVelocity.z
         };
 
