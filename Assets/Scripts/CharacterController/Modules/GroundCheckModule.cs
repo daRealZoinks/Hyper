@@ -3,12 +3,13 @@ using UnityEngine.Events;
 
 public class GroundCheckModule : MonoBehaviour
 {
-    public float SlopeLimit = 45f;
-    public bool IsGrounded { get; private set; }
-
-    public Vector3 GroundNormal { get; private set; }
+    [SerializeField]
+    private float slopeLimit = 45f;
 
     public UnityEvent OnLanded;
+
+    public bool IsGrounded { get; private set; }
+    public Vector3 GroundNormal { get; private set; }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -16,7 +17,7 @@ public class GroundCheckModule : MonoBehaviour
         {
             var angle = Vector3.Angle(contact.normal, Vector3.up);
 
-            if (angle <= SlopeLimit)
+            if (angle <= slopeLimit)
             {
                 if (!IsGrounded)
                 {
@@ -35,7 +36,7 @@ public class GroundCheckModule : MonoBehaviour
         {
             var angle = Vector3.Angle(contact.normal, Vector3.up);
 
-            if (angle <= SlopeLimit)
+            if (angle <= slopeLimit)
             {
                 IsGrounded = true;
                 GroundNormal = contact.normal;
