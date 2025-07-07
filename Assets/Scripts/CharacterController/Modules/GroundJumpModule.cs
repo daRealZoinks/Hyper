@@ -74,7 +74,6 @@ public class GroundJumpModule : MonoBehaviour
             _rigidbody.linearVelocity = new Vector3()
             {
                 x = _rigidbody.linearVelocity.x,
-                y = 0,
                 z = _rigidbody.linearVelocity.z
             };
         }
