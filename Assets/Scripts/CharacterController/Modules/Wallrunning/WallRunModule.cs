@@ -3,14 +3,15 @@ using UnityEngine.Events;
 
 public class WallRunModule : MonoBehaviour
 {
-    public float wallDetectionAngleThreshold = 0.9f;
+    [SerializeField]
+    private float wallDetectionAngleThreshold = 0.9f;
+    [SerializeField]
+    private float wallStickForce = 10f;
+    [SerializeField]
+    private float wallRunMinimumSpeed = 10f;
 
     public float wallRunAscendingGravity = 1.25f;
     public float wallRunDescendingGravity = 0.75f;
-
-    public float wallStickForce = 10f;
-
-    public float wallRunMinimumSpeed = 10f;
 
     public UnityEvent OnStartedWallRunningRight;
     public UnityEvent OnStartedWallRunningLeft;
@@ -32,6 +33,7 @@ public class WallRunModule : MonoBehaviour
             return Vector3.Dot(horizontalVelocity.normalized, transform.forward) > 0.7f;
         }
     }
+
     public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !_groundCheckModule.IsGrounded && IsMovingForward && IsVelocityForward;
     public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !_groundCheckModule.IsGrounded && IsMovingForward && IsVelocityForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
@@ -99,8 +101,6 @@ public class WallRunModule : MonoBehaviour
 
         if (IsWallRunning)
         {
-            var wallRunGravity = _rigidbody.linearVelocity.y >= 0 ? wallRunAscendingGravity : wallRunDescendingGravity;
-
             ApplyWallStickForce();
             ApplyMinimumSpeed();
         }
