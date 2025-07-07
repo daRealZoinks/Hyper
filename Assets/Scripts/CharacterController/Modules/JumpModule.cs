@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class JumpModule : MonoBehaviour
 {
-    public float jumpBufferTime = 0.15f;
+    [SerializeField]
+    private float jumpBufferTime = 0.15f;
 
     private float _jumpBufferCounter;
 
