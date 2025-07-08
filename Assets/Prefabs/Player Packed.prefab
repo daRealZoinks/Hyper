@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e37d810bbe7ba04596436c320707b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SlopeLimit: 45
+  slopeLimit: 45
   OnLanded:
     m_PersistentCalls:
       m_Calls:
@@ -380,10 +380,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallDetectionAngleThreshold: 0.9
-  wallRunAscendingGravity: 1.25
-  wallRunDescendingGravity: 0.25
   wallStickForce: 10
   wallRunMinimumSpeed: 10
+  wallRunAscendingGravity: 1.25
+  wallRunDescendingGravity: 0.25
   OnStartedWallRunningRight:
     m_PersistentCalls:
       m_Calls: []
@@ -1529,7 +1529,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1821447387310042499
 Transform:
   m_ObjectHideFlags: 0
