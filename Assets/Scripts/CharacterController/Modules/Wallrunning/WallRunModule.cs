@@ -41,8 +41,6 @@ public class WallRunModule : MonoBehaviour
     private bool isTouchingWallOnRight;
     private bool isTouchingWallOnLeft;
 
-    private Vector3 minimumHeightCollisionPoint;
-
     private GroundCheckModule _groundCheckModule;
     private MovementModule _movementModule;
     private RigidbodyCharacterController _rigidbodyCharacterController;
@@ -62,6 +60,8 @@ public class WallRunModule : MonoBehaviour
     {
         foreach (var contact in collision.contacts)
         {
+            var minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+
             if (contact.point.y >= minimumHeightCollisionPoint.y)
             {
                 var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
@@ -104,18 +104,11 @@ public class WallRunModule : MonoBehaviour
             ApplyWallStickForce();
             ApplyMinimumSpeed();
         }
-
-        RefreshMinimumHeightCollisionPoint();
     }
 
     private void ApplyWallStickForce()
     {
         _rigidbody.AddForce(-WallContactPoint.normal * wallStickForce, ForceMode.Acceleration);
-    }
-
-    private void RefreshMinimumHeightCollisionPoint()
-    {
-        minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
     }
 
     private void ApplyMinimumSpeed()
