@@ -6,10 +6,15 @@ public class SlidingModule : MonoBehaviour
     public float acceleration = 3f;
     public float topSpeed = 0f;
     public float deceleration = 1f;
-    public float slidingCapsuleColliderHeight = 1f;
-    public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
-    public Vector3 slidingCameraHolderPosition = new(0f, 0.25f, 0f);
-    public float cameraLerpSpeed = 10f;
+
+    [SerializeField]
+    private float slidingCapsuleColliderHeight = 1f;
+    [SerializeField]
+    private Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
+    [SerializeField]
+    private Vector3 slidingCameraHolderPosition = new(0f, 0.25f, 0f);
+    [SerializeField]
+    private float cameraLerpSpeed = 10f;
 
     public bool IsSliding { get; private set; }
 
