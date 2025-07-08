@@ -3,15 +3,18 @@ using UnityEngine.Events;
 
 public class WallClimbingModule : MonoBehaviour
 {
-    public float wallDetectionAngleThreshold = 0.9f;
-    public float wallClimbMaxHeight = 4f;
-
-    public bool IsMovingForward => _rigidbodyCharacterController.CurrentInputPayload.MoveInput.normalized.y > 0.9f;
-    public bool IsWallClimbing => isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !hasWallClimbedSinceLastNegativeVelocity;
+    [SerializeField]
+    private float wallDetectionAngleThreshold = 0.9f;
+    [SerializeField]
+    private float wallClimbMaxHeight = 4f;
 
     public UnityEvent OnStartedWallClimbing;
+    public UnityEvent OnStoppedWallClimbing;
 
-    private Vector3 minimumHeightCollisionPoint;
+    public bool IsWallClimbing { get; private set; } = false;
+
+    public bool IsMovingForward => _rigidbodyCharacterController.CurrentInputPayload.MoveInput.normalized.y > 0.9f;
+    public bool CanStartWallClimb => isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !hasWallClimbedSinceLastNegativeVelocity;
 
     private bool isTouchingWallInFront;
     private bool hasWallClimbedSinceLastNegativeVelocity = false;
@@ -37,24 +40,25 @@ public class WallClimbingModule : MonoBehaviour
     {
         foreach (var contact in collision.contacts)
         {
+            var minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+
             if (contact.point.y >= minimumHeightCollisionPoint.y)
             {
-                var wasWallClimbing = IsWallClimbing;
+                var wasAbleToWallClimb = CanStartWallClimb;
 
                 isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold && contact.normal.y == 0;
 
-                if (!wasWallClimbing && isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !hasWallClimbedSinceLastNegativeVelocity)
+                if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
                 {
-                    float forceToAdd = GetWallClimbAdditiveForce();
-                    if (forceToAdd > 0f)
+                    var climbForce = GetWallClimbAdditiveForce();
+
+                    if (climbForce > 0f)
                     {
                         OnStartedWallClimbing?.Invoke();
+                        IsWallClimbing = true;
                         hasWallClimbedSinceLastNegativeVelocity = true;
-                        _rigidbody.linearVelocity = new Vector3(
-                            _rigidbody.linearVelocity.x,
-                            _rigidbody.linearVelocity.y + forceToAdd,
-                            _rigidbody.linearVelocity.z
-                        );
+
+                        _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
                     }
                 }
             }
@@ -64,6 +68,12 @@ public class WallClimbingModule : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         isTouchingWallInFront = false;
+
+        if (IsWallClimbing)
+        {
+            OnStoppedWallClimbing?.Invoke();
+            IsWallClimbing = false;
+        }
     }
 
     private float GetWallClimbAdditiveForce()
@@ -85,21 +95,24 @@ public class WallClimbingModule : MonoBehaviour
             var forceToAdd = upwardForce - upwardsVelocity;
             return forceToAdd > 0f ? forceToAdd : 0f;
         }
+
         return 0f;
     }
 
     private void FixedUpdate()
     {
-        RefreshMinimumHeightCollisionPoint();
-
         if (hasWallClimbedSinceLastNegativeVelocity && _rigidbody.linearVelocity.y < 0f)
         {
             hasWallClimbedSinceLastNegativeVelocity = false;
         }
-    }
 
-    private void RefreshMinimumHeightCollisionPoint()
-    {
-        minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+        if (IsWallClimbing)
+        {
+            if (_rigidbody.linearVelocity.y < 0f)
+            {
+                OnStoppedWallClimbing?.Invoke();
+                IsWallClimbing = false;
+            }
+        }
     }
 }
