@@ -56,8 +56,11 @@ public class SlidingModule : MonoBehaviour
                 StopSliding();
             }
         }
+    }
 
-        _cameraHolder.localPosition = Vector3.Lerp(_cameraHolder.localPosition, targetCameraHolderPosition, Time.fixedDeltaTime * cameraLerpSpeed);
+    private void Update()
+    {
+        _cameraHolder.localPosition = Vector3.Lerp(_cameraHolder.localPosition, targetCameraHolderPosition, Time.deltaTime * cameraLerpSpeed);
     }
 
     private void StartSliding()
