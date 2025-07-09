@@ -33,9 +33,27 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Slide",
+                    "type": "Button",
+                    "id": "d7e43195-933e-474b-acc8-b7a234daa2a0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Grapple",
                     "type": "Button",
                     "id": "106c80d8-d809-4e9c-8770-a6c95611f71d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "da260aff-1798-47ba-81b1-254c15974434",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -144,22 +162,11 @@
                 },
                 {
                     "name": "",
-                    "id": "6bc43c88-1b24-411b-ade2-40eeb4a3f014",
-                    "path": "<DualShockGamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PlayStation",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "d7093567-d78a-4919-8a47-49da55972e3f",
-                    "path": "<XInputController>/leftStick",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Xbox",
+                    "groups": ";Gamepad",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -177,22 +184,11 @@
                 },
                 {
                     "name": "",
-                    "id": "fd8bed7c-b785-4835-b587-57a85f33576c",
-                    "path": "<DualShockGamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PlayStation",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "efb48447-f063-4aec-8992-973dd8bd0e42",
-                    "path": "<XInputController>/rightStick",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Xbox",
+                    "groups": ";Gamepad",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -210,22 +206,22 @@
                 },
                 {
                     "name": "",
-                    "id": "e66bf746-ec87-4c27-bb00-22f60afe7cac",
-                    "path": "<DualShockGamepad>/rightShoulder",
+                    "id": "3797b68e-27b1-4dd7-b345-1c1c28456ace",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";PlayStation",
+                    "groups": ";Gamepad",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "3797b68e-27b1-4dd7-b345-1c1c28456ace",
-                    "path": "<XInputController>/rightShoulder",
+                    "id": "b1fc29b9-a6eb-446b-b7bd-5730abae8292",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Xbox",
+                    "groups": ";Gamepad",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -244,22 +240,55 @@
                 {
                     "name": "",
                     "id": "d916783b-f981-4fa6-b474-de2596d4912f",
-                    "path": "<XInputController>/leftShoulder",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Xbox",
+                    "groups": ";Gamepad",
                     "action": "Grapple",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "50c47fc7-0167-4895-bda4-a7abdc8f2d3a",
-                    "path": "<DualShockGamepad>/leftShoulder",
+                    "id": "9093db20-969c-45cd-b189-19ad60c34114",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";PlayStation",
-                    "action": "Grapple",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9ef446c4-8d4b-400b-801a-5583bf6b7303",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0b44be3e-4f96-453e-a235-c120b0b3399b",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8569e059-5ec9-430e-b463-b72aaf289e61",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -800,22 +829,11 @@
             ]
         },
         {
-            "name": "Xbox",
-            "bindingGroup": "Xbox",
+            "name": "Gamepad",
+            "bindingGroup": "Gamepad",
             "devices": [
                 {
-                    "devicePath": "<XInputController>",
-                    "isOptional": false,
-                    "isOR": false
-                }
-            ]
-        },
-        {
-            "name": "PlayStation",
-            "bindingGroup": "PlayStation",
-            "devices": [
-                {
-                    "devicePath": "<DualShockGamepad>",
+                    "devicePath": "<Gamepad>",
                     "isOptional": false,
                     "isOR": false
                 }

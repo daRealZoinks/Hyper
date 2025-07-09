@@ -6,16 +6,16 @@ public class JumpingPad : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent<RigidbodyCharacterController>(out var rigidbodyCharacterController))
+        if (collision.gameObject.TryGetComponent<GravityModule>(out var gravityModule))
         {
-            if (rigidbodyCharacterController)
+            if (gravityModule)
             {
-                var rigidbody = rigidbodyCharacterController.GetComponent<Rigidbody>();
+                var rigidbody = gravityModule.GetComponent<Rigidbody>();
 
                 if (rigidbody)
                 {
                     var jumpVector = jumpForce;
-                    jumpVector.y = Mathf.Sqrt(2 * Physics.gravity.magnitude * rigidbodyCharacterController.gravityScale * jumpVector.y);
+                    jumpVector.y = Mathf.Sqrt(2 * Physics.gravity.magnitude * gravityModule.defaultGravityScale * jumpVector.y);
 
                     rigidbody.linearVelocity = jumpVector;
                 }

@@ -31,7 +31,18 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        _rigidbodyCharacterController.Jump();
+        _rigidbodyCharacterController.JumpPressed = true;
+    }
+
+    public void OnSlide(InputAction.CallbackContext context)
+    {
+        var slide = context.phase switch
+        {
+            InputActionPhase.Started or InputActionPhase.Performed => true,
+            InputActionPhase.Disabled or InputActionPhase.Waiting or InputActionPhase.Canceled or _ => false,
+        };
+
+        _rigidbodyCharacterController.Sliding = slide;
     }
 
     public void OnGrapple(InputAction.CallbackContext context)
@@ -53,5 +64,15 @@ public class InputManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.phase != InputActionPhase.Started)
+        {
+            return;
+        }
+
+        Application.Quit();
     }
 }

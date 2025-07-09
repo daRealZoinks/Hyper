@@ -14,6 +14,17 @@ GameObject:
   - component: {fileID: 509104130093213351}
   - component: {fileID: 2639626806727421639}
   - component: {fileID: 6307755992762486862}
+  - component: {fileID: 8375304374309771822}
+  - component: {fileID: 9174427740881968565}
+  - component: {fileID: 5575856456840538790}
+  - component: {fileID: 7088769833007950923}
+  - component: {fileID: 2252465026680502150}
+  - component: {fileID: 6167397094199149244}
+  - component: {fileID: 1445355023004454487}
+  - component: {fileID: 3501951543994579889}
+  - component: {fileID: 8880941185909121492}
+  - component: {fileID: 2522985502675862427}
+  - component: {fileID: 1240839821809891922}
   - component: {fileID: 4221880724104738831}
   - component: {fileID: 3835998098059943154}
   - component: {fileID: 5741402555865847128}
@@ -86,7 +97,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
@@ -208,6 +219,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 106c80d8-d809-4e9c-8770-a6c95611f71d
     m_ActionName: 'Player/Grapple[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2639626806727421639}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnSlide
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d7e43195-933e-474b-acc8-b7a234daa2a0
+    m_ActionName: Player/Slide
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2639626806727421639}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnPause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: da260aff-1798-47ba-81b1-254c15974434
+    m_ActionName: 'Player/Pause[/Keyboard/escape]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -238,22 +281,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6bfcb767f27a7c4bbdbb98a6c437b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 60
-  topSpeed: 8
-  deceleration: 120
-  airControl: 0.25
-  airBreak: 0
-  jumpHeight: 2
-  gravityScale: 1.5
-  wallRunInitialImpulse: 5
-  wallCheckDistance: 0.75
-  wallJumpHeight: 1.5
-  wallJumpSideForce: 4
-  wallJumpForwardForce: 1
   camera: {fileID: 7492384026624369319}
-  OnJump:
-    m_PersistentCalls:
-      m_Calls: []
+--- !u!114 &8375304374309771822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 877064f765153ea4d82f5f2cac7b7914, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultGravityScale: 1.5
+--- !u!114 &9174427740881968565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e37d810bbe7ba04596436c320707b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeLimit: 45
   OnLanded:
     m_PersistentCalls:
       m_Calls:
@@ -269,6 +323,219 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1445355023004454487}
+        m_TargetAssemblyTypeName: GroundJumpManager, Assembly-CSharp
+        m_MethodName: ResetCoyoteTimeCounter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5575856456840538790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc05bf51aa01b94983ab4d02a0642bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  airControl: 0.25
+  airBreak: 0
+  currentAcceleration: 0
+  currentTopSpeed: 0
+  currentDeceleration: 0
+--- !u!114 &7088769833007950923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796f3fa7a115af945ab7128c23ee428b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acceleration: 60
+  topSpeed: 8
+  deceleration: 120
+--- !u!114 &2252465026680502150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 039940dd94ac1c041b26b7848b055fb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallDetectionAngleThreshold: 0.9
+  wallStickForce: 10
+  wallRunMinimumSpeed: 10
+  wallRunAscendingGravity: 1.25
+  wallRunDescendingGravity: 0.25
+  OnStartedWallRunningRight:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStartedWallRunningLeft:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &6167397094199149244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63acb2cb938ddaa49b6e49ecfed7b66e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpBufferTime: 0.15
+--- !u!114 &1445355023004454487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3b4374e5a19ef4f8aa800f62862b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpHeight: 2
+  coyoteTime: 0.15
+  OnJump:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6167397094199149244}
+        m_TargetAssemblyTypeName: JumpManager, Assembly-CSharp
+        m_MethodName: CancelJumpBufferCounter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3501951543994579889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2184e916e54aec848ab7c1fcb277fbe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallJumpHeight: 1.5
+  wallJumpSideForce: 4
+  wallJumpForwardForce: 3
+  sameWallJumpCooldown: 2.5
+  OnRightWallJump:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6167397094199149244}
+        m_TargetAssemblyTypeName: JumpManager, Assembly-CSharp
+        m_MethodName: CancelJumpBufferCounter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnLeftWallJump:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6167397094199149244}
+        m_TargetAssemblyTypeName: JumpManager, Assembly-CSharp
+        m_MethodName: CancelJumpBufferCounter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8880941185909121492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c7f60d402f6a4242a3bcc8201555f49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravityScale: 2
+  acceleration: 3
+  topSpeed: 0
+  deceleration: 1
+  slidingCapsuleColliderHeight: 1
+  slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
+  slidingCameraHolderPosition: {x: 0, y: 0.25, z: 0}
+  cameraLerpSpeed: 10
+  _cameraHolder: {fileID: 351759601881261647}
+--- !u!114 &2522985502675862427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f63ab6dd9cfd9e44b2b91d387c2e47e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallDetectionAngleThreshold: 0.9
+  wallClimbMaxHeight: 4
+  OnStartedWallClimbing:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStoppedWallClimbing:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1240839821809891922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250107373915108671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86aa5a070d0848245bf2e7efde046501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallDetectionAngleThreshold: 0.9
+  mantleDuration: 0.2
+  OnMantle:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4221880724104738831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,6 +1053,8 @@ GameObject:
   - component: {fileID: 4675802401977912688}
   - component: {fileID: 6525954666749750045}
   - component: {fileID: 4820874892768569344}
+  - component: {fileID: 1870265604313678909}
+  - component: {fileID: 5377778505724804356}
   - component: {fileID: 656803543515659055}
   - component: {fileID: 7127193122138023058}
   - component: {fileID: 1214273709555097403}
@@ -805,7 +1074,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6517757529428791751}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.10969667, y: -0.37951383, z: 0.04537291, w: 0.9175387}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -884,7 +1153,7 @@ MonoBehaviour:
   ReferenceFrame: 0
   RecenterTarget: 0
   PanAxis:
-    Value: -44.942085
+    Value: 0
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -894,7 +1163,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 13.635316
+    Value: 0
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -903,6 +1172,40 @@ MonoBehaviour:
       Wait: 1
       Time: 2
     Restrictions: 0
+--- !u!114 &1870265604313678909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6517757529428791751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseProfile: {fileID: 11400000, guid: dec0a51bc48354a41b8e4f8d733c18c7, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 1
+  FrequencyGain: 1
+  m_NoiseOffsets: {x: 45.81604, y: -786.57983, z: 15.738342}
+--- !u!114 &5377778505724804356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6517757529428791751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a193d46cdff69f44d8495aebd0ea3a1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbody: {fileID: 260055356930566399}
+  movementModule: {fileID: 5575856456840538790}
+  groundCheckModule: {fileID: 9174427740881968565}
+  wallRunModule: {fileID: 2252465026680502150}
+  slidingModule: {fileID: 8880941185909121492}
 --- !u!114 &656803543515659055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1042,7 +1345,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6680287346084219529}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.10969667, y: -0.37951383, z: 0.04537291, w: 0.9175387}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1230,7 +1533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1821447387310042499
 Transform:
   m_ObjectHideFlags: 0
