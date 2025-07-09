@@ -1,32 +1,35 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class MantleModule : MonoBehaviour
 {
-    public float wallDetectionAngleThreshold = 0.9f;
+    [SerializeField]
+    private float wallDetectionAngleThreshold = 0.9f;
+    [SerializeField]
+    private float mantleDuration = 0.2f;
 
-    public bool IsMovingForward => _rigidbodyCharacterController.CurrentInputPayload.MoveInput.y > 0;
     public UnityEvent OnMantle;
 
-    private Vector3 maximumHeightCollisionPoint;
+    public bool IsMantling { get; private set; }
 
-    private bool isTouchingWallInFront;
+    public bool IsMovingForward => _rigidbodyCharacterController.CurrentInputPayload.MoveInput.y > 0;
+
+    private bool _isTouchingWallInFront;
+
+    private Vector3 _mantleStart;
+    private Vector3 _mantleEnd;
+
+    private float _mantleElapsedTime;
 
     private RigidbodyCharacterController _rigidbodyCharacterController;
-    private MovementModule _movementModule;
     private GroundCheckModule _groundCheckModule;
     private SlidingModule _slidingModule;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
 
-    private Vector3 _storedVelocity;
-    private bool _isMantling;
-
     private void Awake()
     {
         _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
-        _movementModule = GetComponent<MovementModule>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _slidingModule = GetComponent<SlidingModule>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -40,10 +43,12 @@ public class MantleModule : MonoBehaviour
 
         foreach (var contact in collision.contacts)
         {
-            isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold && contact.normal.y == 0;
+            _isTouchingWallInFront = Vector3.Dot(contact.normal, -transform.forward) > wallDetectionAngleThreshold && contact.normal.y == 0;
 
-            if (isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !_slidingModule.IsSliding)
+            if (_isTouchingWallInFront && !_groundCheckModule.IsGrounded && IsMovingForward && !_slidingModule.IsSliding)
             {
+                var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+
                 if (contact.point.y <= maximumHeightCollisionPoint.y)
                 {
                     touchingBelowMaximumHeight = contact;
@@ -59,57 +64,44 @@ public class MantleModule : MonoBehaviour
         {
             OnMantle?.Invoke();
 
-            Mantle();
+            Mantle(touchingBelowMaximumHeight.Value);
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        isTouchingWallInFront = false;
+        _isTouchingWallInFront = false;
     }
 
-    private void Mantle()
+    private void Mantle(ContactPoint touchingBelowMaximumHeight)
     {
-        if (_isMantling) return;
+        if (IsMantling) return;
 
-        var start = transform.position;
-        var end = start + transform.forward + transform.up;
+        var capsuleColliderCenterPosition = transform.position;
+        var mantleForwardOffset = transform.forward * _capsuleCollider.radius;
+        var mantleVerticalOffset = transform.up * (touchingBelowMaximumHeight.point.y - capsuleColliderCenterPosition.y);
 
-        _storedVelocity = transform.forward * _movementModule.currentTopSpeed;
+        _mantleStart = capsuleColliderCenterPosition;
+        _mantleEnd = _mantleStart + mantleForwardOffset + mantleVerticalOffset;
+        _mantleElapsedTime = 0f;
 
-        var mantleVelocity = _movementModule.currentTopSpeed;
-        StartCoroutine(MantleTransition(start, end, mantleVelocity));
+        IsMantling = true;
     }
 
-    private IEnumerator MantleTransition(Vector3 start, Vector3 end, float velocity)
+    private void Update()
     {
-        _isMantling = true;
-        var distance = Vector3.Distance(start, end);
-        var traveled = 0f;
-
-        while (traveled < distance)
+        if (IsMantling)
         {
-            var step = velocity * Time.fixedDeltaTime;
-            traveled += step;
-            var t = Mathf.Clamp01(traveled / distance);
-            transform.position = Vector3.Lerp(start, end, t);
-            yield return new WaitForFixedUpdate();
+            _mantleElapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(_mantleElapsedTime / mantleDuration);
+            transform.position = Vector3.Lerp(_mantleStart, _mantleEnd, t);
+
+            if (_mantleElapsedTime >= mantleDuration)
+            {
+                transform.position = _mantleEnd;
+                _rigidbody.linearVelocity = Vector3.zero;
+                IsMantling = false;
+            }
         }
-
-        transform.position = end;
-
-        _rigidbody.linearVelocity = _storedVelocity;
-
-        _isMantling = false;
-    }
-
-    private void FixedUpdate()
-    {
-        RefreshMinimumHeightCollisionPoint();
-    }
-
-    private void RefreshMinimumHeightCollisionPoint()
-    {
-        maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
     }
 }

@@ -516,6 +516,9 @@ MonoBehaviour:
   OnStartedWallClimbing:
     m_PersistentCalls:
       m_Calls: []
+  OnStoppedWallClimbing:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1240839821809891922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,6 +532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallDetectionAngleThreshold: 0.9
+  mantleDuration: 0.2
   OnMantle:
     m_PersistentCalls:
       m_Calls: []
