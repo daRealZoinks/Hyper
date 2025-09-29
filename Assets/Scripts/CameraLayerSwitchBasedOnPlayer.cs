@@ -14,8 +14,11 @@ public class CameraLayerSwitchBasedOnPlayer : MonoBehaviour
 
     private void Awake()
     {
-        mouseCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
-        controllerCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
+        if (playerInput.user.valid)
+        {
+            mouseCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
+            controllerCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
+        }
     }
 
     private void Start()
