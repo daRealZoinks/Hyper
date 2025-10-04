@@ -18,13 +18,13 @@ MonoBehaviour:
     Name: Main Editor
     <CorrespondingNodeId>k__BackingField: 
     m_Nodes: []
-    m_PlayerTag: 
+    m_PlayerTag: Host
     m_InitialScene: {fileID: 0}
   m_EditorInstances:
   - Name: Player 2
     <CorrespondingNodeId>k__BackingField: 
     m_Nodes: []
-    m_PlayerTag: 
+    m_PlayerTag: Client
     m_InitialScene: {fileID: 0}
     m_AdvancedConfiguration:
       StreamLogsToMainEditor: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
   - Name: Player 3
     <CorrespondingNodeId>k__BackingField: 
     m_Nodes: []
-    m_PlayerTag: 
+    m_PlayerTag: Client
     m_InitialScene: {fileID: 0}
     m_AdvancedConfiguration:
       StreamLogsToMainEditor: 0
