@@ -14,8 +14,11 @@ public class CameraLayerSwitchBasedOnPlayer : MonoBehaviour
 
     private void Awake()
     {
-        mouseCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
-        controllerCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
+        if (playerInput.user.valid)
+        {
+            mouseCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
+            controllerCinemachineInputAxisController.PlayerIndex = playerInput.user.index;
+        }
     }
 
     private void Start()
@@ -40,9 +43,8 @@ public class CameraLayerSwitchBasedOnPlayer : MonoBehaviour
         var keyboardAndMouse = "Keyboard&Mouse";
         var isKeyboardAndMouse = playerInput.currentControlScheme == keyboardAndMouse;
 
-        var xboxGamepad = "Xbox";
-        var playStationGamepad = "PlayStation";
-        var isController = playerInput.currentControlScheme == xboxGamepad || playerInput.currentControlScheme == playStationGamepad;
+        var gamepad = "Gamepad";
+        var isController = playerInput.currentControlScheme == gamepad;
 
         mouseCinemachineInputAxisController.enabled = isKeyboardAndMouse;
         controllerCinemachineInputAxisController.enabled = isController;

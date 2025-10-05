@@ -6,14 +6,22 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
+    path: Assets/Scenes/Playground - Online.unity
+    guid: fa7c6aa8f4113c346bc5e6ef1a7178c2
+  - enabled: 0
     path: Assets/Scenes/Playground.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
     path: Assets/Scenes/Test Level.unity
     guid: efa25aa0281a6eb4790aacd51e70f008
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Test Level 2.unity
     guid: 65eb5058d71d19c4783adb20ac04648e
+  - enabled: 1
+    path: Assets/Scenes/Online Test Level.unity
+    guid: 1e47f7d760b3099479a0e06699c7e743
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: d53abe1b5d2754e4e96c262642cba1d8, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: 4fcb7fb225fe4044ebc81a2bdcf0c482, type: 2}
   m_UseUCBPForAssetBundles: 0
