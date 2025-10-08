@@ -583,7 +583,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 250107373915108671}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
@@ -629,7 +629,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 250107373915108671}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
@@ -637,8 +637,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkRigidbodyBaseExpanded: 0
   UseRigidBodyForMotion: 1
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
+  AutoUpdateKinematicState: 0
+  AutoSetKinematicOnDespawn: 0
 --- !u!1 &799509202643606066
 GameObject:
   m_ObjectHideFlags: 0
