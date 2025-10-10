@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(RigidbodyCharacterController))]
+[RequireComponent(typeof(OldRigidbodyCharacterController))]
 public class InputManager : MonoBehaviour
 {
     public GrapplingGun grapplingGun;
 
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private OldRigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _rigidbodyCharacterController = GetComponent<OldRigidbodyCharacterController>();
     }
 
     public void OnMove(InputAction.CallbackContext context)

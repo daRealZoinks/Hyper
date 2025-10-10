@@ -43,7 +43,7 @@ public class WallRunModule : MonoBehaviour
 
     private GroundCheckModule _groundCheckModule;
     private MovementModule _movementModule;
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private OldRigidbodyCharacterController _rigidbodyCharacterController;
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
 
@@ -51,7 +51,7 @@ public class WallRunModule : MonoBehaviour
     {
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _movementModule = GetComponent<MovementModule>();
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _rigidbodyCharacterController = GetComponent<OldRigidbodyCharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
     }

@@ -18,7 +18,7 @@ public class MovementModule : MonoBehaviour
     private GroundCheckModule _groundCheckModule;
     private SlidingModule _slidingModule;
     private GroundMovementModule _groundMovementModule;
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private OldRigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class MovementModule : MonoBehaviour
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _slidingModule = GetComponent<SlidingModule>();
         _groundMovementModule = GetComponent<GroundMovementModule>();
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _rigidbodyCharacterController = GetComponent<OldRigidbodyCharacterController>();
     }
 
     private void FixedUpdate()

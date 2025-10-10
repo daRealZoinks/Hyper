@@ -19,7 +19,7 @@ public class WallClimbingModule : MonoBehaviour
     private bool isTouchingWallInFront;
     private bool hasWallClimbedSinceLastNegativeVelocity = false;
 
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private OldRigidbodyCharacterController _rigidbodyCharacterController;
     private GravityModule _gravityModule;
     private GroundCheckModule _groundCheckModule;
     private GroundJumpModule _groundJumpModule;
@@ -28,7 +28,7 @@ public class WallClimbingModule : MonoBehaviour
 
     private void Awake()
     {
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _rigidbodyCharacterController = GetComponent<OldRigidbodyCharacterController>();
         _gravityModule = GetComponent<GravityModule>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _groundJumpModule = GetComponent<GroundJumpModule>();

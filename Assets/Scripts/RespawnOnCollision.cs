@@ -15,14 +15,14 @@ public class RespawnOnCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        RigidbodyCharacterController rigidbodyCharacterController = collision.gameObject.GetComponent<RigidbodyCharacterController>();
+        OldRigidbodyCharacterController rigidbodyCharacterController = collision.gameObject.GetComponent<OldRigidbodyCharacterController>();
         if (rigidbodyCharacterController)
         {
             RespawnAtCheckpoint(rigidbodyCharacterController);
         }
     }
 
-    private void RespawnAtCheckpoint(RigidbodyCharacterController rigidbodyCharacterController)
+    private void RespawnAtCheckpoint(OldRigidbodyCharacterController rigidbodyCharacterController)
     {
         if (!rigidbodyCharacterController || !checkpoint)
         {

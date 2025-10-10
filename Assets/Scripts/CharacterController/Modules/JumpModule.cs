@@ -10,14 +10,14 @@ public class JumpModule : MonoBehaviour
     private GroundCheckModule _groundCheckModule;
     private GroundJumpModule _groundJumpModule;
     private WallJumpModule _wallJumpModule;
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private OldRigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _groundJumpModule = GetComponent<GroundJumpModule>();
         _wallJumpModule = GetComponent<WallJumpModule>();
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _rigidbodyCharacterController = GetComponent<OldRigidbodyCharacterController>();
     }
 
     private void FixedUpdate()

@@ -26,7 +26,7 @@ public class SlidingModule : MonoBehaviour
 
     public Transform _cameraHolder;
     private CapsuleCollider _capsuleCollider;
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private OldRigidbodyCharacterController _rigidbodyCharacterController;
     private WallJumpModule _wallJumpModule;
 
     private void Awake()
@@ -39,7 +39,7 @@ public class SlidingModule : MonoBehaviour
 
         targetCameraHolderPosition = _cameraHolderOriginalPosition;
 
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _rigidbodyCharacterController = GetComponent<OldRigidbodyCharacterController>();
         _wallJumpModule = GetComponent<WallJumpModule>();
     }
 

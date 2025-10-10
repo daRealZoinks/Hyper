@@ -21,7 +21,7 @@ public class MantleModule : MonoBehaviour
 
     private float _mantleElapsedTime;
 
-    private RigidbodyCharacterController _rigidbodyCharacterController;
+    private OldRigidbodyCharacterController _rigidbodyCharacterController;
     private GroundCheckModule _groundCheckModule;
     private SlidingModule _slidingModule;
     private Rigidbody _rigidbody;
@@ -29,7 +29,7 @@ public class MantleModule : MonoBehaviour
 
     private void Awake()
     {
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+        _rigidbodyCharacterController = GetComponent<OldRigidbodyCharacterController>();
         _groundCheckModule = GetComponent<GroundCheckModule>();
         _slidingModule = GetComponent<SlidingModule>();
         _rigidbody = GetComponent<Rigidbody>();

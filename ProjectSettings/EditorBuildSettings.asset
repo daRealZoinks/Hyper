@@ -20,8 +20,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Online Test Level.unity
     guid: 1e47f7d760b3099479a0e06699c7e743
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 14ae4d27461de8743bdce760c1847064
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d53abe1b5d2754e4e96c262642cba1d8, type: 2}
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 5c3ff47c3bd40064bb6bdee4f7baf516, type: 3}
     com.unity.localization.settings: {fileID: 11400000, guid: 4fcb7fb225fe4044ebc81a2bdcf0c482, type: 2}
   m_UseUCBPForAssetBundles: 0
