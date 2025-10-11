@@ -2691,7 +2691,7 @@ Transform:
   m_GameObject: {fileID: 243883240}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5956,7 +5956,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &541235109
 Transform:
   m_ObjectHideFlags: 0
@@ -22320,6 +22320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1798881321}
   - component: {fileID: 1798881318}
+  - component: {fileID: 1798881326}
   - component: {fileID: 1798881322}
   - component: {fileID: 1798881324}
   - component: {fileID: 1798881323}
@@ -22338,7 +22339,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1798881317}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 58e1eda9cb1d10645a2d39ebeb512be1, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -22353,7 +22354,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!4 &1798881321
 Transform:
   m_ObjectHideFlags: 0
@@ -22363,7 +22364,7 @@ Transform:
   m_GameObject: {fileID: 1798881317}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22508,6 +22509,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
+  gravityScale: 1.5
+  slopeLimit: 45
+--- !u!54 &1798881326
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1798881317}
+  serializedVersion: 5
+  m_Mass: 75
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 1
 --- !u!1 &1805624453
 GameObject:
   m_ObjectHideFlags: 0
