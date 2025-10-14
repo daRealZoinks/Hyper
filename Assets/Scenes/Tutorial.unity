@@ -22509,8 +22509,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
+  acceleration: 60
+  topSpeed: 8
+  deceleration: 120
+  airControl: 0.25
+  airBreak: 0
+  jumpHeight: 2
+  coyoteTime: 0.15
+  jumpBufferTime: 0.15
   gravityScale: 1.5
   slopeLimit: 45
+  OnLanded:
+    m_PersistentCalls:
+      m_Calls: []
+  OnJump:
+    m_PersistentCalls:
+      m_Calls: []
+  _camera: {fileID: 1272168209}
 --- !u!54 &1798881326
 Rigidbody:
   m_ObjectHideFlags: 0

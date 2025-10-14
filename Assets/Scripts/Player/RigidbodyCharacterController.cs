@@ -41,10 +41,19 @@ public class RigidbodyCharacterController : MonoBehaviour
     private float _jumpBufferCounter;
     private float _coyoteTimeCounter;
 
+
+
+
     // private references to components
     private Rigidbody _rigidbody;
 
 
+
+
+
+    // private references to other objects
+    [SerializeField]
+    private Camera _camera;
 
 
     private void Awake()
@@ -58,6 +67,8 @@ public class RigidbodyCharacterController : MonoBehaviour
         {
             ApplyCustomGravity(gravityScale);
         }
+
+        UpdateRotationBasedOnCamera();
 
         Move(MoveInput);
 
@@ -107,6 +118,13 @@ public class RigidbodyCharacterController : MonoBehaviour
     private void ApplyCustomGravity(float gravityScale)
     {
         _rigidbody.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
+    }
+
+    private void UpdateRotationBasedOnCamera()
+    {
+        var cameraForward = _camera.transform.forward;
+        cameraForward.y = 0;
+        _rigidbody.rotation = Quaternion.LookRotation(cameraForward.normalized);
     }
 
     private void Move(Vector2 moveInput)
