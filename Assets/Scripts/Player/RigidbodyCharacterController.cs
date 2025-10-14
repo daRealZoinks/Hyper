@@ -71,9 +71,7 @@ public class RigidbodyCharacterController : MonoBehaviour
         UpdateRotationBasedOnCamera();
 
         Move(MoveInput);
-
-        UpdateJumpBufferCounter();
-        UpdateCoyoteTimeCounter();
+        HandleJumpLogic();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -156,30 +154,15 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
     }
 
-    public void Jump()
+    private void HandleJumpLogic()
     {
-        if (isGrounded)
+        UpdateJumpBufferCounter();
+        UpdateCoyoteTimeCounter();
+
+        if (_jumpBufferCounter > 0f)
         {
-            ExecuteJump();
-            OnJump?.Invoke();
-            _coyoteTimeCounter = 0f;
+            GroundJump();
         }
-    }
-
-    private void ExecuteJump()
-    {
-        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * gravityScale * jumpHeight);
-
-        if (_rigidbody.linearVelocity.y < 0)
-        {
-            _rigidbody.linearVelocity = new Vector3()
-            {
-                x = _rigidbody.linearVelocity.x,
-                z = _rigidbody.linearVelocity.z
-            };
-        }
-
-        _rigidbody.AddForce(jumpForce, ForceMode.VelocityChange);
     }
 
     private void UpdateJumpBufferCounter()
@@ -196,5 +179,36 @@ public class RigidbodyCharacterController : MonoBehaviour
         {
             _coyoteTimeCounter -= Time.fixedDeltaTime;
         }
+    }
+
+    public void Jump()
+    {
+        _jumpBufferCounter = jumpBufferTime;
+    }
+
+    private void GroundJump()
+    {
+        if (/* _coyoteTimeCounter > 0f || */ isGrounded)
+        {
+            ExecuteGroundJump();
+            OnJump?.Invoke();
+            _coyoteTimeCounter = 0f;
+        }
+    }
+
+    private void ExecuteGroundJump()
+    {
+        var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * gravityScale * jumpHeight);
+
+        if (_rigidbody.linearVelocity.y < 0)
+        {
+            _rigidbody.linearVelocity = new Vector3()
+            {
+                x = _rigidbody.linearVelocity.x,
+                z = _rigidbody.linearVelocity.z
+            };
+        }
+
+        _rigidbody.AddForce(jumpForce, ForceMode.VelocityChange);
     }
 }
