@@ -24,12 +24,10 @@ public class InputManager : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.phase != InputActionPhase.Started)
+        if (context.started)
         {
-            return;
+            _rigidbodyCharacterController.Jump();
         }
-
-        _rigidbodyCharacterController.Jump();
     }
 
     public void OnSlide(InputAction.CallbackContext context)

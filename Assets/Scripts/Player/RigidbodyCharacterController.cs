@@ -87,6 +87,7 @@ public class RigidbodyCharacterController : MonoBehaviour
                     isGrounded = true;
                     groundNormal = contactPoint.normal;
                     OnLanded?.Invoke();
+                    _coyoteTimeCounter = coyoteTime;
                     break;
                 }
             }
@@ -116,6 +117,11 @@ public class RigidbodyCharacterController : MonoBehaviour
     private void ApplyCustomGravity(float gravityScale)
     {
         _rigidbody.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
+    }
+
+    public void Jump()
+    {
+        _jumpBufferCounter = jumpBufferTime;
     }
 
     private void UpdateRotationBasedOnCamera()
@@ -161,7 +167,10 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         if (_jumpBufferCounter > 0f)
         {
-            GroundJump();
+            if (_coyoteTimeCounter > 0f || isGrounded)
+            {
+                GroundJump();
+            }
         }
     }
 
@@ -175,25 +184,21 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void UpdateCoyoteTimeCounter()
     {
-        if (_coyoteTimeCounter > 0f)
+        if (!isGrounded)
         {
-            _coyoteTimeCounter -= Time.fixedDeltaTime;
+            if (_coyoteTimeCounter > 0f)
+            {
+                _coyoteTimeCounter -= Time.fixedDeltaTime;
+            }
         }
-    }
-
-    public void Jump()
-    {
-        _jumpBufferCounter = jumpBufferTime;
     }
 
     private void GroundJump()
     {
-        if (/* _coyoteTimeCounter > 0f || */ isGrounded)
-        {
-            ExecuteGroundJump();
-            OnJump?.Invoke();
-            _coyoteTimeCounter = 0f;
-        }
+        ExecuteGroundJump();
+        OnJump?.Invoke();
+        _coyoteTimeCounter = 0f;
+        _jumpBufferCounter = 0f;
     }
 
     private void ExecuteGroundJump()
