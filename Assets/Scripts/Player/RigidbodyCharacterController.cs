@@ -19,10 +19,13 @@ public class RigidbodyCharacterController : MonoBehaviour
     public float wallDetectionAngleThreshold = 0.9f;
     public float wallStickForce = 10f;
     public float wallRunMinimumSpeed = 10f;
-
     public float wallRunAscendingForce = 3f;
     public float wallRunDescendingForce = 10f;
 
+    public float wallJumpHeight = 1.5f;
+    public float wallJumpSideForce = 4f;
+    public float wallJumpForwardForce = 5f;
+    public float sameWallJumpCooldown = 2.5f;
 
 
 
@@ -37,6 +40,9 @@ public class RigidbodyCharacterController : MonoBehaviour
     public UnityEvent OnStartedWallRunningRight;
     public UnityEvent OnStartedWallRunningLeft;
 
+    public UnityEvent OnRightWallJump;
+    public UnityEvent OnLeftWallJump;
+
     // private references to other objects
     [SerializeField]
     private Camera _camera;
@@ -44,9 +50,6 @@ public class RigidbodyCharacterController : MonoBehaviour
     // public properties
     public Vector2 MoveInput { private get; set; }
     public bool Sliding { private get; set; }
-
-    public ContactPoint WallContactPoint { get; private set; }
-    public GameObject WallRunningWall { get; private set; }
 
     public bool IsMovingForward => MoveInput.normalized.y > 0.7f;
     public bool IsVelocityForward
@@ -63,8 +66,8 @@ public class RigidbodyCharacterController : MonoBehaviour
         }
     }
 
-    public bool IsWallRunningOnRightWall => isTouchingWallOnRight && !isGrounded && IsMovingForward && IsVelocityForward;
-    public bool IsWallRunningOnLeftWall => isTouchingWallOnLeft && !isGrounded && IsMovingForward && IsVelocityForward;
+    public bool IsWallRunningOnRightWall => _isTouchingWallOnRight && !isGrounded && IsMovingForward && IsVelocityForward;
+    public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !isGrounded && IsMovingForward && IsVelocityForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
 
@@ -75,8 +78,14 @@ public class RigidbodyCharacterController : MonoBehaviour
     private float _jumpBufferCounter;
     private float _coyoteTimeCounter;
 
-    private bool isTouchingWallOnRight;
-    private bool isTouchingWallOnLeft;
+    private bool _isTouchingWallOnRight;
+    private bool _isTouchingWallOnLeft;
+
+    private ContactPoint _wallContactPoint;
+    private GameObject _wallRunningWall;
+    private GameObject _lastWallJumped;
+
+    private float _sameWallJumpCooldownCounter;
 
     // private references to components
     private Rigidbody _rigidbody;
@@ -90,7 +99,12 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isGrounded)
+        if (isGrounded)
+        {
+            _lastWallJumped = null;
+            _sameWallJumpCooldownCounter = 0f;
+        }
+        else
         {
             ApplyCustomGravity(gravityScale);
         }
@@ -110,6 +124,8 @@ public class RigidbodyCharacterController : MonoBehaviour
             ApplyWallStickForce();
             ApplyMinimumSpeed();
         }
+
+        UpdateSameWallJumpCooldownCounter();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -152,21 +168,21 @@ public class RigidbodyCharacterController : MonoBehaviour
                 var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
                 var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
 
-                isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > wallDetectionAngleThreshold;
-                isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > wallDetectionAngleThreshold;
+                _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > wallDetectionAngleThreshold;
+                _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > wallDetectionAngleThreshold;
 
-                WallContactPoint = contactPoint;
+                _wallContactPoint = contactPoint;
 
                 if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
                 {
                     OnStartedWallRunningRight?.Invoke();
-                    WallRunningWall = collision.gameObject;
+                    _wallRunningWall = collision.gameObject;
                 }
 
                 if (!wasWallRunningOnLeftWall && IsWallRunningOnLeftWall)
                 {
                     OnStartedWallRunningLeft?.Invoke();
-                    WallRunningWall = collision.gameObject;
+                    _wallRunningWall = collision.gameObject;
                 }
             }
         }
@@ -176,10 +192,10 @@ public class RigidbodyCharacterController : MonoBehaviour
     {
         isGrounded = false;
 
-        isTouchingWallOnRight = false;
-        isTouchingWallOnLeft = false;
+        _isTouchingWallOnRight = false;
+        _isTouchingWallOnLeft = false;
 
-        WallContactPoint = new ContactPoint();
+        _wallContactPoint = new ContactPoint();
     }
 
     private void ApplyCustomGravity(float gravityScale)
@@ -239,6 +255,11 @@ public class RigidbodyCharacterController : MonoBehaviour
             {
                 GroundJump();
             }
+
+            if (!isGrounded && IsWallRunning)
+            {
+                WallJump();
+            }
         }
     }
 
@@ -250,16 +271,24 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void ApplyWallStickForce()
     {
-        _rigidbody.AddForce(-WallContactPoint.normal * wallStickForce, ForceMode.Acceleration);
+        _rigidbody.AddForce(-_wallContactPoint.normal * wallStickForce, ForceMode.Acceleration);
     }
 
     private void ApplyMinimumSpeed()
     {
         if (_rigidbody.linearVelocity.magnitude < wallRunMinimumSpeed)
         {
-            var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(_rigidbody.transform.forward, WallContactPoint.normal).normalized;
+            var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(_rigidbody.transform.forward, _wallContactPoint.normal).normalized;
 
             _rigidbody.linearVelocity = forwardDirectionAlongSideWall * wallRunMinimumSpeed + Vector3.up * _rigidbody.linearVelocity.y;
+        }
+    }
+
+    private void UpdateSameWallJumpCooldownCounter()
+    {
+        if (_sameWallJumpCooldownCounter > 0f)
+        {
+            _sameWallJumpCooldownCounter -= Time.fixedDeltaTime;
         }
     }
 
@@ -290,6 +319,26 @@ public class RigidbodyCharacterController : MonoBehaviour
         _jumpBufferCounter = 0f;
     }
 
+    private void WallJump()
+    {
+        if ((!_wallRunningWall || _wallRunningWall != _lastWallJumped || sameWallJumpCooldown <= 0f) && IsWallRunning)
+        {
+            _lastWallJumped = _wallRunningWall;
+            _sameWallJumpCooldownCounter = sameWallJumpCooldown;
+            ExecuteWallJump();
+
+            if (IsWallRunningOnRightWall)
+            {
+                OnRightWallJump?.Invoke();
+            }
+
+            if (IsWallRunningOnLeftWall)
+            {
+                OnLeftWallJump?.Invoke();
+            }
+        }
+    }
+
     private void ExecuteGroundJump()
     {
         var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * gravityScale * jumpHeight);
@@ -304,5 +353,22 @@ public class RigidbodyCharacterController : MonoBehaviour
         }
 
         _rigidbody.AddForce(jumpForce, ForceMode.VelocityChange);
+    }
+
+    private void ExecuteWallJump()
+    {
+        var sideForce = _wallContactPoint.normal * wallJumpSideForce;
+        var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * gravityScale * wallJumpHeight);
+        var forwardForce = transform.forward * wallJumpForwardForce;
+
+        var finalForce = sideForce + jumpForce + forwardForce;
+
+        _rigidbody.linearVelocity = new Vector3()
+        {
+            x = _rigidbody.linearVelocity.x,
+            z = _rigidbody.linearVelocity.z
+        };
+
+        _rigidbody.AddForce(finalForce, ForceMode.VelocityChange);
     }
 }
