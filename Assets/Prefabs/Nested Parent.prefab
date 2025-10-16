@@ -363,12 +363,23 @@ MonoBehaviour:
   jumpHeight: 2
   coyoteTime: 0.15
   jumpBufferTime: 0.15
+  wallDetectionAngleThreshold: 0.9
+  wallStickForce: 10
+  wallRunMinimumSpeed: 10
+  wallRunAscendingForce: 3
+  wallRunDescendingForce: 10
   gravityScale: 1.5
   slopeLimit: 45
   OnLanded:
     m_PersistentCalls:
       m_Calls: []
   OnJump:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStartedWallRunningRight:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStartedWallRunningLeft:
     m_PersistentCalls:
       m_Calls: []
   _camera: {fileID: 7681188787058825366}
