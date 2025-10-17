@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class RigidbodyCharacterController : MonoBehaviour
 {
     // public variables
+    [Header("Movement Settings")]
     public float acceleration = 60f;
     public float topSpeed = 8f;
     public float deceleration = 120f;
@@ -12,28 +13,37 @@ public class RigidbodyCharacterController : MonoBehaviour
     public float airControl = 0.25f;
     public float airBreak = 0f;
 
+    [Header("Jump Settings")]
     public float jumpHeight = 2f;
     public float coyoteTime = 0.15f;
     public float jumpBufferTime = 0.15f;
 
+    [Header("Wall Running Settings")]
     public float wallDetectionAngleThreshold = 0.9f;
     public float wallStickForce = 10f;
     public float wallRunMinimumSpeed = 10f;
     public float wallRunAscendingForce = 3f;
     public float wallRunDescendingForce = 10f;
 
+    [Header("Wall Jump Settings")]
     public float wallJumpHeight = 1.5f;
     public float wallJumpSideForce = 4f;
     public float wallJumpForwardForce = 5f;
     public float sameWallJumpCooldown = 2.5f;
 
+    [Header("Sliding Settings")]
+    public float slidingDownForce = 5f;
+    public float slidingCapsuleColliderHeight = 1f;
+    public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
+    public Vector3 slidingCameraTrackingTargetPosition = new(0f, 0.5f, 0f);
 
 
-
+    [Header("General Settings")]
     public float gravityScale = 1.5f;
     public float slopeLimit = 45f;
 
     // public events
+    [Header("Events")]
     public UnityEvent OnLanded;
     public UnityEvent OnJump;
 
@@ -44,8 +54,11 @@ public class RigidbodyCharacterController : MonoBehaviour
     public UnityEvent OnLeftWallJump;
 
     // private references to other objects
+    [Header("References")]
     [SerializeField]
     private Camera _camera;
+    [SerializeField]
+    private Transform _cameraTrackingTarget;
 
     // public properties
     public Vector2 MoveInput { private get; set; }
@@ -70,6 +83,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !isGrounded && IsMovingForward && IsVelocityForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
+    public bool IsSliding { get; private set; }
 
     // private variables
     private bool isGrounded;
@@ -87,14 +101,23 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private float _sameWallJumpCooldownCounter;
 
+    private float _capsuleColliderOriginalHeight;
+    private Vector3 _capsuleColliderOriginalCenter;
+    private Vector3 _cameraTrackingTargetOriginalPosition;
+
     // private references to components
     private Rigidbody _rigidbody;
     private CapsuleCollider _capsuleCollider;
 
     private void Awake()
     {
+        _cameraTrackingTargetOriginalPosition = _cameraTrackingTarget.localPosition;
+
         _rigidbody = GetComponent<Rigidbody>();
+
         _capsuleCollider = GetComponent<CapsuleCollider>();
+        _capsuleColliderOriginalHeight = _capsuleCollider.height;
+        _capsuleColliderOriginalCenter = _capsuleCollider.center;
     }
 
     private void FixedUpdate()
@@ -111,21 +134,46 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         UpdateRotationBasedOnCamera();
 
-        if (!IsWallRunning)
+        if (!IsWallRunning && !IsSliding)
         {
             Move(MoveInput);
         }
 
         HandleJumpLogic();
 
-        if (IsWallRunning)
+        if (!IsSliding)
         {
-            ApplyWallRunForce();
-            ApplyWallStickForce();
-            ApplyMinimumSpeed();
+            if (IsWallRunning)
+            {
+                ApplyWallRunForce();
+                ApplyWallStickForce();
+                ApplyMinimumSpeed();
+            }
         }
 
         UpdateSameWallJumpCooldownCounter();
+
+        UpdateSlidingState();
+    }
+
+    private void UpdateSlidingState()
+    {
+        if (Sliding)
+        {
+            if (!IsSliding)
+            {
+                StartSliding();
+            }
+
+            _rigidbody.AddForce(Vector3.down * (slidingDownForce + (isGrounded ? -Physics.gravity.y * gravityScale : 0)), ForceMode.Acceleration);
+        }
+        else
+        {
+            if (IsSliding)
+            {
+                StopSliding();
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -249,16 +297,19 @@ public class RigidbodyCharacterController : MonoBehaviour
         UpdateJumpBufferCounter();
         UpdateCoyoteTimeCounter();
 
-        if (_jumpBufferCounter > 0f)
+        if (!IsSliding)
         {
-            if (_coyoteTimeCounter > 0f || isGrounded)
+            if (_jumpBufferCounter > 0f)
             {
-                GroundJump();
-            }
+                if (_coyoteTimeCounter > 0f || isGrounded)
+                {
+                    GroundJump();
+                }
 
-            if (!isGrounded && IsWallRunning)
-            {
-                WallJump();
+                if (!isGrounded && IsWallRunning)
+                {
+                    WallJump();
+                }
             }
         }
     }
@@ -370,5 +421,21 @@ public class RigidbodyCharacterController : MonoBehaviour
         };
 
         _rigidbody.AddForce(finalForce, ForceMode.VelocityChange);
+    }
+
+    private void StartSliding()
+    {
+        IsSliding = true;
+        _cameraTrackingTarget.localPosition = slidingCameraTrackingTargetPosition;
+        _capsuleCollider.height = slidingCapsuleColliderHeight;
+        _capsuleCollider.center = slidingCapsuleColliderCenter;
+    }
+
+    private void StopSliding()
+    {
+        _cameraTrackingTarget.localPosition = _cameraTrackingTargetOriginalPosition;
+        _capsuleCollider.height = _capsuleColliderOriginalHeight;
+        _capsuleCollider.center = _capsuleColliderOriginalCenter;
+        IsSliding = false;
     }
 }

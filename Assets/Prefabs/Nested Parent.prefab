@@ -368,6 +368,13 @@ MonoBehaviour:
   wallRunMinimumSpeed: 10
   wallRunAscendingForce: 3
   wallRunDescendingForce: 10
+  wallJumpHeight: 1.5
+  wallJumpSideForce: 4
+  wallJumpForwardForce: 5
+  sameWallJumpCooldown: 2.5
+  slidingDownForce: 5
+  slidingCapsuleColliderHeight: 1
+  slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
   gravityScale: 1.5
   slopeLimit: 45
   OnLanded:
@@ -382,7 +389,14 @@ MonoBehaviour:
   OnStartedWallRunningLeft:
     m_PersistentCalls:
       m_Calls: []
+  OnRightWallJump:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeftWallJump:
+    m_PersistentCalls:
+      m_Calls: []
   _camera: {fileID: 7681188787058825366}
+  _cameraTrackingTarget: {fileID: 6216556272576259190}
 --- !u!1 &3911431363384287958
 GameObject:
   m_ObjectHideFlags: 0
