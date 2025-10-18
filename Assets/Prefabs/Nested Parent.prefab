@@ -373,8 +373,10 @@ MonoBehaviour:
   wallJumpForwardForce: 5
   sameWallJumpCooldown: 2.5
   slidingDownForce: 5
+  slidingTurnSpeed: 0.2
   slidingCapsuleColliderHeight: 1
   slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
+  slidingCameraTrackingTargetPosition: {x: 0, y: 0.5, z: 0}
   gravityScale: 1.5
   slopeLimit: 45
   OnLanded:

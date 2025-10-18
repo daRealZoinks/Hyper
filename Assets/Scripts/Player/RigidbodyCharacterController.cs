@@ -33,9 +33,15 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     [Header("Sliding Settings")]
     public float slidingDownForce = 5f;
+    public float slidingTurnSpeed = 0.2f;
     public float slidingCapsuleColliderHeight = 1f;
     public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
     public Vector3 slidingCameraTrackingTargetPosition = new(0f, 0.5f, 0f);
+
+
+
+
+
 
 
     [Header("General Settings")]
@@ -166,6 +172,23 @@ public class RigidbodyCharacterController : MonoBehaviour
             }
 
             _rigidbody.AddForce(Vector3.down * (slidingDownForce + (isGrounded ? -Physics.gravity.y * gravityScale : 0)), ForceMode.Acceleration);
+
+            var horizontalVelocity = new Vector3
+            {
+                x = _rigidbody.linearVelocity.x,
+                z = _rigidbody.linearVelocity.z
+            };
+
+            var desiredDirection = (transform.right * MoveInput.x + transform.forward * MoveInput.y).normalized;
+            var projectedDesiredDirection = Vector3.ProjectOnPlane(desiredDirection, groundNormal).normalized;
+            var newHorizontalVelocity = Vector3.Slerp(horizontalVelocity.normalized, projectedDesiredDirection, MoveInput.magnitude * slidingTurnSpeed * Time.fixedDeltaTime) * horizontalVelocity.magnitude;
+
+            _rigidbody.linearVelocity = new Vector3
+            {
+                x = newHorizontalVelocity.x,
+                y = _rigidbody.linearVelocity.y,
+                z = newHorizontalVelocity.z
+            };
         }
         else
         {
