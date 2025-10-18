@@ -19,7 +19,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     public float jumpBufferTime = 0.15f;
 
     [Header("Wall Running Settings")]
-    public float wallDetectionAngleThreshold = 0.9f;
+    public float wallRunDetectionAngleThreshold = 0.9f;
     public float wallStickForce = 10f;
     public float wallRunMinimumSpeed = 10f;
     public float wallRunAscendingForce = 3f;
@@ -38,8 +38,9 @@ public class RigidbodyCharacterController : MonoBehaviour
     public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
     public Vector3 slidingCameraTrackingTargetPosition = new(0f, 0.5f, 0f);
 
-
-
+    [Header("Mantling Settings")]
+    private float wallMantleDetectionAngleThreshold = 0.9f;
+    private float mantleDuration = 0.2f;
 
 
 
@@ -58,6 +59,8 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public UnityEvent OnRightWallJump;
     public UnityEvent OnLeftWallJump;
+
+    public UnityEvent OnMantle;
 
     // private references to other objects
     [Header("References")]
@@ -91,6 +94,8 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public bool IsSliding { get; private set; }
 
+    public bool IsMantling { get; private set; }
+
     // private variables
     private bool isGrounded;
     private Vector3 groundNormal;
@@ -103,13 +108,18 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private ContactPoint _wallContactPoint;
     private GameObject _wallRunningWall;
-    private GameObject _lastWallJumped;
 
+    private GameObject _lastWallJumped;
     private float _sameWallJumpCooldownCounter;
 
     private float _capsuleColliderOriginalHeight;
     private Vector3 _capsuleColliderOriginalCenter;
     private Vector3 _cameraTrackingTargetOriginalPosition;
+
+    private bool _isTouchingWallInFront;
+    private Vector3 _mantleStart;
+    private Vector3 _mantleEnd;
+    private float _mantleElapsedTime;
 
     // private references to components
     private Rigidbody _rigidbody;
@@ -135,7 +145,10 @@ public class RigidbodyCharacterController : MonoBehaviour
         }
         else
         {
-            ApplyCustomGravity(gravityScale);
+            if (!IsMantling)
+            {
+                ApplyCustomGravity(gravityScale);
+            }
         }
 
         UpdateRotationBasedOnCamera();
@@ -160,44 +173,10 @@ public class RigidbodyCharacterController : MonoBehaviour
         UpdateSameWallJumpCooldownCounter();
 
         UpdateSlidingState();
+
+        UpdateMantlingState();
     }
 
-    private void UpdateSlidingState()
-    {
-        if (Sliding)
-        {
-            if (!IsSliding)
-            {
-                StartSliding();
-            }
-
-            _rigidbody.AddForce(Vector3.down * (slidingDownForce + (isGrounded ? -Physics.gravity.y * gravityScale : 0)), ForceMode.Acceleration);
-
-            var horizontalVelocity = new Vector3
-            {
-                x = _rigidbody.linearVelocity.x,
-                z = _rigidbody.linearVelocity.z
-            };
-
-            var desiredDirection = (transform.right * MoveInput.x + transform.forward * MoveInput.y).normalized;
-            var projectedDesiredDirection = Vector3.ProjectOnPlane(desiredDirection, groundNormal).normalized;
-            var newHorizontalVelocity = Vector3.Slerp(horizontalVelocity.normalized, projectedDesiredDirection, MoveInput.magnitude * slidingTurnSpeed * Time.fixedDeltaTime) * horizontalVelocity.magnitude;
-
-            _rigidbody.linearVelocity = new Vector3
-            {
-                x = newHorizontalVelocity.x,
-                y = _rigidbody.linearVelocity.y,
-                z = newHorizontalVelocity.z
-            };
-        }
-        else
-        {
-            if (IsSliding)
-            {
-                StopSliding();
-            }
-        }
-    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -221,6 +200,9 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
+        ContactPoint? touchingBelowMaximumHeight = null;
+        ContactPoint? touchingAboveMaximumHeight = null;
+
         foreach (var contactPoint in collision.contacts)
         {
             var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
@@ -239,8 +221,8 @@ public class RigidbodyCharacterController : MonoBehaviour
                 var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
                 var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
 
-                _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > wallDetectionAngleThreshold;
-                _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > wallDetectionAngleThreshold;
+                _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > wallMantleDetectionAngleThreshold;
+                _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > wallMantleDetectionAngleThreshold;
 
                 _wallContactPoint = contactPoint;
 
@@ -256,6 +238,29 @@ public class RigidbodyCharacterController : MonoBehaviour
                     _wallRunningWall = collision.gameObject;
                 }
             }
+
+            _isTouchingWallInFront = Vector3.Dot(contactPoint.normal, -transform.forward) > wallMantleDetectionAngleThreshold && contactPoint.normal.y == 0;
+
+            if (_isTouchingWallInFront && !isGrounded && IsMovingForward && !IsSliding)
+            {
+                var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+
+                if (contactPoint.point.y <= maximumHeightCollisionPoint.y)
+                {
+                    touchingBelowMaximumHeight = contactPoint;
+                }
+                else
+                {
+                    touchingAboveMaximumHeight = contactPoint;
+                }
+            }
+        }
+
+        if (touchingBelowMaximumHeight != null && touchingAboveMaximumHeight == null)
+        {
+            OnMantle?.Invoke();
+
+            Mantle(touchingBelowMaximumHeight.Value);
         }
     }
 
@@ -267,6 +272,8 @@ public class RigidbodyCharacterController : MonoBehaviour
         _isTouchingWallOnLeft = false;
 
         _wallContactPoint = new ContactPoint();
+
+        _isTouchingWallInFront = false;
     }
 
     private void ApplyCustomGravity(float gravityScale)
@@ -446,6 +453,43 @@ public class RigidbodyCharacterController : MonoBehaviour
         _rigidbody.AddForce(finalForce, ForceMode.VelocityChange);
     }
 
+    private void UpdateSlidingState()
+    {
+        if (Sliding)
+        {
+            if (!IsSliding)
+            {
+                StartSliding();
+            }
+
+            _rigidbody.AddForce(Vector3.down * (slidingDownForce + (isGrounded ? -Physics.gravity.y * gravityScale : 0)), ForceMode.Acceleration);
+
+            var horizontalVelocity = new Vector3
+            {
+                x = _rigidbody.linearVelocity.x,
+                z = _rigidbody.linearVelocity.z
+            };
+
+            var desiredDirection = (transform.right * MoveInput.x + transform.forward * MoveInput.y).normalized;
+            var projectedDesiredDirection = Vector3.ProjectOnPlane(desiredDirection, groundNormal).normalized;
+            var newHorizontalVelocity = Vector3.Slerp(horizontalVelocity.normalized, projectedDesiredDirection, MoveInput.magnitude * slidingTurnSpeed * Time.fixedDeltaTime) * horizontalVelocity.magnitude;
+
+            _rigidbody.linearVelocity = new Vector3
+            {
+                x = newHorizontalVelocity.x,
+                y = _rigidbody.linearVelocity.y,
+                z = newHorizontalVelocity.z
+            };
+        }
+        else
+        {
+            if (IsSliding)
+            {
+                StopSliding();
+            }
+        }
+    }
+
     private void StartSliding()
     {
         IsSliding = true;
@@ -460,5 +504,42 @@ public class RigidbodyCharacterController : MonoBehaviour
         _capsuleCollider.height = _capsuleColliderOriginalHeight;
         _capsuleCollider.center = _capsuleColliderOriginalCenter;
         IsSliding = false;
+    }
+
+    private void UpdateMantlingState()
+    {
+        if (IsMantling)
+        {
+            _capsuleCollider.enabled = false;
+            _rigidbody.linearVelocity = Vector3.zero;
+            _mantleElapsedTime += Time.fixedDeltaTime;
+            float t = Mathf.Clamp01(_mantleElapsedTime / mantleDuration);
+            transform.position = Vector3.Lerp(_mantleStart, _mantleEnd, t);
+
+            if (_mantleElapsedTime >= mantleDuration)
+            {
+                transform.position = _mantleEnd;
+                IsMantling = false;
+            }
+        }
+        else
+        {
+            _capsuleCollider.enabled = true;
+        }
+    }
+
+    private void Mantle(ContactPoint touchingBelowMaximumHeight)
+    {
+        if (IsMantling) return;
+
+        var capsuleColliderCenterPosition = transform.position;
+        var mantleForwardOffset = transform.forward * _capsuleCollider.radius;
+        var mantleVerticalOffset = transform.up * (touchingBelowMaximumHeight.point.y - capsuleColliderCenterPosition.y);
+
+        _mantleStart = capsuleColliderCenterPosition;
+        _mantleEnd = _mantleStart + mantleForwardOffset + mantleVerticalOffset;
+        _mantleElapsedTime = 0f;
+
+        IsMantling = true;
     }
 }
