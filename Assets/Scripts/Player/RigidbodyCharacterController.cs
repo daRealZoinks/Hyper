@@ -38,12 +38,10 @@ public class RigidbodyCharacterController : MonoBehaviour
     public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
     public Vector3 slidingCameraTrackingTargetPosition = new(0f, 0.5f, 0f);
 
-    [Header("Mantling Settings")]
-    private float wallMantleDetectionAngleThreshold = 0.9f;
-    private float mantleDuration = 0.2f;
-
-
-
+    [Header("Mantling and Wall Climbing Settings")]
+    public float frontWallDetectionAngleThreshold = 0.9f;
+    public float mantleDuration = 0.2f;
+    public float wallClimbMaxHeight = 4f;
 
     [Header("General Settings")]
     public float gravityScale = 1.5f;
@@ -62,6 +60,9 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     public UnityEvent OnMantle;
 
+    public UnityEvent OnStartedWallClimbing;
+    public UnityEvent OnStoppedWallClimbing;
+
     // private references to other objects
     [Header("References")]
     [SerializeField]
@@ -73,7 +74,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     public Vector2 MoveInput { private get; set; }
     public bool Sliding { private get; set; }
 
-    public bool IsMovingForward => MoveInput.normalized.y > 0.7f;
+    public bool IsMovingForward => MoveInput.normalized.y > 0.9f;
     public bool IsVelocityForward
     {
         get
@@ -95,6 +96,9 @@ public class RigidbodyCharacterController : MonoBehaviour
     public bool IsSliding { get; private set; }
 
     public bool IsMantling { get; private set; }
+
+    public bool IsWallClimbing { get; private set; } = false;
+    public bool CanStartWallClimb => _isTouchingWallInFront && !isGrounded && IsMovingForward && !_hasWallClimbedSinceLastNegativeVelocity;
 
     // private variables
     private bool isGrounded;
@@ -120,6 +124,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     private Vector3 _mantleStart;
     private Vector3 _mantleEnd;
     private float _mantleElapsedTime;
+    private bool _hasWallClimbedSinceLastNegativeVelocity = false;
 
     // private references to components
     private Rigidbody _rigidbody;
@@ -175,8 +180,9 @@ public class RigidbodyCharacterController : MonoBehaviour
         UpdateSlidingState();
 
         UpdateMantlingState();
-    }
 
+        UpdateWallClimbingState();
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -221,8 +227,12 @@ public class RigidbodyCharacterController : MonoBehaviour
                 var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
                 var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
 
-                _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > wallMantleDetectionAngleThreshold;
-                _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > wallMantleDetectionAngleThreshold;
+                var wasAbleToWallClimb = CanStartWallClimb;
+
+                _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > frontWallDetectionAngleThreshold;
+                _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > frontWallDetectionAngleThreshold;
+
+                _isTouchingWallInFront = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
 
                 _wallContactPoint = contactPoint;
 
@@ -237,9 +247,23 @@ public class RigidbodyCharacterController : MonoBehaviour
                     OnStartedWallRunningLeft?.Invoke();
                     _wallRunningWall = collision.gameObject;
                 }
+
+                if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
+                {
+                    var climbForce = GetWallClimbAdditiveForce();
+
+                    if (climbForce > 0f)
+                    {
+                        OnStartedWallClimbing?.Invoke();
+                        IsWallClimbing = true;
+                        _hasWallClimbedSinceLastNegativeVelocity = true;
+
+                        _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
+                    }
+                }
             }
 
-            _isTouchingWallInFront = Vector3.Dot(contactPoint.normal, -transform.forward) > wallMantleDetectionAngleThreshold && contactPoint.normal.y == 0;
+            _isTouchingWallInFront = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
 
             if (_isTouchingWallInFront && !isGrounded && IsMovingForward && !IsSliding)
             {
@@ -274,6 +298,12 @@ public class RigidbodyCharacterController : MonoBehaviour
         _wallContactPoint = new ContactPoint();
 
         _isTouchingWallInFront = false;
+
+        if (IsWallClimbing)
+        {
+            OnStoppedWallClimbing?.Invoke();
+            IsWallClimbing = false;
+        }
     }
 
     private void ApplyCustomGravity(float gravityScale)
@@ -541,5 +571,45 @@ public class RigidbodyCharacterController : MonoBehaviour
         _mantleElapsedTime = 0f;
 
         IsMantling = true;
+    }
+
+    private float GetWallClimbAdditiveForce()
+    {
+        var upwardsVelocity = _rigidbody.linearVelocity.y;
+        var gravity = Physics.gravity.y * gravityScale;
+        var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+
+        if (currentAirHeight < 0)
+        {
+            currentAirHeight = 0;
+        }
+
+        var heightDifference = wallClimbMaxHeight - currentAirHeight;
+
+        if (heightDifference > 0)
+        {
+            var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
+            var forceToAdd = upwardForce - upwardsVelocity;
+            return forceToAdd > 0f ? forceToAdd : 0f;
+        }
+
+        return 0f;
+    }
+
+    private void UpdateWallClimbingState()
+    {
+        if (_hasWallClimbedSinceLastNegativeVelocity && _rigidbody.linearVelocity.y < 0f)
+        {
+            _hasWallClimbedSinceLastNegativeVelocity = false;
+        }
+
+        if (IsWallClimbing)
+        {
+            if (_rigidbody.linearVelocity.y < 0f)
+            {
+                OnStoppedWallClimbing?.Invoke();
+                IsWallClimbing = false;
+            }
+        }
     }
 }
