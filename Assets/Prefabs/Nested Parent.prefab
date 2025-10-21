@@ -363,7 +363,7 @@ MonoBehaviour:
   jumpHeight: 2
   coyoteTime: 0.15
   jumpBufferTime: 0.15
-  wallDetectionAngleThreshold: 0.9
+  wallRunDetectionAngleThreshold: 0.9
   wallStickForce: 10
   wallRunMinimumSpeed: 10
   wallRunAscendingForce: 3
@@ -377,6 +377,9 @@ MonoBehaviour:
   slidingCapsuleColliderHeight: 1
   slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
   slidingCameraTrackingTargetPosition: {x: 0, y: 0.5, z: 0}
+  frontWallDetectionAngleThreshold: 0.9
+  mantleDuration: 0.2
+  wallClimbMaxHeight: 4
   gravityScale: 1.5
   slopeLimit: 45
   OnLanded:
@@ -395,6 +398,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnLeftWallJump:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMantle:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStartedWallClimbing:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStoppedWallClimbing:
     m_PersistentCalls:
       m_Calls: []
   _camera: {fileID: 7681188787058825366}

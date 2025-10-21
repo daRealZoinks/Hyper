@@ -98,7 +98,7 @@ public class RigidbodyCharacterController : MonoBehaviour
     public bool IsMantling { get; private set; }
 
     public bool IsWallClimbing { get; private set; } = false;
-    public bool CanStartWallClimb => _isTouchingWallInFront && !isGrounded && IsMovingForward && !_hasWallClimbedSinceLastNegativeVelocity;
+    public bool CanStartWallClimb => _wallClimbFrontWallDetection && !isGrounded && IsMovingForward && !_hasWallClimbedSinceLastNegativeVelocity;
 
     // private variables
     private bool isGrounded;
@@ -120,10 +120,12 @@ public class RigidbodyCharacterController : MonoBehaviour
     private Vector3 _capsuleColliderOriginalCenter;
     private Vector3 _cameraTrackingTargetOriginalPosition;
 
-    private bool _isTouchingWallInFront;
+    private bool _mantlingFrontWallDetection;
     private Vector3 _mantleStart;
     private Vector3 _mantleEnd;
     private float _mantleElapsedTime;
+
+    private bool _wallClimbFrontWallDetection;
     private bool _hasWallClimbedSinceLastNegativeVelocity = false;
 
     // private references to components
@@ -206,9 +208,6 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        ContactPoint? touchingBelowMaximumHeight = null;
-        ContactPoint? touchingAboveMaximumHeight = null;
-
         foreach (var contactPoint in collision.contacts)
         {
             var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
@@ -219,7 +218,13 @@ public class RigidbodyCharacterController : MonoBehaviour
                 groundNormal = contactPoint.normal;
                 break;
             }
+        }
 
+        ContactPoint? touchingBelowMaximumHeight = null;
+        ContactPoint? touchingAboveMaximumHeight = null;
+
+        foreach (var contactPoint in collision.contacts)
+        {
             var minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
 
             if (contactPoint.point.y >= minimumHeightCollisionPoint.y)
@@ -232,9 +237,9 @@ public class RigidbodyCharacterController : MonoBehaviour
                 _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > frontWallDetectionAngleThreshold;
                 _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > frontWallDetectionAngleThreshold;
 
-                _isTouchingWallInFront = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
-
                 _wallContactPoint = contactPoint;
+
+                _wallClimbFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
 
                 if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
                 {
@@ -263,9 +268,9 @@ public class RigidbodyCharacterController : MonoBehaviour
                 }
             }
 
-            _isTouchingWallInFront = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
+            _mantlingFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
 
-            if (_isTouchingWallInFront && !isGrounded && IsMovingForward && !IsSliding)
+            if (_mantlingFrontWallDetection && !isGrounded && IsMovingForward && !IsSliding)
             {
                 var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
 
@@ -297,7 +302,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         _wallContactPoint = new ContactPoint();
 
-        _isTouchingWallInFront = false;
+        _wallClimbFrontWallDetection = false;
 
         if (IsWallClimbing)
         {
