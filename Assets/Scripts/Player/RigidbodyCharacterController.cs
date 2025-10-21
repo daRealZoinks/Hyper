@@ -143,6 +143,11 @@ public class RigidbodyCharacterController : MonoBehaviour
         _capsuleColliderOriginalCenter = _capsuleCollider.center;
     }
 
+    private void Update()
+    {
+        UpdateMantlingState();
+    }
+
     private void FixedUpdate()
     {
         if (isGrounded)
@@ -180,8 +185,6 @@ public class RigidbodyCharacterController : MonoBehaviour
         UpdateSameWallJumpCooldownCounter();
 
         UpdateSlidingState();
-
-        UpdateMantlingState();
 
         UpdateWallClimbingState();
     }
@@ -547,7 +550,7 @@ public class RigidbodyCharacterController : MonoBehaviour
         {
             _capsuleCollider.enabled = false;
             _rigidbody.linearVelocity = Vector3.zero;
-            _mantleElapsedTime += Time.fixedDeltaTime;
+            _mantleElapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(_mantleElapsedTime / mantleDuration);
             transform.position = Vector3.Lerp(_mantleStart, _mantleEnd, t);
 
