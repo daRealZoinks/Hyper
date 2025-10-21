@@ -52,6 +52,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Throw",
+                    "type": "Button",
+                    "id": "e6ea26a9-2ab4-4fad-a2c9-c4725d9cdfd8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "da260aff-1798-47ba-81b1-254c15974434",
@@ -207,8 +216,8 @@
                 },
                 {
                     "name": "",
-                    "id": "3797b68e-27b1-4dd7-b345-1c1c28456ace",
-                    "path": "<Gamepad>/rightShoulder",
+                    "id": "b1fc29b9-a6eb-446b-b7bd-5730abae8292",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -218,8 +227,8 @@
                 },
                 {
                     "name": "",
-                    "id": "b1fc29b9-a6eb-446b-b7bd-5730abae8292",
-                    "path": "<Gamepad>/buttonSouth",
+                    "id": "3797b68e-27b1-4dd7-b345-1c1c28456ace",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -234,6 +243,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
+                    "action": "Grapple",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d5e0689-b551-42c3-a73e-224a76378cbf",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
                     "action": "Grapple",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -273,6 +293,17 @@
                 },
                 {
                     "name": "",
+                    "id": "dce6872a-8cfb-4eec-b2ca-f43db30106a0",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0b44be3e-4f96-453e-a235-c120b0b3399b",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
@@ -290,6 +321,39 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a31e112d-e55b-479b-93a7-a52364e680e7",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "12c32bac-59a7-4694-a900-b1146620f3ce",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c29a351-777a-4773-a047-b614b27c84a7",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Throw",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
