@@ -40,29 +40,4 @@ public class InputManager : MonoBehaviour
 
         _rigidbodyCharacterController.Sliding = slide;
     }
-
-    public void OnGrapple(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            Debug.Log("Grapple started");
-        }
-
-        if (context.canceled)
-        {
-            Debug.Log("Grapple canceled");
-        }
-    }
-
-    public void OnPause(InputAction.CallbackContext context)
-    {
-        if (context.phase != InputActionPhase.Started)
-        {
-            return;
-        }
-
-        // TODO: put this in another bigger component
-
-        Application.Quit();
-    }
 }
