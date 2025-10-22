@@ -4,48 +4,34 @@ using UnityEngine.InputSystem;
 
 public class ControllerRumble : MonoBehaviour
 {
-    private PlayerInput playerInput;
+    private Gamepad currentGamepad;
+
+    public float strength = 0.5f;
+    public float ratio = 0.5f;
+    public float duration = 0.1f;
 
     private void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
+        currentGamepad = Gamepad.current;
+        currentGamepad.PauseHaptics();
+
+        var lowFrequency = ratio * strength;
+        var highFrequency = (1 - ratio) * strength;
+
+        currentGamepad.SetMotorSpeeds(lowFrequency, highFrequency);
     }
 
     public async void QuickRumble()
     {
-        await RumbleAsync(0.4f, 0.1f);
+        await RumbleAsync(duration);
     }
 
-    public async Task RumbleAsync(float strength, float duration)
+    public async Task RumbleAsync(float duration)
     {
-        var isController = playerInput.currentControlScheme != "Xbox" || playerInput.currentControlScheme != "PlayStation";
+        if (currentGamepad == null) return;
 
-        if (!isController)
-        {
-            return;
-        }
-
-        var devices = playerInput.devices;
-
-        foreach (var device in devices)
-        {
-            if (device is not Gamepad gamepad) continue;
-
-            if (gamepad != Gamepad.current) continue;
-
-
-            var lowFrequency = 1f / 3f * strength;
-            var highFrequency = 2f / 3f * strength;
-
-            gamepad.SetMotorSpeeds(lowFrequency, highFrequency);
-            await Awaitable.WaitForSecondsAsync(duration);
-            StopRumble();
-            return;
-        }
-    }
-
-    private void StopRumble()
-    {
-        Gamepad.current.SetMotorSpeeds(0, 0);
+        currentGamepad.ResumeHaptics();
+        await Awaitable.WaitForSecondsAsync(duration);
+        currentGamepad.PauseHaptics();
     }
 }
