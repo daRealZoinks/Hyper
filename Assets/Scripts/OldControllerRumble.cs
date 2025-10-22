@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ControllerRumble : MonoBehaviour
+public class OldControllerRumble : MonoBehaviour
 {
     private Gamepad currentGamepad;
 
