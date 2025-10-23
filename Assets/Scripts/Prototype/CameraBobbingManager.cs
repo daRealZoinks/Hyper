@@ -3,11 +3,7 @@ using UnityEngine;
 
 public class CameraBobbingManager : MonoBehaviour
 {
-    public new Rigidbody rigidbody;
-    public MovementModule movementModule;
-    public GroundCheckModule groundCheckModule;
-    public WallRunModule wallRunModule;
-    public SlidingModule slidingModule;
+    public RigidbodyCharacterController rigidbodyCharacterController;
 
     private CinemachineBasicMultiChannelPerlin _cinemachineBasicMultiChannelPerlin;
 
@@ -20,15 +16,17 @@ public class CameraBobbingManager : MonoBehaviour
     {
         var intensity = 0f;
 
-        if ((groundCheckModule.IsGrounded || wallRunModule.IsWallRunning) && !slidingModule.IsSliding)
+        if ((rigidbodyCharacterController.IsGrounded || rigidbodyCharacterController.IsWallRunning) && !rigidbodyCharacterController.IsSliding)
         {
+            var rigidbody = rigidbodyCharacterController.GetComponent<Rigidbody>();
+
             var rigidbodyHorizontalVelocity = new Vector3
             {
                 x = rigidbody.linearVelocity.x,
                 z = rigidbody.linearVelocity.z
             };
 
-            var speed = rigidbodyHorizontalVelocity.magnitude / movementModule.currentTopSpeed;
+            var speed = rigidbodyHorizontalVelocity.magnitude / rigidbodyCharacterController.topSpeed;
             intensity = Mathf.Clamp(speed, 0f, 1f);
         }
 

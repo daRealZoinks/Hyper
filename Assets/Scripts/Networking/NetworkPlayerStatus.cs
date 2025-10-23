@@ -8,8 +8,6 @@ public class NetworkPlayerStatus : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
-
         (IsOwner ? DoOnSpawnIfOwner : DoOnSpawnIfNotOwner)?.Invoke();
     }
 }

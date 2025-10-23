@@ -89,8 +89,10 @@ public class RigidbodyCharacterController : MonoBehaviour
         }
     }
 
-    public bool IsWallRunningOnRightWall => _isTouchingWallOnRight && !isGrounded && IsMovingForward && IsVelocityForward;
-    public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !isGrounded && IsMovingForward && IsVelocityForward;
+    public bool IsGrounded { get; set; }
+
+    public bool IsWallRunningOnRightWall => _isTouchingWallOnRight && !IsGrounded && IsMovingForward && IsVelocityForward;
+    public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !IsGrounded && IsMovingForward && IsVelocityForward;
     public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
     public bool IsSliding { get; private set; }
@@ -98,10 +100,8 @@ public class RigidbodyCharacterController : MonoBehaviour
     public bool IsMantling { get; private set; }
 
     public bool IsWallClimbing { get; private set; } = false;
-    public bool CanStartWallClimb => _wallClimbFrontWallDetection && !isGrounded && IsMovingForward && !_hasWallClimbedSinceLastNegativeVelocity;
+    public bool CanStartWallClimb => _wallClimbFrontWallDetection && !IsGrounded && IsMovingForward && !_hasWallClimbedSinceLastNegativeVelocity;
 
-    // private variables
-    private bool isGrounded;
     private Vector3 groundNormal;
 
     private float _jumpBufferCounter;
@@ -150,7 +150,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isGrounded)
+        if (IsGrounded)
         {
             _lastWallJumped = null;
             _sameWallJumpCooldownCounter = 0f;
@@ -197,9 +197,9 @@ public class RigidbodyCharacterController : MonoBehaviour
 
             if (angle <= slopeLimit)
             {
-                if (!isGrounded)
+                if (!IsGrounded)
                 {
-                    isGrounded = true;
+                    IsGrounded = true;
                     groundNormal = contactPoint.normal;
                     OnLanded?.Invoke();
                     _coyoteTimeCounter = coyoteTime;
@@ -217,7 +217,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
             if (angle <= slopeLimit)
             {
-                isGrounded = true;
+                IsGrounded = true;
                 groundNormal = contactPoint.normal;
                 break;
             }
@@ -273,7 +273,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
             _mantlingFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
 
-            if (_mantlingFrontWallDetection && !isGrounded && IsMovingForward && !IsSliding)
+            if (_mantlingFrontWallDetection && !IsGrounded && IsMovingForward && !IsSliding)
             {
                 var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
 
@@ -298,7 +298,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        isGrounded = false;
+        IsGrounded = false;
 
         _isTouchingWallOnRight = false;
         _isTouchingWallOnLeft = false;
@@ -326,9 +326,8 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void UpdateRotationBasedOnCamera()
     {
-        var cameraForward = _camera.transform.forward;
-        cameraForward.y = 0;
-        _rigidbody.rotation = Quaternion.LookRotation(cameraForward.normalized);
+        var cameraYaw = _camera.transform.rotation.eulerAngles.y;
+        _rigidbody.rotation = Quaternion.Euler(0f, cameraYaw, 0f);
     }
 
     private void Move(Vector2 moveInput)
@@ -347,7 +346,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
         finalForce *= (inputDirection != Vector3.zero) ? acceleration : deceleration;
 
-        if (isGrounded)
+        if (IsGrounded)
         {
             finalForce = Vector3.ProjectOnPlane(finalForce, groundNormal);
         }
@@ -369,12 +368,12 @@ public class RigidbodyCharacterController : MonoBehaviour
         {
             if (_jumpBufferCounter > 0f)
             {
-                if (_coyoteTimeCounter > 0f || isGrounded)
+                if (_coyoteTimeCounter > 0f || IsGrounded)
                 {
                     GroundJump();
                 }
 
-                if (!isGrounded && IsWallRunning)
+                if (!IsGrounded && IsWallRunning)
                 {
                     WallJump();
                 }
@@ -421,7 +420,7 @@ public class RigidbodyCharacterController : MonoBehaviour
 
     private void UpdateCoyoteTimeCounter()
     {
-        if (!isGrounded)
+        if (!IsGrounded)
         {
             if (_coyoteTimeCounter > 0f)
             {
@@ -500,7 +499,7 @@ public class RigidbodyCharacterController : MonoBehaviour
                 StartSliding();
             }
 
-            _rigidbody.AddForce(Vector3.down * (slidingDownForce + (isGrounded ? -Physics.gravity.y * gravityScale : 0)), ForceMode.Acceleration);
+            _rigidbody.AddForce(Vector3.down * (slidingDownForce + (IsGrounded ? -Physics.gravity.y * gravityScale : 0)), ForceMode.Acceleration);
 
             var horizontalVelocity = new Vector3
             {
