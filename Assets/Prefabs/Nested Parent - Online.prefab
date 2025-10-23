@@ -8,6 +8,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8985527
+      objectReference: {fileID: 0}
+    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.00059079163
+      objectReference: {fileID: 0}
+    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.43886518
+      objectReference: {fileID: 0}
+    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.00028855054
+      objectReference: {fileID: 0}
+    - target: {fileID: 1414012690279855362, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_ControllerManager.Controllers.Array.data[1].InputValue
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4698619195359147837, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_ControllerManager.Controllers.Array.data[1].InputValue
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,9 +72,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6487292247844961331, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: PanAxis.Value
+      value: 52.063007
+      objectReference: {fileID: 0}
+    - target: {fileID: 6487292247844961331, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: TiltAxis.Value
+      value: 0.07534307
+      objectReference: {fileID: 0}
     - target: {fileID: 8020874733183147571, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_Name
       value: Nested Parent - Online
+      objectReference: {fileID: 0}
+    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8985527
+      objectReference: {fileID: 0}
+    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.00059079163
+      objectReference: {fileID: 0}
+    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.43886518
+      objectReference: {fileID: 0}
+    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.00028855054
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -62,7 +110,20 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8020874733183147571, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       insertIndex: -1
       addedObject: {fileID: 218452910974849878}
+    - targetCorrespondingSourceObject: {fileID: 3684836292335276868, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1842513181178938386}
   m_SourcePrefab: {fileID: 100100000, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+--- !u!1 &6741245782153771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7229300285507892601, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 7224989236110536530}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &558669704334905277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7171026161743700207, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 7224989236110536530}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &795886426534850913 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8020874733183147571, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
@@ -106,9 +167,119 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerStatus
   ShowTopMostFoldoutHeaderGroup: 1
-  DoOnSpawnIfOwner:
+  OnNetworkSpawnIfOwner:
     m_PersistentCalls:
       m_Calls: []
-  DoOnSpawnIfNotOwner:
+  OnNetworkSpawnIfNotOwner:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5241013219650184947}
+        m_TargetAssemblyTypeName: UnityEngine.InputSystem.PlayerInput, Unity.InputSystem
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5494167406935795251}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5484798920892925352}
+        m_TargetAssemblyTypeName: RigidbodyCharacterController, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6741245782153771}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 558669704334905277}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5241013219650184947 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3242451747582740897, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 7224989236110536530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6298137274890533910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+--- !u!114 &5484798920892925352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2907560510715554554, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 7224989236110536530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6298137274890533910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
+--- !u!114 &5494167406935795251 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2917036558841039201, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 7224989236110536530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6298137274890533910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac2c235ebcb6df40b0589e237076cce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!1 &6298137274890533910 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3684836292335276868, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 7224989236110536530}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1842513181178938386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6298137274890533910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b559400845c1b48a9308b653d08404, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdvancedNetworkRigidbody
