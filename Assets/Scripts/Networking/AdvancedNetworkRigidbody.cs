@@ -8,12 +8,6 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
 
     private Rigidbody _rigidbody;
 
-    private float _distance;
-    private float _angle;
-
-    private Vector3 _networkPosition = new();
-    private Quaternion _networkRotation = new();
-
     private readonly NetworkVariable<PhysicsSnapshot> _physicsSnapshot = new(writePerm: NetworkVariableWritePermission.Owner);
 
     private void Awake()
@@ -38,12 +32,10 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
 
         var localTime = NetworkManager.NetworkTimeSystem.LocalTime;
         var serverTime = NetworkManager.NetworkTimeSystem.ServerTime;
-        var timeDifference = localTime - serverTime;
+        var timeDifference = (float)(localTime - serverTime);
 
-        Debug.Log($"Local Time: {localTime}, Server Time: {serverTime}, Difference: {timeDifference}");
-
-        var predictedPosition = newValue.Position + newValue.LinearVelocity * (float)timeDifference;
-        var predictedRotation = newValue.Rotation * Quaternion.Euler(newValue.AngularVelocity * Mathf.Rad2Deg * (float)timeDifference);
+        var predictedPosition = newValue.Position + newValue.LinearVelocity * timeDifference;
+        var predictedRotation = newValue.Rotation * Quaternion.Euler(timeDifference * Mathf.Rad2Deg * newValue.AngularVelocity);
 
         if (teleportEnabled && Vector3.Distance(_rigidbody.position, predictedPosition) > teleportIfDistanceGreaterThan)
         {
@@ -52,8 +44,8 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
         }
         else
         {
-            _rigidbody.position = Vector3.Lerp(_rigidbody.position, predictedPosition, 0.1f);
-            _rigidbody.rotation = Quaternion.Lerp(_rigidbody.rotation, predictedRotation, 0.1f);
+            _rigidbody.position = Vector3.Lerp(_rigidbody.position, predictedPosition, 0.9f);
+            _rigidbody.rotation = Quaternion.Lerp(_rigidbody.rotation, predictedRotation, 0.9f);
         }
 
         _rigidbody.linearVelocity = newValue.LinearVelocity;
@@ -62,8 +54,6 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!NetworkManager.IsListening) return;
-
         if (IsOwner)
         {
             _physicsSnapshot.Value = new PhysicsSnapshot
@@ -73,11 +63,6 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
                 LinearVelocity = _rigidbody.linearVelocity,
                 AngularVelocity = _rigidbody.angularVelocity
             };
-        }
-        else
-        {
-            _rigidbody.position = Vector3.MoveTowards(_rigidbody.position, _networkPosition, _distance);
-            _rigidbody.rotation = Quaternion.RotateTowards(_rigidbody.rotation, _networkRotation, _angle);
         }
     }
 
