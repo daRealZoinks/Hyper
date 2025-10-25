@@ -283,3 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b559400845c1b48a9308b653d08404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AdvancedNetworkRigidbody
+  ShowTopMostFoldoutHeaderGroup: 1
+  positionSmoothingFactor: 0.1
+  rotationSmoothingFactor: 0.1
+  teleportEnabled: 1
+  teleportIfDistanceGreaterThan: 10

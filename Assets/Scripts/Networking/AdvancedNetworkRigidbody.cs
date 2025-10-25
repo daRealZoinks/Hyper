@@ -3,10 +3,17 @@ using UnityEngine;
 
 public class AdvancedNetworkRigidbody : NetworkBehaviour
 {
+    // smoothing for position and rotation assignment
+    public float positionSmoothingFactor = 0.1f;
+    public float rotationSmoothingFactor = 0.1f;
+
     public bool teleportEnabled = true;
     public float teleportIfDistanceGreaterThan = 10f;
 
     private Rigidbody _rigidbody;
+
+    private Vector3 _networkPosition;
+    private Quaternion _networkRotation;
 
     private readonly NetworkVariable<PhysicsSnapshot> _physicsSnapshot = new(writePerm: NetworkVariableWritePermission.Owner);
 
@@ -44,8 +51,8 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
         }
         else
         {
-            _rigidbody.position = Vector3.Lerp(_rigidbody.position, predictedPosition, 0.9f);
-            _rigidbody.rotation = Quaternion.Lerp(_rigidbody.rotation, predictedRotation, 0.9f);
+            _networkPosition = predictedPosition;
+            _networkRotation = predictedRotation;
         }
 
         _rigidbody.linearVelocity = newValue.LinearVelocity;
@@ -63,6 +70,11 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
                 LinearVelocity = _rigidbody.linearVelocity,
                 AngularVelocity = _rigidbody.angularVelocity
             };
+        }
+        else
+        {
+            _rigidbody.position = Vector3.Lerp(_rigidbody.position, _networkPosition, positionSmoothingFactor);
+            _rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, _networkRotation, rotationSmoothingFactor);
         }
     }
 
