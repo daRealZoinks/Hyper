@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class AdvancedNetworkRigidbody : NetworkBehaviour
 {
-    // smoothing for position and rotation assignment
     public float positionSmoothingFactor = 0.1f;
     public float rotationSmoothingFactor = 0.1f;
 
@@ -74,7 +73,7 @@ public class AdvancedNetworkRigidbody : NetworkBehaviour
         else
         {
             _rigidbody.position = Vector3.Lerp(_rigidbody.position, _networkPosition, positionSmoothingFactor);
-            _rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, _networkRotation, rotationSmoothingFactor);
+            //_rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, _networkRotation, rotationSmoothingFactor);
         }
     }
 

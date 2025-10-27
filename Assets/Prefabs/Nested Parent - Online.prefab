@@ -10,19 +10,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8985527
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00059079163
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.43886518
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00028855054
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1414012690279855362, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_ControllerManager.Controllers.Array.data[1].InputValue
@@ -74,11 +74,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6487292247844961331, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: PanAxis.Value
-      value: 52.063007
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6487292247844961331, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: TiltAxis.Value
-      value: 0.07534307
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8020874733183147571, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_Name
@@ -86,19 +86,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8985527
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00059079163
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.43886518
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00028855054
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3105970856
+  GlobalObjectIdHash: 2209744058
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

@@ -21,7 +21,21 @@ MonoBehaviour:
   m_OverrideGlobalSceneList: 1
   m_Scenes:
   - m_enabled: 1
+    m_path: Assets/Scenes/Tests/Visual Test.unity
+  - m_enabled: 0
+    m_path: Assets/Scenes/Maps/Test Level 2.unity
+  - m_enabled: 0
+    m_path: Assets/Scenes/Maps/Test Level.unity
+  - m_enabled: 0
+    m_path: Assets/Scenes/Maps/Tutorial.unity
+  - m_enabled: 0
     m_path: Assets/Scenes/Menus/Main Menu.unity
+  - m_enabled: 0
+    m_path: Assets/Scenes/Tests/Multiplayer/Local/Playground - Local Network Manager.unity
+  - m_enabled: 0
+    m_path: Assets/Scenes/Tests/Multiplayer/Online/Playground - Online.unity
+  - m_enabled: 0
+    m_path: Assets/Scenes/Tests/Single Player/Playground - Single Player.unity
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings: []
