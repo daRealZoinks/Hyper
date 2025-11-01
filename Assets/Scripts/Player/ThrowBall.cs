@@ -8,14 +8,37 @@ public class ThrowBall : NetworkBehaviour
     public Transform throwPoint;
     public float throwForce = 500f;
 
+    public float throwInterval = 15f;
+
+    private float _nextThrowTime;
+
+    public override void OnNetworkSpawn()
+    {
+        _nextThrowTime = throwInterval;
+    }
+
+    private void Update()
+    {
+        if (_nextThrowTime > 0f)
+        {
+            _nextThrowTime -= Time.deltaTime;
+        }
+    }
+
     public void InstantiateAndThrowBall()
     {
-        var thrownBall = NetworkManager.SpawnManager.InstantiateAndSpawn(throwBall, position: throwPoint.position, rotation: throwPoint.rotation, ownerClientId: NetworkManager.LocalClientId);
+        if (_nextThrowTime <= 0f)
+        {
+            ExecuteInstantiateAndThrowBall();
+            _nextThrowTime = throwInterval;
+        }
+    }
 
-        var ballRigidbody = thrownBall.GetComponent<Rigidbody>();
-
+    private void ExecuteInstantiateAndThrowBall()
+    {
+        var spawnedBall = NetworkManager.SpawnManager.InstantiateAndSpawn(throwBall, position: throwPoint.position, rotation: throwPoint.rotation, ownerClientId: NetworkManager.LocalClientId);
+        var ballRigidbody = spawnedBall.GetComponent<Rigidbody>();
         var throwForceVelocity = throwPoint.forward * throwForce + playerRigidbody.linearVelocity;
-
         ballRigidbody.AddForce(throwForceVelocity, ForceMode.VelocityChange);
     }
 }

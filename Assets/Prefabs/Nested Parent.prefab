@@ -1058,6 +1058,7 @@ MonoBehaviour:
   playerRigidbody: {fileID: 665804745902072558}
   throwPoint: {fileID: 414082079559515901}
   throwForce: 20
+  throwInterval: 2
 --- !u!1 &8013223275309380459
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8552418588279980601}
   - component: {fileID: 1684585809778309667}
-  - component: {fileID: 7821331118857150637}
   - component: {fileID: 7664895223489986548}
   - component: {fileID: 8377999019160207613}
   - component: {fileID: 8152464993926659831}
   - component: {fileID: 9019157123462453443}
+  - component: {fileID: 7821331118857150637}
   m_Layer: 0
   m_Name: Throw Ball
   m_TagString: Untagged
@@ -59,18 +59,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.15
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7821331118857150637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5706262805189479691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6b29933459dce14ca230e92b414fa3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!54 &7664895223489986548
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -186,6 +174,18 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &7821331118857150637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5706262805189479691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6b29933459dce14ca230e92b414fa3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &7449632516526574396
 GameObject:
   m_ObjectHideFlags: 0
