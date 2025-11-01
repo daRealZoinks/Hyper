@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     private RigidbodyCharacterController _rigidbodyCharacterController;
+    public ThrowBall throwBall;
 
     private void Awake()
     {
@@ -39,5 +40,13 @@ public class InputManager : MonoBehaviour
         };
 
         _rigidbodyCharacterController.Sliding = slide;
+    }
+
+    public void OnThrow(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            throwBall.InstantiateAndThrowBall();
+        }
     }
 }
