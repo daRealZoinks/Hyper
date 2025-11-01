@@ -21,13 +21,13 @@ MonoBehaviour:
   m_OverrideGlobalSceneList: 1
   m_Scenes:
   - m_enabled: 1
+    m_path: Assets/Scenes/Menus/Main Menu.unity
+  - m_enabled: 1
     m_path: Assets/Scenes/Maps/Test Level 2.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Maps/Test Level.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Maps/Tutorial.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/Menus/Main Menu.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Tests/Maps/Playground.unity
   - m_enabled: 1
