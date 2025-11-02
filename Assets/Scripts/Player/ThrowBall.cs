@@ -37,7 +37,23 @@ public class ThrowBall : NetworkBehaviour
     private void ExecuteInstantiateAndThrowBall()
     {
         var spawnedBall = NetworkManager.SpawnManager.InstantiateAndSpawn(throwBall, position: throwPoint.position, rotation: throwPoint.rotation, ownerClientId: NetworkManager.LocalClientId);
+
         var ballRigidbody = spawnedBall.GetComponent<Rigidbody>();
+
+        var ball = spawnedBall.GetComponent<Ball>();
+
+        ball.OnBallCollision += (contactPoint, hitPlayerGameObject) =>
+        {
+            if (hitPlayerGameObject)
+            {
+                playerRigidbody.position = hitPlayerGameObject.GetComponent<Rigidbody>().position;
+            }
+            else
+            {
+                playerRigidbody.position = contactPoint.point + contactPoint.normal;
+            }
+        };
+
         var throwForceVelocity = throwPoint.forward * throwForce + playerRigidbody.linearVelocity;
         ballRigidbody.AddForce(throwForceVelocity, ForceMode.VelocityChange);
     }

@@ -5,7 +5,7 @@ public class Ball : NetworkBehaviour
 {
     public float lifeTime = 15f;
 
-    public delegate void BallCollisionDelegate(Vector3 collisionPosition, RigidbodyCharacterController hitPlayerGameObject);
+    public delegate void BallCollisionDelegate(ContactPoint contactPoint, RigidbodyCharacterController hitPlayerGameObject);
 
     public event BallCollisionDelegate OnBallCollision;
 
@@ -16,9 +16,7 @@ public class Ball : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        var collisionPoint = collision.contacts != null && collision.contacts.Length > 0
-            ? collision.contacts[0].point
-            : transform.position;
+        var collisionPoint = collision.contacts[0];
 
         var playerObject = collision.gameObject.GetComponentInChildren<RigidbodyCharacterController>();
 
