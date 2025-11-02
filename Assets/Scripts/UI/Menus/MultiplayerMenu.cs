@@ -1,26 +1,12 @@
 using UnityEngine;
-using UnityEngine.InputSystem.UI;
+using UnityEngine.UI;
 
 public class MultiplayerMenu : MonoBehaviour
 {
-    public GameObject multiplayerMenu;
-    public GameObject mainMenuUI;
-
-    public InputSystemUIInputModule inputModule;
+    public Button firstButtonToSelect;
 
     private void OnEnable()
     {
-        inputModule.cancel.action.started += (_) => ShowMainMenu();
-    }
-
-    private void OnDisable()
-    {
-        inputModule.cancel.action.started -= (_) => ShowMainMenu();
-    }
-
-    public void ShowMainMenu()
-    {
-        multiplayerMenu.SetActive(false);
-        mainMenuUI.SetActive(true);
+        firstButtonToSelect.Select();
     }
 }

@@ -1,27 +1,21 @@
 using UnityEngine;
-using UnityEngine.InputSystem.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    public GameObject mainMenuUI;
-    public GameObject titleScreenUI;
+    public Button firstButtonToSelect;
 
-    public InputSystemUIInputModule inputModule;
+    public EventSystem eventSystem;
 
     private void OnEnable()
     {
-        inputModule.cancel.action.started += (_) => ShowTitleScreen();
+        firstButtonToSelect.Select();
     }
 
     private void OnDisable()
     {
-        inputModule.cancel.action.started -= (_) => ShowTitleScreen();
-    }
-
-    public void ShowTitleScreen()
-    {
-        mainMenuUI.SetActive(false);
-        titleScreenUI.SetActive(true);
+        eventSystem.SetSelectedGameObject(null);
     }
 
     public void Quit()

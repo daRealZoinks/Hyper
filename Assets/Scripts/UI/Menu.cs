@@ -5,16 +5,18 @@ using UnityEngine.InputSystem.UI;
 public class Menu : MonoBehaviour
 {
     public GameObject titleScreen;
+
+    public GameObject buttonPrompts;
+
     public GameObject mainMenu;
     public GameObject singlePlayerMenu;
     public GameObject multiplayerMenu;
     public GameObject optionsMenu;
 
-    public InputSystemUIInputModule inputModule;
+    private InputSystemUIInputModule _inputModule;
 
     private readonly Stack<MenuState> menuStack = new();
 
-    [SerializeField]
     private MenuState currentState;
 
     public enum MenuState
@@ -36,6 +38,8 @@ public class Menu : MonoBehaviour
         {
             currentState = value;
 
+            buttonPrompts.SetActive(currentState != MenuState.TitleScreen);
+
             titleScreen.SetActive(currentState == MenuState.TitleScreen);
             mainMenu.SetActive(currentState == MenuState.MainMenu);
             singlePlayerMenu.SetActive(currentState == MenuState.SinglePlayerMenu);
@@ -46,19 +50,28 @@ public class Menu : MonoBehaviour
 
     private void OnEnable()
     {
-        inputModule.submit.action.started += (_) =>
+        _inputModule.submit.action.started += (_) =>
         {
+            Debug.Log("Submit Detected");
             OnStartButtonPressed();
         };
 
-        inputModule.cancel.action.started += (_) =>
+        _inputModule.leftClick.action.started += (_) =>
         {
+            Debug.Log("Left Click Detected");
+            OnStartButtonPressed();
+        };
+
+        _inputModule.cancel.action.started += (_) =>
+        {
+            Debug.Log("Cancel Detected");
             OnBackButtonPressed();
         };
     }
 
-    private void Start()
+    private void Awake()
     {
+        _inputModule = GetComponent<InputSystemUIInputModule>();
         CurrentState = MenuState.TitleScreen;
         menuStack.Push(CurrentState);
     }
@@ -90,11 +103,6 @@ public class Menu : MonoBehaviour
     public void OnOptionsButtonPressed()
     {
         SetMenuState(MenuState.OptionsMenu);
-    }
-
-    public void Quit()
-    {
-        Application.Quit();
     }
 
     public void OnBackButtonPressed()
