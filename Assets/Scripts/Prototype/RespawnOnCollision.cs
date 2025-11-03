@@ -1,3 +1,4 @@
+using Hyper.Player;
 using UnityEngine;
 
 public class RespawnOnCollision : MonoBehaviour

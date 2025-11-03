@@ -1,27 +1,36 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class Ball : NetworkBehaviour
+namespace Hyper.Player
 {
-    public float lifeTime = 15f;
-
-    public delegate void BallCollisionDelegate(ContactPoint contactPoint, RigidbodyCharacterController hitPlayerGameObject);
-
-    public event BallCollisionDelegate OnBallCollision;
-
-    public override void OnNetworkSpawn()
+    public class Ball : NetworkBehaviour
     {
-        Destroy(gameObject, lifeTime);
-    }
+        public float lifeTime = 15f;
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        var collisionPoint = collision.contacts[0];
+        public Rigidbody PlayerRigidbody { private get; set; }
 
-        var playerObject = collision.gameObject.GetComponentInChildren<RigidbodyCharacterController>();
+        public override void OnNetworkSpawn()
+        {
+            Destroy(gameObject, lifeTime);
+        }
 
-        OnBallCollision?.Invoke(collisionPoint, playerObject);
+        private void OnCollisionEnter(Collision collision)
+        {
+            var contactPoint = collision.contacts[0];
 
-        Destroy(gameObject);
+            var hitPlayerRigidbodyCharacterController = collision.gameObject.GetComponentInChildren<RigidbodyCharacterController>();
+
+            if (hitPlayerRigidbodyCharacterController)
+            {
+                var hitPlayerRigidbody = hitPlayerRigidbodyCharacterController.GetComponent<Rigidbody>();
+                (PlayerRigidbody.position, hitPlayerRigidbody.position) = (hitPlayerRigidbody.position, PlayerRigidbody.position);
+            }
+            else
+            {
+                PlayerRigidbody.position = contactPoint.point;
+            }
+
+            Destroy(gameObject);
+        }
     }
 }

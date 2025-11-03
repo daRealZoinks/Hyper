@@ -1,53 +1,56 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(RigidbodyCharacterController))]
-public class InputManager : MonoBehaviour
+namespace Hyper.Player
 {
-    public ThrowBall throwBall;
-
-    private RigidbodyCharacterController _rigidbodyCharacterController;
-
-    private void Awake()
+    [RequireComponent(typeof(RigidbodyCharacterController))]
+    public class InputManager : MonoBehaviour
     {
-        _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
-    }
+        public ThrowBall throwBall;
 
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        var moveInput = context.phase switch
+        private RigidbodyCharacterController _rigidbodyCharacterController;
+
+        private void Awake()
         {
-            InputActionPhase.Started or InputActionPhase.Performed => context.ReadValue<Vector2>(),
-            InputActionPhase.Canceled or InputActionPhase.Waiting or InputActionPhase.Disabled or _ => Vector2.zero,
-        };
-
-        _rigidbodyCharacterController.MoveInput = moveInput;
-    }
-
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            _rigidbodyCharacterController.Jump();
+            _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
         }
-    }
 
-    public void OnSlide(InputAction.CallbackContext context)
-    {
-        var slide = context.phase switch
+        public void OnMove(InputAction.CallbackContext context)
         {
-            InputActionPhase.Started or InputActionPhase.Performed => true,
-            InputActionPhase.Canceled or InputActionPhase.Waiting or InputActionPhase.Disabled or _ => false,
-        };
+            var moveInput = context.phase switch
+            {
+                InputActionPhase.Started or InputActionPhase.Performed => context.ReadValue<Vector2>(),
+                InputActionPhase.Canceled or InputActionPhase.Waiting or InputActionPhase.Disabled or _ => Vector2.zero,
+            };
 
-        _rigidbodyCharacterController.Sliding = slide;
-    }
+            _rigidbodyCharacterController.MoveInput = moveInput;
+        }
 
-    public void OnThrow(InputAction.CallbackContext context)
-    {
-        if (context.started)
+        public void OnJump(InputAction.CallbackContext context)
         {
-            throwBall.InstantiateAndThrowBall();
+            if (context.started)
+            {
+                _rigidbodyCharacterController.Jump();
+            }
+        }
+
+        public void OnSlide(InputAction.CallbackContext context)
+        {
+            var slide = context.phase switch
+            {
+                InputActionPhase.Started or InputActionPhase.Performed => true,
+                InputActionPhase.Canceled or InputActionPhase.Waiting or InputActionPhase.Disabled or _ => false,
+            };
+
+            _rigidbodyCharacterController.Sliding = slide;
+        }
+
+        public void OnThrow(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                throwBall.InstantiateAndThrowBall();
+            }
         }
     }
 }

@@ -342,7 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac2c235ebcb6df40b0589e237076cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  throwBall: {fileID: 0}
+  throwBall: {fileID: 6448816616791665718}
 --- !u!114 &2907560510715554554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1209,7 +1209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3469513237
+  GlobalObjectIdHash: 3643188166
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
