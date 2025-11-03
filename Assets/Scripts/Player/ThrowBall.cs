@@ -6,7 +6,7 @@ public class ThrowBall : NetworkBehaviour
     public NetworkObject throwBall;
     public Rigidbody playerRigidbody;
     public Transform throwPoint;
-    public float throwForce = 500f;
+    public float throwForce = 20f;
 
     public float throwInterval = 15f;
 
@@ -36,25 +36,28 @@ public class ThrowBall : NetworkBehaviour
 
     private void ExecuteInstantiateAndThrowBall()
     {
-        var spawnedBall = NetworkManager.SpawnManager.InstantiateAndSpawn(throwBall, position: throwPoint.position, rotation: throwPoint.rotation, ownerClientId: NetworkManager.LocalClientId);
+        var spawnedBall = Instantiate(throwBall, throwPoint.position, throwPoint.rotation);
+        spawnedBall.SpawnWithOwnership(NetworkManager.LocalClientId);
 
         var ballRigidbody = spawnedBall.GetComponent<Rigidbody>();
 
         var ball = spawnedBall.GetComponent<Ball>();
 
-        ball.OnBallCollision += (contactPoint, hitPlayerGameObject) =>
-        {
-            if (hitPlayerGameObject)
-            {
-                playerRigidbody.position = hitPlayerGameObject.GetComponent<Rigidbody>().position;
-            }
-            else
-            {
-                playerRigidbody.position = contactPoint.point + contactPoint.normal;
-            }
-        };
+        ball.OnBallCollision += OnBallCollision;
 
         var throwForceVelocity = throwPoint.forward * throwForce + playerRigidbody.linearVelocity;
         ballRigidbody.AddForce(throwForceVelocity, ForceMode.VelocityChange);
+    }
+
+    private void OnBallCollision(ContactPoint contactPoint, RigidbodyCharacterController hitPlayerGameObject)
+    {
+        if (hitPlayerGameObject)
+        {
+            (playerRigidbody.position, hitPlayerGameObject.GetComponent<Rigidbody>().position) = (hitPlayerGameObject.GetComponent<Rigidbody>().position, playerRigidbody.position);
+        }
+        else
+        {
+            playerRigidbody.position = contactPoint.point + contactPoint.normal;
+        }
     }
 }

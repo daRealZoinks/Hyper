@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 2917036558841039201}
   - component: {fileID: 2907560510715554554}
   - component: {fileID: 451494572285065196}
+  - component: {fileID: 9120795128593380099}
   - component: {fileID: 8582168105653550514}
   m_Layer: 0
   m_Name: Player
@@ -341,7 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac2c235ebcb6df40b0589e237076cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  throwBall: {fileID: 3450088942961100003}
+  throwBall: {fileID: 0}
 --- !u!114 &2907560510715554554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,6 +435,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acd82cdbfad141747bec977e72c6cc22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &9120795128593380099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684836292335276868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f26ed2a29f3398846a36a1fc0fe20ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Respawn
 --- !u!114 &8582168105653550514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,7 +902,7 @@ GameObject:
   - component: {fileID: 7681188787058825366}
   - component: {fileID: 1917017277497305251}
   - component: {fileID: 4176342853401186312}
-  - component: {fileID: 3450088942961100003}
+  - component: {fileID: 6448816616791665718}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -1041,7 +1054,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!114 &3450088942961100003
+--- !u!114 &6448816616791665718
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1052,13 +1065,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4baede48820bd474b9dbc25977960bc6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::ThrowBall
   ShowTopMostFoldoutHeaderGroup: 1
   throwBall: {fileID: 8377999019160207613, guid: a82507e285c5de941861071207cd439d, type: 3}
   playerRigidbody: {fileID: 665804745902072558}
   throwPoint: {fileID: 414082079559515901}
   throwForce: 20
-  throwInterval: 0.5
+  throwInterval: 15
 --- !u!1 &8013223275309380459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,7 +1188,7 @@ Transform:
   m_GameObject: {fileID: 8020874733183147571}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1196,7 +1209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3643188166
+  GlobalObjectIdHash: 3469513237
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

@@ -4,8 +4,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(RigidbodyCharacterController))]
 public class InputManager : MonoBehaviour
 {
-    private RigidbodyCharacterController _rigidbodyCharacterController;
     public ThrowBall throwBall;
+
+    private RigidbodyCharacterController _rigidbodyCharacterController;
 
     private void Awake()
     {
