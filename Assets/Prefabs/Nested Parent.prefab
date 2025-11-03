@@ -1067,7 +1067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrowBall
   ShowTopMostFoldoutHeaderGroup: 1
-  throwBall: {fileID: 8965702791223797819, guid: cba37c83b0b63804eb257c778b5b7f5a, type: 3}
+  throwBall: {fileID: 1750151313678128029, guid: 01636f7d89b3574468a842d94e772e94, type: 3}
   playerRigidbody: {fileID: 665804745902072558}
   throwPoint: {fileID: 414082079559515901}
   throwForce: 20
