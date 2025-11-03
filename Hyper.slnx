@@ -1,0 +1,5 @@
+﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Hyper.Player.Camera.csproj" />
+  <Project Path="Hyper.Player.csproj" />
+</Solution>

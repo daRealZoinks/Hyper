@@ -1,17 +1,15 @@
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Hyper.Player
 {
-    public class Ball : NetworkBehaviour
+    [RequireComponent(typeof(HyperBall))]
+    public class TeleportingHyperBall : MonoBehaviour
     {
-        public float lifeTime = 15f;
+        private HyperBall _hyperBall;
 
-        public Rigidbody PlayerRigidbody { private get; set; }
-
-        public override void OnNetworkSpawn()
+        private void Awake()
         {
-            Destroy(gameObject, lifeTime);
+            _hyperBall = GetComponent<HyperBall>();
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -23,11 +21,11 @@ namespace Hyper.Player
             if (hitPlayerRigidbodyCharacterController)
             {
                 var hitPlayerRigidbody = hitPlayerRigidbodyCharacterController.GetComponent<Rigidbody>();
-                (PlayerRigidbody.position, hitPlayerRigidbody.position) = (hitPlayerRigidbody.position, PlayerRigidbody.position);
+                (_hyperBall.OwningPlayerRigidbody.position, hitPlayerRigidbody.position) = (hitPlayerRigidbody.position, _hyperBall.OwningPlayerRigidbody.position);
             }
             else
             {
-                PlayerRigidbody.position = contactPoint.point;
+                _hyperBall.OwningPlayerRigidbody.position = contactPoint.point;
             }
 
             Destroy(gameObject);

@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 8377999019160207613}
   - component: {fileID: 8152464993926659831}
   - component: {fileID: 9019157123462453443}
-  - component: {fileID: 7821331118857150637}
+  - component: {fileID: 330385353381369950}
   m_Layer: 0
-  m_Name: Throw Ball
+  m_Name: Hyper Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!114 &7821331118857150637
+--- !u!114 &330385353381369950
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,9 +183,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5706262805189479691}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6b29933459dce14ca230e92b414fa3f, type: 3}
+  m_Script: {fileID: 11500000, guid: f8324fce83c90a24ead6cf1ca93349f0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Hyper.Player::Hyper.Player.HyperBall
   ShowTopMostFoldoutHeaderGroup: 1
   lifeTime: 15
 --- !u!1 &7449632516526574396

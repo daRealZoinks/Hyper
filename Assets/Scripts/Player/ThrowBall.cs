@@ -41,8 +41,8 @@ namespace Hyper.Player
             var spawnedBallNetworkObject = Instantiate(throwBall, throwPoint.position, throwPoint.rotation);
             spawnedBallNetworkObject.SpawnWithOwnership(NetworkManager.LocalClientId);
 
-            var spawnedBall = spawnedBallNetworkObject.GetComponent<Ball>();
-            spawnedBall.PlayerRigidbody = playerRigidbody;
+            var spawnedBall = spawnedBallNetworkObject.GetComponent<HyperBall>();
+            spawnedBall.OwningPlayerRigidbody = playerRigidbody;
 
             var spawnedBallRigidbody = spawnedBallNetworkObject.GetComponent<Rigidbody>();
             var throwForceVelocity = throwPoint.forward * throwForce + playerRigidbody.linearVelocity;
