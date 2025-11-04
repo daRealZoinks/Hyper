@@ -234,6 +234,8 @@ namespace Hyper.Player
 
                 if (contactPoint.point.y >= minimumHeightCollisionPoint.y)
                 {
+                    // TODO: cant tell if wall running detection just doesnt work or the threshold is too high
+
                     var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
                     var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
 
@@ -300,7 +302,7 @@ namespace Hyper.Player
 
         private void OnCollisionExit(Collision collision)
         {
-            IsGrounded = false;
+            IsGrounded = false; // TODO: not changing if whatever is under the player vanishes
 
             _isTouchingWallOnRight = false;
             _isTouchingWallOnLeft = false;
@@ -372,6 +374,8 @@ namespace Hyper.Player
                 {
                     if (_coyoteTimeCounter > 0f || IsGrounded)
                     {
+                        // TODO: Jump is being triggered multiple times, fix
+
                         GroundJump();
                     }
 
