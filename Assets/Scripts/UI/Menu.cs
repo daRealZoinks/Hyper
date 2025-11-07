@@ -11,6 +11,7 @@ public class Menu : MonoBehaviour
     public GameObject mainMenu;
     public GameObject singlePlayerMenu;
     public GameObject multiplayerMenu;
+    public GameObject localMenu;
     public GameObject optionsMenu;
 
     private InputSystemUIInputModule _inputModule;
@@ -25,6 +26,7 @@ public class Menu : MonoBehaviour
         MainMenu,
         SinglePlayerMenu,
         MultiplayerMenu,
+        LocalMenu,
         OptionsMenu
     }
 
@@ -44,6 +46,7 @@ public class Menu : MonoBehaviour
             mainMenu.SetActive(currentState == MenuState.MainMenu);
             singlePlayerMenu.SetActive(currentState == MenuState.SinglePlayerMenu);
             multiplayerMenu.SetActive(currentState == MenuState.MultiplayerMenu);
+            localMenu.SetActive(currentState == MenuState.LocalMenu);
             optionsMenu.SetActive(currentState == MenuState.OptionsMenu);
         }
     }
@@ -84,6 +87,11 @@ public class Menu : MonoBehaviour
     public void OnMultiplayerButtonPressed()
     {
         SetMenuState(MenuState.MultiplayerMenu);
+    }
+
+    public void OnLocalButtonPressed()
+    {
+        SetMenuState(MenuState.LocalMenu);
     }
 
     public void OnOptionsButtonPressed()

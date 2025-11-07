@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -5,11 +6,13 @@ using UnityEngine.UI;
 
 public class MenuScreen : MonoBehaviour
 {
+    public List<Button> buttons;
+
     public Button firstButtonToSelect;
 
-    public Button lastButtonSelected;
+    private Button _lastButtonSelected;
 
-    public InputSystemUIInputModule _inputSystemUIInputModule;
+    private InputSystemUIInputModule _inputSystemUIInputModule;
 
     private void Awake()
     {
@@ -21,23 +24,26 @@ public class MenuScreen : MonoBehaviour
         {
             if (eventSystem.currentSelectedGameObject == null)
             {
-                (lastButtonSelected ? lastButtonSelected : firstButtonToSelect).Select();
+                (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
+            }
+
+            if (eventSystem && eventSystem.currentSelectedGameObject)
+            {
+                var button = eventSystem.currentSelectedGameObject.GetComponent<Button>();
+
+                if (buttons.Contains(button))
+                {
+                    _lastButtonSelected = eventSystem.currentSelectedGameObject.GetComponent<Button>();
+                }
             }
         };
     }
 
     private void OnEnable()
     {
-        (lastButtonSelected ? lastButtonSelected : firstButtonToSelect).Select();
-    }
-
-    private void OnDisable()
-    {
-        var eventSystem = EventSystem.current;
-
-        if (eventSystem.currentSelectedGameObject)
+        if (DeviceManager.Singleton && DeviceManager.Singleton.CurrentDeviceType != DeviceManager.DeviceType.Mouse)
         {
-            lastButtonSelected = eventSystem.currentSelectedGameObject.GetComponent<Button>();
+            (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
         }
     }
 }
