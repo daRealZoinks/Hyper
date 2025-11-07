@@ -10,7 +10,7 @@ namespace Hyper.Player
 
         public Rigidbody TargetPlayerRigidbody { get; set; }
 
-        public void Awake()
+        private void Awake()
         {
             Destroy(gameObject, lifeTime);
         }
