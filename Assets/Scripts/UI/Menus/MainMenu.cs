@@ -17,9 +17,4 @@ public class MainMenu : MonoBehaviour
     {
         eventSystem.SetSelectedGameObject(null);
     }
-
-    public void Quit()
-    {
-        Application.Quit();
-    }
 }

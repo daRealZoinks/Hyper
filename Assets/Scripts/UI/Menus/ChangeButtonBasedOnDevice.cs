@@ -11,7 +11,7 @@ public class ChangeButtonBasedOnDevice : MonoBehaviour
     {
         switch (DeviceManager.Singleton.CurrentDeviceType)
         {
-            case DeviceManager.DeviceType.Keyboard:
+            case DeviceManager.DeviceType.Mouse or DeviceManager.DeviceType.Keyboard:
                 KeyboardButtonImage.SetActive(true);
                 XboxControllerButtonImage.SetActive(false);
                 PlayStationControllerButtonImage.SetActive(false);

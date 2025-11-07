@@ -50,21 +50,8 @@ public class Menu : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputModule.submit.action.started += (_) =>
-        {
-            Debug.Log("Submit Detected");
-            OnStartButtonPressed();
-        };
-
-        _inputModule.leftClick.action.started += (_) =>
-        {
-            Debug.Log("Left Click Detected");
-            OnStartButtonPressed();
-        };
-
         _inputModule.cancel.action.started += (_) =>
         {
-            Debug.Log("Cancel Detected");
             OnBackButtonPressed();
         };
     }
@@ -84,10 +71,7 @@ public class Menu : MonoBehaviour
 
     public void OnStartButtonPressed()
     {
-        if (CurrentState == MenuState.TitleScreen)
-        {
-            SetMenuState(MenuState.MainMenu);
-        }
+        SetMenuState(MenuState.MainMenu);
     }
 
     public void OnSinglePlayerButtonPressed()
@@ -112,5 +96,10 @@ public class Menu : MonoBehaviour
             menuStack.Pop();
             CurrentState = menuStack.Peek();
         }
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }

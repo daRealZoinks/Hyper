@@ -11,6 +11,7 @@ public class DeviceManager : MonoBehaviour
 
     public enum DeviceType
     {
+        Mouse,
         Keyboard,
         XboxController,
         PlayStationController,
@@ -38,7 +39,11 @@ public class DeviceManager : MonoBehaviour
     {
         foreach (var device in inputModule.actionsAsset.devices)
         {
-            if ((device is Keyboard keyboard && keyboard == Keyboard.current) || (device is Mouse mouse && mouse == Mouse.current))
+            if (device is Mouse mouse && mouse == Mouse.current)
+            {
+                CurrentDeviceType = DeviceType.Mouse;
+            }
+            else if (device is Keyboard keyboard && keyboard == Keyboard.current)
             {
                 CurrentDeviceType = DeviceType.Keyboard;
             }
