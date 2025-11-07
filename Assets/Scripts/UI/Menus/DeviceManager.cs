@@ -18,7 +18,7 @@ public class DeviceManager : MonoBehaviour
         SwitchController
     }
 
-    public DeviceType CurrentDeviceType { get; set; }
+    public DeviceType CurrentDeviceType { get; private set; }
 
     public InputSystemUIInputModule inputModule;
 

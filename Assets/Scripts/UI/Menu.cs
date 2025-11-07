@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
-using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
@@ -16,9 +14,8 @@ public class Menu : MonoBehaviour
     public GameObject optionsMenu;
 
     private InputSystemUIInputModule _inputModule;
-    private EventSystem _eventSystem;
 
-    private readonly Stack<KeyValuePair<MenuState, Button>> menuButtonStack = new();
+    private readonly Stack<MenuState> menuStack = new();
 
     private MenuState currentState;
 
@@ -62,47 +59,45 @@ public class Menu : MonoBehaviour
     private void Awake()
     {
         _inputModule = GetComponent<InputSystemUIInputModule>();
-        _eventSystem = GetComponent<EventSystem>();
+
         CurrentMenuState = MenuState.TitleScreen;
-        menuButtonStack.Push(new KeyValuePair<MenuState, Button>(CurrentMenuState, _eventSystem.currentSelectedGameObject.GetComponent<Button>()));
+
+        menuStack.Push(CurrentMenuState);
     }
 
-    private void SetMenuState(MenuState newState, Button button)
+    private void SetMenuState(MenuState newState)
     {
         CurrentMenuState = newState;
-        menuButtonStack.Push(new KeyValuePair<MenuState, Button>(newState, button));
+        menuStack.Push(CurrentMenuState);
     }
 
     public void OnStartButtonPressed()
     {
-        SetMenuState(MenuState.MainMenu, _eventSystem.currentSelectedGameObject.GetComponent<Button>());
+        SetMenuState(MenuState.MainMenu);
     }
 
     public void OnSinglePlayerButtonPressed()
     {
-        SetMenuState(MenuState.SinglePlayerMenu, _eventSystem.currentSelectedGameObject.GetComponent<Button>());
+        SetMenuState(MenuState.SinglePlayerMenu);
     }
 
     public void OnMultiplayerButtonPressed()
     {
-        SetMenuState(MenuState.MultiplayerMenu, _eventSystem.currentSelectedGameObject.GetComponent<Button>());
+        SetMenuState(MenuState.MultiplayerMenu);
     }
 
     public void OnOptionsButtonPressed()
     {
-        SetMenuState(MenuState.OptionsMenu, _eventSystem.currentSelectedGameObject.GetComponent<Button>());
+        SetMenuState(MenuState.OptionsMenu);
     }
 
     public void OnBackButtonPressed()
     {
-        if (menuButtonStack.Count > 1)
+        if (menuStack.Count > 1)
         {
-            menuButtonStack.Pop();
+            menuStack.Pop();
 
-            var lastMenuState = menuButtonStack.Peek();
-
-            CurrentMenuState = lastMenuState.Key;
-            lastMenuState.Value.Select();
+            CurrentMenuState = menuStack.Peek();
         }
     }
 
