@@ -1,9 +1,8 @@
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Hyper.Player
 {
-    public class HyperBall : NetworkBehaviour
+    public class HyperBall : MonoBehaviour
     {
         public float lifeTime = 15f;
 
@@ -11,14 +10,14 @@ namespace Hyper.Player
 
         public Rigidbody TargetPlayerRigidbody { get; set; }
 
+        public void Awake()
+        {
+            Destroy(gameObject, lifeTime);
+        }
+
         private void FixedUpdate()
         {
             // TODO: add trajectory physics here if needed to go towards the target 
-        }
-
-        public override void OnNetworkSpawn()
-        {
-            Destroy(gameObject, lifeTime);
         }
     }
 }

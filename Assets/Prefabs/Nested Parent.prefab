@@ -1067,7 +1067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrowBall
   ShowTopMostFoldoutHeaderGroup: 1
-  throwBall: {fileID: 1750151313678128029, guid: 01636f7d89b3574468a842d94e772e94, type: 3}
+  hyperBallPrefab: {fileID: 7536962381723962174, guid: 01636f7d89b3574468a842d94e772e94, type: 3}
   playerRigidbody: {fileID: 665804745902072558}
   throwPoint: {fileID: 414082079559515901}
   throwForce: 20
@@ -1277,9 +1277,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7229300285507892601}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
+      - m_Target: {fileID: 7681188787058825366}
+        m_TargetAssemblyTypeName: UnityEngine.Camera, UnityEngine
+        m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1292,6 +1292,18 @@ MonoBehaviour:
       - m_Target: {fileID: 7171026161743700207}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4176342853401186312}
+        m_TargetAssemblyTypeName: Unity.Cinemachine.CinemachineBrain, Unity.Cinemachine
+        m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

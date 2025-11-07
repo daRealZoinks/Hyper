@@ -5,7 +5,7 @@ namespace Hyper.Player
 {
     public class ThrowBall : NetworkBehaviour
     {
-        public NetworkObject throwBall;
+        public HyperBall hyperBallPrefab;
         public Rigidbody playerRigidbody;
         public Transform throwPoint;
         public float throwForce = 20f;
@@ -14,7 +14,7 @@ namespace Hyper.Player
 
         private float _nextThrowTime;
 
-        public override void OnNetworkSpawn()
+        private void Awake()
         {
             _nextThrowTime = throwInterval;
         }
@@ -29,23 +29,38 @@ namespace Hyper.Player
 
         public void InstantiateAndThrowBall()
         {
-            if (_nextThrowTime <= 0f)
+            if (IsOwner)
             {
-                ExecuteInstantiateAndThrowBall();
-                _nextThrowTime = throwInterval;
+                if (_nextThrowTime <= 0f)
+                {
+                    InstantiateAndThrowBallServerRpc(throwPoint.position, throwPoint.forward);
+                    LocalInstantiateAndThrowBall(throwPoint.position, throwPoint.forward);
+
+                    _nextThrowTime = throwInterval;
+                }
             }
         }
 
-        private void ExecuteInstantiateAndThrowBall()
+        [Rpc(SendTo.Server)]
+        private void InstantiateAndThrowBallServerRpc(Vector3 position, Vector3 direction)
         {
-            var spawnedBallNetworkObject = Instantiate(throwBall, throwPoint.position, throwPoint.rotation);
-            spawnedBallNetworkObject.SpawnWithOwnership(NetworkManager.LocalClientId);
+            InstantiateAndThrowBallNotOwnerRpc(position, direction);
+        }
 
-            var spawnedBall = spawnedBallNetworkObject.GetComponent<HyperBall>();
-            spawnedBall.OwningPlayerRigidbody = playerRigidbody;
+        [Rpc(SendTo.NotOwner)]
+        private void InstantiateAndThrowBallNotOwnerRpc(Vector3 position, Vector3 direction)
+        {
+            LocalInstantiateAndThrowBall(position, direction);
+        }
 
-            var spawnedBallRigidbody = spawnedBallNetworkObject.GetComponent<Rigidbody>();
-            var throwForceVelocity = throwPoint.forward * throwForce + playerRigidbody.linearVelocity;
+        private void LocalInstantiateAndThrowBall(Vector3 position, Vector3 direction)
+        {
+            var hyperBallInstance = Instantiate(hyperBallPrefab, position, Quaternion.identity);
+
+            hyperBallInstance.OwningPlayerRigidbody = playerRigidbody;
+
+            var spawnedBallRigidbody = hyperBallInstance.GetComponent<Rigidbody>();
+            var throwForceVelocity = direction * throwForce + playerRigidbody.linearVelocity;
             spawnedBallRigidbody.AddForce(throwForceVelocity, ForceMode.VelocityChange);
         }
     }
