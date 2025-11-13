@@ -152,6 +152,9 @@ namespace Hyper.Player
 
         private void FixedUpdate()
         {
+            GroundCheck();
+
+
             if (IsGrounded)
             {
                 _lastWallJumped = null;
@@ -191,39 +194,68 @@ namespace Hyper.Player
             UpdateWallClimbingState();
         }
 
-        private void OnCollisionEnter(Collision collision)
-        {
-            foreach (var contactPoint in collision.contacts)
-            {
-                var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
+        Ray groundCheckRay;
 
+        private void GroundCheck()
+        {
+            groundCheckRay = new Ray(_rigidbody.position, Vector3.down);
+            if (Physics.Raycast(groundCheckRay, out var hitInfo, 0.1f))
+            {
+                Debug.Log(hitInfo.transform.gameObject.name);
+
+                var angle = Vector3.Angle(hitInfo.normal, Vector3.up);
                 if (angle <= slopeLimit)
                 {
                     if (!IsGrounded)
                     {
                         IsGrounded = true;
-                        groundNormal = contactPoint.normal;
+                        groundNormal = hitInfo.normal;
                         OnLanded?.Invoke();
                         _coyoteTimeCounter = coyoteTime;
-                        break;
                     }
                 }
             }
         }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(groundCheckRay.origin, groundCheckRay.origin + groundCheckRay.direction * 0.1f);
+        }
+
+        //private void OnCollisionEnter(Collision collision)
+        //{
+        //    foreach (var contactPoint in collision.contacts)
+        //    {
+        //        var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
+
+        //        if (angle <= slopeLimit)
+        //        {
+        //            if (!IsGrounded)
+        //            {
+        //                IsGrounded = true;
+        //                groundNormal = contactPoint.normal;
+        //                OnLanded?.Invoke();
+        //                _coyoteTimeCounter = coyoteTime;
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+
         private void OnCollisionStay(Collision collision)
         {
-            foreach (var contactPoint in collision.contacts)
-            {
-                var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
+            //foreach (var contactPoint in collision.contacts)
+            //{
+            //    var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
 
-                if (angle <= slopeLimit)
-                {
-                    IsGrounded = true;
-                    groundNormal = contactPoint.normal;
-                    break;
-                }
-            }
+            //    if (angle <= slopeLimit)
+            //    {
+            //        IsGrounded = true;
+            //        groundNormal = contactPoint.normal;
+            //        break;
+            //    }
+            //}
 
             ContactPoint? touchingBelowMaximumHeight = null;
             ContactPoint? touchingAboveMaximumHeight = null;
@@ -302,7 +334,7 @@ namespace Hyper.Player
 
         private void OnCollisionExit(Collision collision)
         {
-            IsGrounded = false; // TODO: not changing if whatever is under the player vanishes
+            //IsGrounded = false; // TODO: not changing if whatever is under the player vanishes
 
             _isTouchingWallOnRight = false;
             _isTouchingWallOnLeft = false;
