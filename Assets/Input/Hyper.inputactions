@@ -53,7 +53,7 @@
                 },
                 {
                     "name": "Throw",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "e6ea26a9-2ab4-4fad-a2c9-c4725d9cdfd8",
                     "expectedControlType": "",
                     "processors": "",
