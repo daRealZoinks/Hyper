@@ -194,14 +194,11 @@ namespace Hyper.Player
             UpdateWallClimbingState();
         }
 
-        Ray groundCheckRay;
-
         private void GroundCheck()
         {
-            groundCheckRay = new Ray(_rigidbody.position, Vector3.down);
-            if (Physics.Raycast(groundCheckRay, out var hitInfo, 0.1f))
+            if (Physics.SphereCast(_rigidbody.position + Vector3.up * 0.25f, _capsuleCollider.radius, Vector3.down, out RaycastHit hitInfo))
             {
-                Debug.Log(hitInfo.transform.gameObject.name);
+                Debug.Log(hitInfo.collider.gameObject.name);
 
                 var angle = Vector3.Angle(hitInfo.normal, Vector3.up);
                 if (angle <= slopeLimit)
@@ -215,12 +212,16 @@ namespace Hyper.Player
                     }
                 }
             }
+            else
+            {
+                IsGrounded = false;
+            }
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(groundCheckRay.origin, groundCheckRay.origin + groundCheckRay.direction * 0.1f);
+            Gizmos.DrawSphere(_rigidbody.position + Vector3.up * 0.25f, _capsuleCollider.radius);
         }
 
         //private void OnCollisionEnter(Collision collision)
