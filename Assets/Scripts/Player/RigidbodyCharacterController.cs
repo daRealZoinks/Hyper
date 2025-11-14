@@ -196,9 +196,11 @@ namespace Hyper.Player
 
         private void GroundCheck()
         {
-            if (Physics.SphereCast(_rigidbody.position + Vector3.up * 0.25f, _capsuleCollider.radius, Vector3.down, out RaycastHit hitInfo))
+            var ray = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, Vector3.down);
+
+            if (Physics.SphereCast(ray, _capsuleCollider.radius + 0.1f, out RaycastHit hitInfo))
             {
-                Debug.Log(hitInfo.collider.gameObject.name);
+                Debug.Log(hitInfo.transform.name);
 
                 var angle = Vector3.Angle(hitInfo.normal, Vector3.up);
                 if (angle <= slopeLimit)
@@ -221,7 +223,7 @@ namespace Hyper.Player
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_rigidbody.position + Vector3.up * 0.25f, _capsuleCollider.radius);
+            Gizmos.DrawSphere(_rigidbody.position + Vector3.up * _capsuleCollider.radius, _capsuleCollider.radius + 0.1f);
         }
 
         //private void OnCollisionEnter(Collision collision)
