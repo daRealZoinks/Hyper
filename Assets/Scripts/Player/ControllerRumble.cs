@@ -13,9 +13,11 @@ namespace Hyper.Player
             _playerInput = GetComponent<PlayerInput>();
         }
 
-        public void LandingRumble()
+        public void LandingRumble(float landingVerticalVelocity)
         {
-            _ = RumbleAsync(0.25f, 0.25f, 0.1f);
+            var landingIntensity = Mathf.Min(landingVerticalVelocity, 100) / 100;
+
+            _ = RumbleAsync(landingIntensity, landingIntensity, 0.1f);
         }
 
         public async Task RumbleAsync(float lowFrequency, float highFrequency, float duration)

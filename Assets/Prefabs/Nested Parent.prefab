@@ -410,9 +410,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 451494572285065196}
-        m_TargetAssemblyTypeName: ControllerRumble, Assembly-CSharp
+        m_TargetAssemblyTypeName: Hyper.Player.ControllerRumble, Hyper.Player
         m_MethodName: LandingRumble
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

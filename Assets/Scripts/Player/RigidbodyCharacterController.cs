@@ -51,7 +51,7 @@ namespace Hyper.Player
 
         // public events
         [Header("Events")]
-        public UnityEvent OnLanded;
+        public UnityEvent<float> OnLanded;
         public UnityEvent OnJump;
 
         public UnityEvent OnStartedWallRunningRight;
@@ -196,12 +196,8 @@ namespace Hyper.Player
 
         private void GroundCheck()
         {
-            var ray = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, Vector3.down);
-
-            if (Physics.SphereCast(ray, _capsuleCollider.radius + 0.1f, out RaycastHit hitInfo))
+            if (Physics.SphereCast(_rigidbody.position + _capsuleCollider.center, _capsuleCollider.radius, Vector3.down, out var hitInfo, _capsuleCollider.height / 2 - _capsuleCollider.radius + 0.01f))
             {
-                Debug.Log(hitInfo.transform.name);
-
                 var angle = Vector3.Angle(hitInfo.normal, Vector3.up);
                 if (angle <= slopeLimit)
                 {
@@ -209,7 +205,7 @@ namespace Hyper.Player
                     {
                         IsGrounded = true;
                         groundNormal = hitInfo.normal;
-                        OnLanded?.Invoke();
+                        OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
                         _coyoteTimeCounter = coyoteTime;
                     }
                 }
@@ -218,48 +214,12 @@ namespace Hyper.Player
             {
                 IsGrounded = false;
             }
+
+            // TODO: Make it so drifting while sliding doesn't make you land multiple times
         }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_rigidbody.position + Vector3.up * _capsuleCollider.radius, _capsuleCollider.radius + 0.1f);
-        }
-
-        //private void OnCollisionEnter(Collision collision)
-        //{
-        //    foreach (var contactPoint in collision.contacts)
-        //    {
-        //        var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
-
-        //        if (angle <= slopeLimit)
-        //        {
-        //            if (!IsGrounded)
-        //            {
-        //                IsGrounded = true;
-        //                groundNormal = contactPoint.normal;
-        //                OnLanded?.Invoke();
-        //                _coyoteTimeCounter = coyoteTime;
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
 
         private void OnCollisionStay(Collision collision)
         {
-            //foreach (var contactPoint in collision.contacts)
-            //{
-            //    var angle = Vector3.Angle(contactPoint.normal, Vector3.up);
-
-            //    if (angle <= slopeLimit)
-            //    {
-            //        IsGrounded = true;
-            //        groundNormal = contactPoint.normal;
-            //        break;
-            //    }
-            //}
-
             ContactPoint? touchingBelowMaximumHeight = null;
             ContactPoint? touchingAboveMaximumHeight = null;
 
@@ -337,8 +297,6 @@ namespace Hyper.Player
 
         private void OnCollisionExit(Collision collision)
         {
-            //IsGrounded = false; // TODO: not changing if whatever is under the player vanishes
-
             _isTouchingWallOnRight = false;
             _isTouchingWallOnLeft = false;
 
