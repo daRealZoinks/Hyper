@@ -48,6 +48,7 @@ namespace Hyper.Player
         [Header("General Settings")]
         public float gravityScale = 1.5f;
         public float slopeLimit = 45f;
+        public LayerMask groundCheckLayerMask;
 
         // public events
         [Header("Events")]
@@ -154,7 +155,6 @@ namespace Hyper.Player
         {
             GroundCheck();
 
-
             if (IsGrounded)
             {
                 _lastWallJumped = null;
@@ -196,17 +196,34 @@ namespace Hyper.Player
 
         private void GroundCheck()
         {
-            if (Physics.SphereCast(_rigidbody.position + _capsuleCollider.center, _capsuleCollider.radius, Vector3.down, out var hitInfo, _capsuleCollider.height / 2 - _capsuleCollider.radius + 0.01f))
+            var origin = _rigidbody.position + _capsuleCollider.center;
+            var radius = _capsuleCollider.radius - 0.1f;
+            var maxDistance = _capsuleCollider.height / 2 - _capsuleCollider.radius + 0.15f;
+
+            RaycastHit[] results = new RaycastHit[5];
+
+            var raycastHitsCount = Physics.SphereCastNonAlloc(origin, radius, Vector3.down, results, maxDistance, groundCheckLayerMask);
+
+            if (raycastHitsCount > 0)
             {
-                var angle = Vector3.Angle(hitInfo.normal, Vector3.up);
-                if (angle <= slopeLimit)
+                for (int i = 0; i < raycastHitsCount; i++)
                 {
-                    if (!IsGrounded)
+                    var raycastHit = results[i];
+
+                    Debug.Log($"{raycastHit.collider.gameObject.name}: {raycastHit.normal}");
+
+                    var angle = Vector3.Angle(raycastHit.normal, Vector3.up);
+
+                    if (angle <= slopeLimit)
                     {
-                        IsGrounded = true;
-                        groundNormal = hitInfo.normal;
-                        OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
-                        _coyoteTimeCounter = coyoteTime;
+                        if (!IsGrounded)
+                        {
+                            IsGrounded = true;
+                            groundNormal = raycastHit.normal;
+                            OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
+                            _coyoteTimeCounter = coyoteTime;
+                            break;
+                        }
                     }
                 }
             }
@@ -214,8 +231,6 @@ namespace Hyper.Player
             {
                 IsGrounded = false;
             }
-
-            // TODO: Make it so drifting while sliding doesn't make you land multiple times
         }
 
         private void OnCollisionStay(Collision collision)
