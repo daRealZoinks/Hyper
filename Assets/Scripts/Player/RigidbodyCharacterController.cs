@@ -155,7 +155,6 @@ namespace Hyper.Player
         {
             GroundCheck();
 
-
             if (IsGrounded)
             {
                 _lastWallJumped = null;
@@ -201,12 +200,16 @@ namespace Hyper.Player
             var radius = _capsuleCollider.radius - 0.1f;
             var maxDistance = _capsuleCollider.height / 2 - _capsuleCollider.radius + 0.15f;
 
-            var raycastHits = Physics.SphereCastAll(origin, radius, Vector3.down, maxDistance, groundCheckLayerMask);
+            RaycastHit[] results = new RaycastHit[5];
 
-            if (raycastHits.Length > 0)
+            var raycastHitsCount = Physics.SphereCastNonAlloc(origin, radius, Vector3.down, results, maxDistance, groundCheckLayerMask);
+
+            if (raycastHitsCount > 0)
             {
-                foreach (var raycastHit in raycastHits)
+                for (int i = 0; i < raycastHitsCount; i++)
                 {
+                    var raycastHit = results[i];
+
                     Debug.Log($"{raycastHit.collider.gameObject.name}: {raycastHit.normal}");
 
                     var angle = Vector3.Angle(raycastHit.normal, Vector3.up);
