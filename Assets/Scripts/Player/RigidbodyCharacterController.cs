@@ -154,6 +154,7 @@ namespace Hyper.Player
         private void FixedUpdate()
         {
             GroundCheck();
+            MantleCheck();
 
             if (IsGrounded)
             {
@@ -210,8 +211,6 @@ namespace Hyper.Player
                 {
                     var raycastHit = results[i];
 
-                    Debug.Log($"{raycastHit.collider.gameObject.name}: {raycastHit.normal}");
-
                     var angle = Vector3.Angle(raycastHit.normal, Vector3.up);
 
                     if (angle <= slopeLimit)
@@ -233,10 +232,64 @@ namespace Hyper.Player
             }
         }
 
+        private void MantleCheck()
+        {
+            var upperRay = new Ray(_rigidbody.position + _capsuleCollider.center, transform.forward);
+            var lowerRay = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, transform.forward);
+
+            var upperRaycastHits = Physics.RaycastAll(upperRay, _capsuleCollider.radius + 0.5f, groundCheckLayerMask);
+            var lowerRaycastHits = Physics.RaycastAll(lowerRay, _capsuleCollider.radius + 0.5f, groundCheckLayerMask);
+
+            Debug.DrawLine(upperRay.origin, upperRay.origin + upperRay.direction * (_capsuleCollider.radius + 0.5f), upperRaycastHits.Length > 0 ? Color.green : Color.red);
+            Debug.DrawLine(lowerRay.origin, lowerRay.origin + lowerRay.direction * (_capsuleCollider.radius + 0.5f), lowerRaycastHits.Length > 0 ? Color.green : Color.red);
+
+            //Collision collision = new(); // Remove
+
+            //ContactPoint? touchingBelowMaximumHeight = null;
+            //ContactPoint? touchingAboveMaximumHeight = null;
+
+            //RaycastHit[] results = new RaycastHit[5];
+
+            //var raycastHitsCount = Physics.SphereCastNonAlloc(origin, radius, Vector3.down, results, maxDistance, groundCheckLayerMask);
+
+            //if (raycastHitsCount > 0)
+            //{
+            //    for (int i = 0; i < raycastHitsCount; i++)
+            //    {
+            //        //foreach (var contactPoint in collision.contacts)
+            //        //{
+            //        var raycastHit = results[i];
+
+            //        _mantlingFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
+
+            //        if (_mantlingFrontWallDetection && !IsGrounded && IsMovingForward && !IsSliding)
+            //        {
+            //            var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+
+            //            if (contactPoint.point.y <= maximumHeightCollisionPoint.y)
+            //            {
+            //                touchingBelowMaximumHeight = contactPoint;
+            //            }
+            //            else
+            //            {
+            //                touchingAboveMaximumHeight = contactPoint;
+            //            }
+            //        }
+            //    }
+            //}
+
+            //if (touchingBelowMaximumHeight != null && touchingAboveMaximumHeight == null)
+            //{
+            //    OnMantle?.Invoke();
+
+            //    Mantle(touchingBelowMaximumHeight.Value);
+            //}
+        }
+
         private void OnCollisionStay(Collision collision)
         {
-            ContactPoint? touchingBelowMaximumHeight = null;
-            ContactPoint? touchingAboveMaximumHeight = null;
+            //ContactPoint? touchingBelowMaximumHeight = null;
+            //ContactPoint? touchingAboveMaximumHeight = null;
 
             foreach (var contactPoint in collision.contacts)
             {
@@ -285,29 +338,29 @@ namespace Hyper.Player
                     }
                 }
 
-                _mantlingFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
+                //_mantlingFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
 
-                if (_mantlingFrontWallDetection && !IsGrounded && IsMovingForward && !IsSliding)
-                {
-                    var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+                //if (_mantlingFrontWallDetection && !IsGrounded && IsMovingForward && !IsSliding)
+                //{
+                //    var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
 
-                    if (contactPoint.point.y <= maximumHeightCollisionPoint.y)
-                    {
-                        touchingBelowMaximumHeight = contactPoint;
-                    }
-                    else
-                    {
-                        touchingAboveMaximumHeight = contactPoint;
-                    }
-                }
+                //    if (contactPoint.point.y <= maximumHeightCollisionPoint.y)
+                //    {
+                //        touchingBelowMaximumHeight = contactPoint;
+                //    }
+                //    else
+                //    {
+                //        touchingAboveMaximumHeight = contactPoint;
+                //    }
+                //}
             }
 
-            if (touchingBelowMaximumHeight != null && touchingAboveMaximumHeight == null)
-            {
-                OnMantle?.Invoke();
+            //if (touchingBelowMaximumHeight != null && touchingAboveMaximumHeight == null)
+            //{
+            //    OnMantle?.Invoke();
 
-                Mantle(touchingBelowMaximumHeight.Value);
-            }
+            //    Mantle(touchingBelowMaximumHeight.Value);
+            //}
         }
 
         private void OnCollisionExit(Collision collision)
