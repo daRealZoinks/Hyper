@@ -154,6 +154,7 @@ namespace Hyper.Player
         private void FixedUpdate()
         {
             GroundCheck();
+            MantleCheck();
 
             if (IsGrounded)
             {
@@ -210,8 +211,6 @@ namespace Hyper.Player
                 {
                     var raycastHit = results[i];
 
-                    Debug.Log($"{raycastHit.collider.gameObject.name}: {raycastHit.normal}");
-
                     var angle = Vector3.Angle(raycastHit.normal, Vector3.up);
 
                     if (angle <= slopeLimit)
@@ -233,11 +232,44 @@ namespace Hyper.Player
             }
         }
 
+        private void MantleCheck()
+        {
+            var upperRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.25f, transform.forward);
+            var lowerRay = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, transform.forward);
+
+            var upperRaycastHits = Physics.RaycastAll(upperRay, _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var lowerRaycastHits = Physics.RaycastAll(lowerRay, _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+
+            var isTouchingWallAbove = upperRaycastHits.Length > 0;
+            var isTouchingWallBelow = lowerRaycastHits.Length > 0;
+
+            if (!IsGrounded && IsMovingForward && !IsSliding)
+            {
+                if (!isTouchingWallAbove && isTouchingWallBelow)
+                {
+                    var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + transform.forward, Vector3.down);
+
+                    var positionOfMantlingRaycastHits = Physics.RaycastAll(positionOfMantlingRay, groundCheckLayerMask);
+
+                    var positionOfMantlingRaycastHit = positionOfMantlingRaycastHits[0];
+
+                    foreach (var raycastHit in positionOfMantlingRaycastHits)
+                    {
+                        if (raycastHit.point.y > positionOfMantlingRaycastHit.point.y)
+                        {
+                            positionOfMantlingRaycastHit = raycastHit;
+                        }
+                    }
+
+                    Mantle(positionOfMantlingRaycastHit);
+
+                    OnMantle?.Invoke();
+                }
+            }
+        }
+
         private void OnCollisionStay(Collision collision)
         {
-            ContactPoint? touchingBelowMaximumHeight = null;
-            ContactPoint? touchingAboveMaximumHeight = null;
-
             foreach (var contactPoint in collision.contacts)
             {
                 var minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
@@ -284,29 +316,6 @@ namespace Hyper.Player
                         }
                     }
                 }
-
-                _mantlingFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
-
-                if (_mantlingFrontWallDetection && !IsGrounded && IsMovingForward && !IsSliding)
-                {
-                    var maximumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
-
-                    if (contactPoint.point.y <= maximumHeightCollisionPoint.y)
-                    {
-                        touchingBelowMaximumHeight = contactPoint;
-                    }
-                    else
-                    {
-                        touchingAboveMaximumHeight = contactPoint;
-                    }
-                }
-            }
-
-            if (touchingBelowMaximumHeight != null && touchingAboveMaximumHeight == null)
-            {
-                OnMantle?.Invoke();
-
-                Mantle(touchingBelowMaximumHeight.Value);
             }
         }
 
@@ -579,16 +588,12 @@ namespace Hyper.Player
             }
         }
 
-        private void Mantle(ContactPoint touchingBelowMaximumHeight)
+        private void Mantle(RaycastHit raycastHit)
         {
             if (IsMantling) return;
 
-            var capsuleColliderCenterPosition = transform.position;
-            var mantleForwardOffset = transform.forward * _capsuleCollider.radius;
-            var mantleVerticalOffset = transform.up * (touchingBelowMaximumHeight.point.y - capsuleColliderCenterPosition.y);
-
-            _mantleStart = capsuleColliderCenterPosition;
-            _mantleEnd = _mantleStart + mantleForwardOffset + mantleVerticalOffset;
+            _mantleStart = transform.position;
+            _mantleEnd = raycastHit.point;
             _mantleElapsedTime = 0f;
 
             IsMantling = true;
