@@ -154,6 +154,7 @@ namespace Hyper.Player
         {
             GroundCheck();
             MantleCheck();
+            WallClimbCheck();
 
             if (IsGrounded)
             {
@@ -267,6 +268,39 @@ namespace Hyper.Player
             }
         }
 
+        private void WallClimbCheck()
+        {
+            var wasAbleToWallClimb = CanStartWallClimb;
+
+            var wallCLimbCheckRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f, transform.forward);
+
+            var wallCLimbCheckRaycastHits = Physics.RaycastAll(wallCLimbCheckRay, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
+
+            _wallClimbFrontWallDetection = wallCLimbCheckRaycastHits.Length > 0;
+
+            if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
+            {
+                var climbForce = GetWallClimbAdditiveForce();
+
+                if (climbForce > 0f)
+                {
+                    Debug.Log("Started Wall Climbing");
+
+                    OnStartedWallClimbing?.Invoke();
+                    IsWallClimbing = true;
+                    _hasWallClimbedSinceLastNegativeVelocity = true;
+
+                    _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
+                }
+            }
+
+            if (!_wallClimbFrontWallDetection && IsWallClimbing)
+            {
+                OnStoppedWallClimbing?.Invoke();
+                IsWallClimbing = false;
+            }
+        }
+
         private void OnCollisionStay(Collision collision)
         {
             foreach (var contactPoint in collision.contacts)
@@ -280,14 +314,14 @@ namespace Hyper.Player
                     var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
                     var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
 
-                    var wasAbleToWallClimb = CanStartWallClimb;
+                    //var wasAbleToWallClimb = CanStartWallClimb;
 
                     _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > frontWallDetectionAngleThreshold;
                     _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > frontWallDetectionAngleThreshold;
 
-                    _wallContactPoint = contactPoint;
+                    //_wallContactPoint = contactPoint;
 
-                    _wallClimbFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
+                    //_wallClimbFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
 
                     if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
                     {
@@ -301,19 +335,19 @@ namespace Hyper.Player
                         _wallRunningWall = collision.gameObject;
                     }
 
-                    if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
-                    {
-                        var climbForce = GetWallClimbAdditiveForce();
+                    //if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
+                    //{
+                    //    var climbForce = GetWallClimbAdditiveForce();
 
-                        if (climbForce > 0f)
-                        {
-                            OnStartedWallClimbing?.Invoke();
-                            IsWallClimbing = true;
-                            _hasWallClimbedSinceLastNegativeVelocity = true;
+                    //    if (climbForce > 0f)
+                    //    {
+                    //        OnStartedWallClimbing?.Invoke();
+                    //        IsWallClimbing = true;
+                    //        _hasWallClimbedSinceLastNegativeVelocity = true;
 
-                            _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
-                        }
-                    }
+                    //        _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
+                    //    }
+                    //}
                 }
             }
         }
@@ -325,13 +359,13 @@ namespace Hyper.Player
 
             _wallContactPoint = new ContactPoint();
 
-            _wallClimbFrontWallDetection = false;
+            //_wallClimbFrontWallDetection = false;
 
-            if (IsWallClimbing)
-            {
-                OnStoppedWallClimbing?.Invoke();
-                IsWallClimbing = false;
-            }
+            //if (IsWallClimbing)
+            //{
+            //    OnStoppedWallClimbing?.Invoke();
+            //    IsWallClimbing = false;
+            //}
         }
 
         private void ApplyCustomGravity(float gravityScale)
