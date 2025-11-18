@@ -123,7 +123,6 @@ namespace Hyper.Player
         private Vector3 _capsuleColliderOriginalCenter;
         private Vector3 _cameraTrackingTargetOriginalPosition;
 
-        private bool _mantlingFrontWallDetection;
         private Vector3 _mantleStart;
         private Vector3 _mantleEnd;
         private float _mantleElapsedTime;
