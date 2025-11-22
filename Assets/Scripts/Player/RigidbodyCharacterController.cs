@@ -251,19 +251,22 @@ namespace Hyper.Player
 
                     var positionOfMantlingRaycastHits = Physics.RaycastAll(positionOfMantlingRay, groundCheckLayerMask);
 
-                    var positionOfMantlingRaycastHit = positionOfMantlingRaycastHits[0];
-
-                    foreach (var raycastHit in positionOfMantlingRaycastHits)
+                    if (positionOfMantlingRaycastHits.Length > 0)
                     {
-                        if (raycastHit.point.y > positionOfMantlingRaycastHit.point.y)
+                        var positionOfMantlingRaycastHit = positionOfMantlingRaycastHits[0];
+
+                        foreach (var raycastHit in positionOfMantlingRaycastHits)
                         {
-                            positionOfMantlingRaycastHit = raycastHit;
+                            if (raycastHit.point.y > positionOfMantlingRaycastHit.point.y)
+                            {
+                                positionOfMantlingRaycastHit = raycastHit;
+                            }
                         }
+
+                        Mantle(positionOfMantlingRaycastHit);
+
+                        OnMantle?.Invoke();
                     }
-
-                    Mantle(positionOfMantlingRaycastHit);
-
-                    OnMantle?.Invoke();
                 }
             }
         }
@@ -284,8 +287,6 @@ namespace Hyper.Player
 
                 if (climbForce > 0f)
                 {
-                    Debug.Log("Started Wall Climbing");
-
                     OnStartedWallClimbing?.Invoke();
                     IsWallClimbing = true;
                     _hasWallClimbedSinceLastNegativeVelocity = true;
@@ -303,69 +304,39 @@ namespace Hyper.Player
 
         private void OnCollisionStay(Collision collision)
         {
-            foreach (var contactPoint in collision.contacts)
-            {
-                var minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
+            //foreach (var contactPoint in collision.contacts)
+            //{
+            //    var minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
 
-                if (contactPoint.point.y >= minimumHeightCollisionPoint.y)
-                {
-                    // TODO: cant tell if wall running detection just doesnt work or the threshold is too high
+            //    if (contactPoint.point.y >= minimumHeightCollisionPoint.y)
+            //    {
+            //        var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
+            //        var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
 
-                    var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
-                    var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
+            //        _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > frontWallDetectionAngleThreshold;
+            //        _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > frontWallDetectionAngleThreshold;
 
-                    //var wasAbleToWallClimb = CanStartWallClimb;
+            //        if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
+            //        {
+            //            OnStartedWallRunningRight?.Invoke();
+            //            _wallRunningWall = collision.gameObject;
+            //        }
 
-                    _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > frontWallDetectionAngleThreshold;
-                    _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > frontWallDetectionAngleThreshold;
-
-                    //_wallContactPoint = contactPoint;
-
-                    //_wallClimbFrontWallDetection = Vector3.Dot(contactPoint.normal, -transform.forward) > frontWallDetectionAngleThreshold && contactPoint.normal.y == 0;
-
-                    if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
-                    {
-                        OnStartedWallRunningRight?.Invoke();
-                        _wallRunningWall = collision.gameObject;
-                    }
-
-                    if (!wasWallRunningOnLeftWall && IsWallRunningOnLeftWall)
-                    {
-                        OnStartedWallRunningLeft?.Invoke();
-                        _wallRunningWall = collision.gameObject;
-                    }
-
-                    //if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
-                    //{
-                    //    var climbForce = GetWallClimbAdditiveForce();
-
-                    //    if (climbForce > 0f)
-                    //    {
-                    //        OnStartedWallClimbing?.Invoke();
-                    //        IsWallClimbing = true;
-                    //        _hasWallClimbedSinceLastNegativeVelocity = true;
-
-                    //        _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
-                    //    }
-                    //}
-                }
-            }
+            //        if (!wasWallRunningOnLeftWall && IsWallRunningOnLeftWall)
+            //        {
+            //            OnStartedWallRunningLeft?.Invoke();
+            //            _wallRunningWall = collision.gameObject;
+            //        }
+            //    }
+            //}
         }
 
         private void OnCollisionExit(Collision collision)
         {
-            _isTouchingWallOnRight = false;
-            _isTouchingWallOnLeft = false;
+            //_isTouchingWallOnRight = false;
+            //_isTouchingWallOnLeft = false;
 
-            _wallContactPoint = new ContactPoint();
-
-            //_wallClimbFrontWallDetection = false;
-
-            //if (IsWallClimbing)
-            //{
-            //    OnStoppedWallClimbing?.Invoke();
-            //    IsWallClimbing = false;
-            //}
+            //_wallContactPoint = new ContactPoint();
         }
 
         private void ApplyCustomGravity(float gravityScale)
