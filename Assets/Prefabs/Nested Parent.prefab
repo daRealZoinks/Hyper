@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2152030009110808132}
   - component: {fileID: 1419571723318700838}
   - component: {fileID: 9001151781569187813}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 451494572285065196}
   - component: {fileID: 9120795128593380099}
   - component: {fileID: 8582168105653550514}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,10 +197,34 @@ MonoBehaviour:
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8020874733183147571}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_DeviceRegainedEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8020874733183147571}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -382,13 +406,16 @@ MonoBehaviour:
   wallClimbMaxHeight: 4
   gravityScale: 1.5
   slopeLimit: 45
+  groundCheckLayerMask:
+    serializedVersion: 2
+    m_Bits: 55
   OnLanded:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 451494572285065196}
-        m_TargetAssemblyTypeName: ControllerRumble, Assembly-CSharp
+        m_TargetAssemblyTypeName: Hyper.Player.ControllerRumble, Hyper.Player
         m_MethodName: LandingRumble
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -473,7 +500,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 414082079559515901}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Throw Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,7 +531,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 778711822468206269}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Third Person Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -537,7 +564,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6216556272576259190}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Camera Tracking Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +597,7 @@ GameObject:
   - component: {fileID: 7633448451002838218}
   - component: {fileID: 2605546496469227611}
   - component: {fileID: 5014087873250221022}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -664,7 +691,7 @@ GameObject:
   - component: {fileID: 1414012690279855362}
   - component: {fileID: 7498498206540703137}
   - component: {fileID: 7546176787410170185}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CinemachineCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -903,7 +930,7 @@ GameObject:
   - component: {fileID: 1917017277497305251}
   - component: {fileID: 4176342853401186312}
   - component: {fileID: 6448816616791665718}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1067,7 +1094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrowBall
   ShowTopMostFoldoutHeaderGroup: 1
-  hyperBallPrefab: {fileID: 918155078425850008, guid: 5eae1567c23660447a3b579b86ed8b18, type: 3}
+  hyperBallPrefab: {fileID: 7536962381723962174, guid: 01636f7d89b3574468a842d94e772e94, type: 3}
   playerRigidbody: {fileID: 665804745902072558}
   throwPoint: {fileID: 414082079559515901}
   throwForce: 20
@@ -1083,7 +1110,7 @@ GameObject:
   - component: {fileID: 922023289765217383}
   - component: {fileID: 5758169371495132276}
   - component: {fileID: 6476198148668637248}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1172,7 +1199,7 @@ GameObject:
   - component: {fileID: 5896176556011013896}
   - component: {fileID: 3902320517130395597}
   - component: {fileID: 1160304534055563568}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Nested Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1209,7 +1236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3643188166
+  GlobalObjectIdHash: 3469513237
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1322,7 +1349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5193958941739314017}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: First Person Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1357,7 +1384,7 @@ GameObject:
   - component: {fileID: 8043055346908919276}
   - component: {fileID: 6908050064601843588}
   - component: {fileID: 8489427408784648956}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
