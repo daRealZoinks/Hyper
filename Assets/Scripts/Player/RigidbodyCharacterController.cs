@@ -22,9 +22,9 @@ namespace Hyper.Player
 
         [Header("Wall Running Settings")]
         public float wallRunDetectionAngleThreshold = 0.9f;
-        public float wallStickForce = 10f;
-        public float wallRunMinimumSpeed = 10f;
-        public float wallRunAscendingForce = 3f;
+        public float wallStickForce = 7f;
+        public float wallRunLandBoost = 2f;
+        public float wallRunAscendingHeight = 3f;
         public float wallRunDescendingForce = 10f;
 
         [Header("Wall Jump Settings")]
@@ -94,8 +94,8 @@ namespace Hyper.Player
 
         public bool IsGrounded { get; set; }
 
-        public bool IsWallRunningOnRightWall => _isTouchingWallOnRight && !IsGrounded && IsMovingForward && IsVelocityForward;
-        public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !IsGrounded && IsMovingForward && IsVelocityForward;
+        public bool IsWallRunningOnRightWall => _isTouchingWallOnRight && !IsGrounded;
+        public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !IsGrounded;
         public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
         public bool IsSliding { get; private set; }
@@ -105,6 +105,7 @@ namespace Hyper.Player
         public bool IsWallClimbing { get; private set; } = false;
         public bool CanStartWallClimb => _wallClimbFrontWallDetection && !IsGrounded && IsMovingForward && !_hasWallClimbedSinceLastNegativeVelocity;
 
+
         private Vector3 groundNormal;
 
         private float _jumpBufferCounter;
@@ -113,7 +114,7 @@ namespace Hyper.Player
         private bool _isTouchingWallOnRight;
         private bool _isTouchingWallOnLeft;
 
-        private ContactPoint _wallContactPoint;
+        private Vector3 _wallContactNormal;
         private GameObject _wallRunningWall;
 
         private GameObject _lastWallJumped;
@@ -153,8 +154,8 @@ namespace Hyper.Player
         private void FixedUpdate()
         {
             GroundCheck();
-            MantleCheck();
-            WallClimbCheck();
+
+            WallRunCheck();
 
             if (IsGrounded)
             {
@@ -167,11 +168,14 @@ namespace Hyper.Player
                 {
                     ApplyCustomGravity(gravityScale);
                 }
+
+                MantleCheck();
+                WallClimbCheck();
             }
 
             UpdateRotationBasedOnCamera();
 
-            if (!IsWallRunning && !IsSliding)
+            if (!IsSliding)
             {
                 Move(MoveInput);
             }
@@ -184,7 +188,6 @@ namespace Hyper.Player
                 {
                     ApplyWallRunForce();
                     ApplyWallStickForce();
-                    ApplyMinimumSpeed();
                 }
             }
 
@@ -275,11 +278,11 @@ namespace Hyper.Player
         {
             var wasAbleToWallClimb = CanStartWallClimb;
 
-            var wallCLimbCheckRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f, transform.forward);
+            var wallClimbCheckRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f, transform.forward);
 
-            var wallCLimbCheckRaycastHits = Physics.RaycastAll(wallCLimbCheckRay, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
+            var wallClimbCheckRaycastHits = Physics.RaycastAll(wallClimbCheckRay, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
 
-            _wallClimbFrontWallDetection = wallCLimbCheckRaycastHits.Length > 0;
+            _wallClimbFrontWallDetection = wallClimbCheckRaycastHits.Length > 0;
 
             if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
             {
@@ -299,6 +302,100 @@ namespace Hyper.Player
             {
                 OnStoppedWallClimbing?.Invoke();
                 IsWallClimbing = false;
+            }
+        }
+
+        private void WallRunCheck()
+        {
+            RightWallRunCheck();
+            LeftWallRunCheck();
+        }
+
+        private void RightWallRunCheck()
+        {
+            var wasWallRunningOnWall = IsWallRunningOnRightWall;
+
+            var raycastHits = Physics.RaycastAll(_rigidbody.position + _capsuleCollider.center, transform.right, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
+
+            _isTouchingWallOnRight = raycastHits.Length > 0;
+
+            if (!wasWallRunningOnWall && IsWallRunningOnRightWall)
+            {
+                OnStartedWallRunningRight?.Invoke();
+
+                var raycastHit = raycastHits[0];
+
+                _wallRunningWall = raycastHit.collider.gameObject;
+                _wallContactNormal = raycastHit.normal;
+
+                var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
+
+                _rigidbody.AddForce(forwardDirectionAlongSideWall * wallRunLandBoost, ForceMode.VelocityChange);
+
+                if (_rigidbody.linearVelocity.y > 0f)
+                {
+                    var upwardsVelocity = _rigidbody.linearVelocity.y;
+                    var gravity = Physics.gravity.y * gravityScale;
+                    var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+
+                    if (currentAirHeight < 0)
+                    {
+                        currentAirHeight = 0;
+                    }
+
+                    var heightDifference = wallRunAscendingHeight - currentAirHeight;
+
+                    if (heightDifference > 0)
+                    {
+                        var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
+                        var forceToAdd = upwardForce - upwardsVelocity;
+                        _rigidbody.AddForce(Vector3.up * Mathf.Max(forceToAdd, 0f), ForceMode.VelocityChange);
+                    }
+                }
+            }
+        }
+
+        private void LeftWallRunCheck()
+        {
+            var wasWallRunningOnWall = IsWallRunningOnLeftWall;
+
+            var raycastHits = Physics.RaycastAll(_rigidbody.position + _capsuleCollider.center, -transform.right, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
+
+            _isTouchingWallOnLeft = raycastHits.Length > 0;
+
+            if (!wasWallRunningOnWall && IsWallRunningOnLeftWall)
+            {
+                OnStartedWallRunningLeft?.Invoke();
+
+                var raycastHit = raycastHits[0];
+
+                _wallRunningWall = raycastHit.collider.gameObject;
+                _wallContactNormal = raycastHit.normal;
+
+                var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
+
+                _rigidbody.AddForce(forwardDirectionAlongSideWall * wallRunLandBoost, ForceMode.VelocityChange);
+
+                if (_rigidbody.linearVelocity.y > 0f)
+                {
+                    var upwardsVelocity = _rigidbody.linearVelocity.y;
+                    var gravity = Physics.gravity.y * gravityScale;
+                    var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+
+                    if (currentAirHeight < 0)
+                    {
+                        currentAirHeight = 0;
+                    }
+
+                    var heightDifference = wallRunAscendingHeight - currentAirHeight;
+
+                    if (heightDifference > 0)
+                    {
+                        var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
+                        var forceToAdd = upwardForce - upwardsVelocity;
+                        _rigidbody.AddForce(Vector3.up * Mathf.Max(forceToAdd, 0f), ForceMode.VelocityChange);
+                    }
+                }
             }
         }
 
@@ -410,23 +507,15 @@ namespace Hyper.Player
 
         private void ApplyWallRunForce()
         {
-            var upwardForce = _rigidbody.linearVelocity.y < 0 ? wallRunDescendingForce : wallRunAscendingForce;
-            _rigidbody.AddForce(Vector3.up * upwardForce, ForceMode.Acceleration);
+            if (_rigidbody.linearVelocity.y < 0)
+            {
+                _rigidbody.AddForce(Vector3.up * wallRunDescendingForce, ForceMode.Acceleration);
+            }
         }
 
         private void ApplyWallStickForce()
         {
-            _rigidbody.AddForce(-_wallContactPoint.normal * wallStickForce, ForceMode.Acceleration);
-        }
-
-        private void ApplyMinimumSpeed()
-        {
-            if (_rigidbody.linearVelocity.magnitude < wallRunMinimumSpeed)
-            {
-                var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(_rigidbody.transform.forward, _wallContactPoint.normal).normalized;
-
-                _rigidbody.linearVelocity = forwardDirectionAlongSideWall * wallRunMinimumSpeed + Vector3.up * _rigidbody.linearVelocity.y;
-            }
+            _rigidbody.AddForce(-_wallContactNormal * wallStickForce, ForceMode.Acceleration);
         }
 
         private void UpdateSameWallJumpCooldownCounter()
@@ -502,17 +591,23 @@ namespace Hyper.Player
 
         private void ExecuteWallJump()
         {
-            var sideForce = _wallContactPoint.normal * wallJumpSideForce;
+            var sideForce = _wallContactNormal * wallJumpSideForce;
             var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * gravityScale * wallJumpHeight);
             var forwardForce = transform.forward * wallJumpForwardForce;
 
             var finalForce = sideForce + jumpForce + forwardForce;
 
-            _rigidbody.linearVelocity = new Vector3()
+            var vel = _rigidbody.linearVelocity;
+            if (_wallContactNormal != Vector3.zero)
             {
-                x = _rigidbody.linearVelocity.x,
-                z = _rigidbody.linearVelocity.z
-            };
+                var normal = _wallContactNormal.normalized;
+                var velAlongNormal = Vector3.Dot(vel, normal) * normal;
+                vel -= velAlongNormal;
+            }
+
+            vel.y = 0f;
+
+            _rigidbody.linearVelocity = vel;
 
             _rigidbody.AddForce(finalForce, ForceMode.VelocityChange);
         }
