@@ -5195,7 +5195,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1258207817}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: OnBackButtonPressed
         m_Mode: 1
@@ -6510,7 +6510,7 @@ MonoBehaviour:
   m_PlayerJoinedEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1901080632}
         m_TargetAssemblyTypeName: LocalMenuManager, Assembly-CSharp
         m_MethodName: OnPlayerJoined
         m_Mode: 0
@@ -6903,6 +6903,7 @@ MonoBehaviour:
   - {fileID: 416279179}
   - {fileID: 1141906906}
   playerInputManager: {fileID: 1749074530}
+  eventSystem: {fileID: 1038690824}
 --- !u!1 &1902170644
 GameObject:
   m_ObjectHideFlags: 0

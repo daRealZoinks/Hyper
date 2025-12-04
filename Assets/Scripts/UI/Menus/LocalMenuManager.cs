@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class LocalMenuManager : MonoBehaviour
@@ -7,14 +8,17 @@ public class LocalMenuManager : MonoBehaviour
     public List<CharacterSelectMenu> characterSelectMenuList;
 
     public PlayerInputManager playerInputManager;
+    public EventSystem eventSystem;
 
     private void OnEnable()
     {
+        eventSystem.enabled = false;
         playerInputManager.EnableJoining();
     }
 
     private void OnDisable()
     {
+        eventSystem.enabled = true;
         playerInputManager.DisableJoining();
     }
 
