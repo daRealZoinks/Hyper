@@ -580,7 +580,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038690826}
+      - m_Target: {fileID: 1258207817}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: OnSinglePlayerButtonPressed
         m_Mode: 1
@@ -1636,7 +1636,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038690826}
+      - m_Target: {fileID: 1258207817}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: OnMultiplayerButtonPressed
         m_Mode: 1
@@ -1823,7 +1823,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038690826}
+      - m_Target: {fileID: 1258207817}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: Quit
         m_Mode: 1
@@ -2470,7 +2470,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038690826}
+      - m_Target: {fileID: 1258207817}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: OnLocalButtonPressed
         m_Mode: 1
@@ -2676,7 +2676,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &963717298
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2989,7 +2989,6 @@ GameObject:
   - component: {fileID: 1038690825}
   - component: {fileID: 1038690824}
   - component: {fileID: 1038690823}
-  - component: {fileID: 1038690826}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -3058,25 +3057,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1038690826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038690822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea2540c8af49a1a41ae7dbf95ea511ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  titleScreen: {fileID: 552517018}
-  buttonPrompts: {fileID: 963717297}
-  mainMenu: {fileID: 2022685045}
-  singlePlayerMenu: {fileID: 1159101729}
-  multiplayerMenu: {fileID: 1580727474}
-  localMenu: {fileID: 1901080630}
-  optionsMenu: {fileID: 1352312610}
 --- !u!1 &1043607495
 GameObject:
   m_ObjectHideFlags: 0
@@ -3464,7 +3444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1115484046
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4456,6 +4436,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1197945966}
   m_CullTransparentMesh: 1
+--- !u!1 &1258207816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1258207818}
+  - component: {fileID: 1258207817}
+  m_Layer: 0
+  m_Name: Menu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1258207817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258207816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea2540c8af49a1a41ae7dbf95ea511ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  buttonPrompts: {fileID: 963717297}
+  backPrompt: {fileID: 1356510246}
+  selectPrompt: {fileID: 1115484045}
+  titleScreen: {fileID: 552517018}
+  mainMenu: {fileID: 2022685045}
+  singlePlayerMenu: {fileID: 1159101729}
+  multiplayerMenu: {fileID: 1580727474}
+  localMenu: {fileID: 1901080630}
+  optionsMenu: {fileID: 1352312610}
+  inputSystemUIInputModule: {fileID: 1038690823}
+  eventSystem: {fileID: 1038690824}
+--- !u!4 &1258207818
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258207816}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 352.79953, y: 577.4317, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1277535095
 GameObject:
   m_ObjectHideFlags: 0
@@ -5091,7 +5126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1356510247
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5160,7 +5195,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038690826}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: OnBackButtonPressed
         m_Mode: 1
@@ -6265,7 +6300,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038690826}
+      - m_Target: {fileID: 1258207817}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: OnOptionsButtonPressed
         m_Mode: 1
@@ -6434,7 +6469,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1749074528}
   - component: {fileID: 1749074530}
-  - component: {fileID: 1749074531}
   m_Layer: 0
   m_Name: Player Input Manager
   m_TagString: Untagged
@@ -6476,7 +6510,7 @@ MonoBehaviour:
   m_PlayerJoinedEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1749074531}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LocalMenuManager, Assembly-CSharp
         m_MethodName: OnPlayerJoined
         m_Mode: 0
@@ -6529,24 +6563,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &1749074531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1749074527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed1a54e10cdcf3944b2ca2cd92abf2b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  localMenu: {fileID: 1901080630}
-  characterSelectMenuList:
-  - {fileID: 4852232531937717399}
-  - {fileID: 1328003852}
-  - {fileID: 416279179}
-  - {fileID: 1141906906}
 --- !u!1 &1804278949
 GameObject:
   m_ObjectHideFlags: 0
@@ -6841,6 +6857,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1901080631}
+  - component: {fileID: 1901080632}
   m_Layer: 5
   m_Name: Local Menu
   m_TagString: Untagged
@@ -6868,6 +6885,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1901080632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901080630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed1a54e10cdcf3944b2ca2cd92abf2b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  characterSelectMenuList:
+  - {fileID: 4852232531937717399}
+  - {fileID: 1328003852}
+  - {fileID: 416279179}
+  - {fileID: 1141906906}
+  playerInputManager: {fileID: 1749074530}
 --- !u!1 &1902170644
 GameObject:
   m_ObjectHideFlags: 0
@@ -7172,7 +7207,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038690826}
+      - m_Target: {fileID: 1258207817}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: OnStartButtonPressed
         m_Mode: 1
@@ -8838,6 +8873,7 @@ SceneRoots:
   - {fileID: 927082274}
   - {fileID: 2080753095}
   - {fileID: 1074318047}
+  - {fileID: 1749074528}
+  - {fileID: 1258207818}
   - {fileID: 1612965093}
   - {fileID: 1038690825}
-  - {fileID: 1749074528}

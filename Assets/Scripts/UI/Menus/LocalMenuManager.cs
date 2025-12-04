@@ -4,28 +4,18 @@ using UnityEngine.InputSystem;
 
 public class LocalMenuManager : MonoBehaviour
 {
-    public GameObject localMenu;
-
     public List<CharacterSelectMenu> characterSelectMenuList;
 
-    private PlayerInputManager playerInputManager;
+    public PlayerInputManager playerInputManager;
 
-    private void Awake()
+    private void OnEnable()
     {
-        playerInputManager = GetComponent<PlayerInputManager>();
+        playerInputManager.EnableJoining();
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        if (localMenu.activeSelf && !playerInputManager.joiningEnabled)
-        {
-            playerInputManager.EnableJoining();
-        }
-
-        if (!localMenu.activeSelf && playerInputManager.joiningEnabled)
-        {
-            playerInputManager.DisableJoining();
-        }
+        playerInputManager.DisableJoining();
     }
 
     public void OnPlayerJoined(PlayerInput playerInput)
@@ -37,9 +27,6 @@ public class LocalMenuManager : MonoBehaviour
         var rectTransform = playerInput.GetComponent<RectTransform>();
         rectTransform.localPosition = Vector3.zero;
         rectTransform.localScale = Vector3.one;
-
-
-
 
         characterSelectMenu.User = playerInput.user;
     }
