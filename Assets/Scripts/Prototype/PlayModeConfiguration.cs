@@ -1,4 +1,4 @@
-using Unity.Multiplayer.Playmode;
+using Unity.Multiplayer.PlayMode;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ public class PlayModeConfiguration : MonoBehaviour
 {
     private void Start()
     {
-        foreach (var tag in CurrentPlayer.ReadOnlyTags())
+        foreach (var tag in CurrentPlayer.Tags)
         {
             if (tag == "Host")
             {

@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    public GameObject titleScreen;
-
     public GameObject buttonPrompts;
+
+    public GameObject backPrompt;
+    public GameObject selectPrompt;
+
+    public GameObject titleScreen;
 
     public GameObject mainMenu;
     public GameObject singlePlayerMenu;
@@ -14,11 +19,16 @@ public class Menu : MonoBehaviour
     public GameObject localMenu;
     public GameObject optionsMenu;
 
-    private InputSystemUIInputModule _inputModule;
+    public InputSystemUIInputModule inputSystemUIInputModule;
+    public EventSystem eventSystem;
 
     private readonly Stack<MenuState> menuStack = new();
 
     private MenuState currentState;
+
+
+    private readonly Stack<MenuScreen> menuScreenStack = new();
+    private MenuScreen currentMenuScreen;
 
     public enum MenuState
     {
@@ -40,7 +50,7 @@ public class Menu : MonoBehaviour
         {
             currentState = value;
 
-            buttonPrompts.SetActive(currentState != MenuState.TitleScreen);
+            //buttonPrompts.SetActive(menuStack.Count > 1);
 
             titleScreen.SetActive(currentState == MenuState.TitleScreen);
             mainMenu.SetActive(currentState == MenuState.MainMenu);
@@ -53,16 +63,20 @@ public class Menu : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputModule.cancel.action.started += (_) =>
+        inputSystemUIInputModule.cancel.action.started += (_) =>
         {
             OnBackButtonPressed();
         };
     }
 
+    private void Update()
+    {
+        backPrompt.SetActive(menuStack.Count > 1);
+        selectPrompt.SetActive(menuStack.Count > 1 && eventSystem.currentSelectedGameObject && eventSystem.currentSelectedGameObject.TryGetComponent<Button>(out var _));
+    }
+
     private void Awake()
     {
-        _inputModule = GetComponent<InputSystemUIInputModule>();
-
         CurrentMenuState = MenuState.TitleScreen;
 
         menuStack.Push(CurrentMenuState);
