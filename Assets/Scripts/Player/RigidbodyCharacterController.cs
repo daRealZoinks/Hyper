@@ -46,6 +46,7 @@ namespace Hyper.Player
         public float wallClimbMaxHeight = 4f;
 
         [Header("General Settings")]
+        public bool useGravity = true;
         public float gravityScale = 1.5f;
         public float slopeLimit = 45f;
         public LayerMask groundCheckLayerMask;
