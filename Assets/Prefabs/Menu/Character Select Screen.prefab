@@ -133,13 +133,13 @@ MonoBehaviour:
     m_ActionName: 'Player/Pause[/Keyboard/escape,/DualSenseGamepadHID/start]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 4518183747296690518}
+        m_TargetAssemblyTypeName: CharacterSelectScreen, Assembly-CSharp
+        m_MethodName: ChooseCharacter
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -148,11 +148,35 @@ MonoBehaviour:
     m_ActionId: c95b2375-e6d9-4b88-9c4c-c5e76515df4b
     m_ActionName: 'UI/Navigate[/DualSenseGamepadHID/leftStick,/DualSenseGamepadHID/dpad,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4518183747296690518}
+        m_TargetAssemblyTypeName: CharacterSelectScreen, Assembly-CSharp
+        m_MethodName: ReadyUp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 7607c7b6-cd76-4816-beef-bd0341cfe950
     m_ActionName: 'UI/Submit[/Keyboard/enter,/DualSenseGamepadHID/buttonSouth]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4518183747296690518}
+        m_TargetAssemblyTypeName: CharacterSelectScreen, Assembly-CSharp
+        m_MethodName: Unready
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 15cef263-9014-4fd5-94d9-4e4a6234a6ef
     m_ActionName: 'UI/Cancel[/Keyboard/escape,/DualSenseGamepadHID/buttonEast]'
   - m_PersistentCalls:
@@ -199,6 +223,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a64c48ede411aa144987d9bdb43d728b, type: 2}
   - {fileID: 11400000, guid: faf5a8b6928c1754b91e6ac459a47ecd, type: 2}
   - {fileID: 11400000, guid: 93fa7bc469c853c46a0de359ba446aa7, type: 2}
+  nextCharacterButton: {fileID: 102600554070089374}
+  previousCharacterButton: {fileID: 7574936037827396413}
 --- !u!1 &1203941126742631509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1152,7 +1178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -1182,7 +1208,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3772650720933248606}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4518183747296690518}
+        m_TargetAssemblyTypeName: CharacterSelectScreen, Assembly-CSharp
+        m_MethodName: ToggleReady
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &930461800162896894
 MonoBehaviour:
   m_ObjectHideFlags: 0
