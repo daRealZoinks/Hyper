@@ -26,14 +26,21 @@ namespace Hyper.Player
                 lineRenderer.SetPosition(0, TargetPoint.Value - transform.position);
                 lineRenderer.SetPosition(1, OwningPlayerRigidbody.position - transform.position);
             }
+
+            if (TargetCharacterController)
+            {
+                var targetRigidbody = TargetCharacterController.GetComponent<Rigidbody>();
+                lineRenderer.SetPosition(0, targetRigidbody.position - transform.position);
+                lineRenderer.SetPosition(1, OwningPlayerRigidbody.position - transform.position);
+            }
         }
 
         private void FixedUpdate()
         {
             if (TargetPoint.HasValue)
             {
-                var toTarget = TargetPoint.Value - OwningPlayerRigidbody.position;
                 var owningPlayerRigidbodyCharacterController = OwningPlayerRigidbody.GetComponent<RigidbodyCharacterController>();
+                var toTarget = TargetPoint.Value - OwningPlayerRigidbody.position;
 
                 if (toTarget.magnitude > rangeToDisengage)
                 {
@@ -43,6 +50,27 @@ namespace Hyper.Player
                 else
                 {
                     owningPlayerRigidbodyCharacterController.useGravity = true;
+                    Destroy(gameObject);
+                }
+            }
+
+            if (TargetCharacterController)
+            {
+                var owningPlayerRigidbodyCharacterController = OwningPlayerRigidbody.GetComponent<RigidbodyCharacterController>();
+                var targetRigidbody = TargetCharacterController.GetComponent<Rigidbody>();
+                var toTarget = targetRigidbody.position - OwningPlayerRigidbody.position;
+
+                if (toTarget.magnitude > rangeToDisengage)
+                {
+                    owningPlayerRigidbodyCharacterController.useGravity = false;
+                    TargetCharacterController.useGravity = false;
+                    OwningPlayerRigidbody.linearVelocity = toTarget.normalized * speed;
+                    targetRigidbody.linearVelocity = -toTarget.normalized * speed;
+                }
+                else
+                {
+                    owningPlayerRigidbodyCharacterController.useGravity = true;
+                    TargetCharacterController.useGravity = true;
                     Destroy(gameObject);
                 }
             }
