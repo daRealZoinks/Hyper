@@ -65,14 +65,14 @@ public class RaceManager : MonoBehaviour
 
                         if (player1Progress.lastReachedCheckpoint != null)
                         {
-                            player1nextCheckpointPosition = player1Progress.lastReachedCheckpoint.Next.Value.transform.position;
+                            player1nextCheckpointPosition = player1Progress.lastReachedCheckpoint.NextOrFirst().Value.transform.position;
                         }
 
                         var player2nextCheckpointPosition = startingCheckpoint.transform.position;
 
                         if (player2Progress.lastReachedCheckpoint != null)
                         {
-                            player2nextCheckpointPosition = player2Progress.lastReachedCheckpoint.Next.Value.transform.position;
+                            player2nextCheckpointPosition = player2Progress.lastReachedCheckpoint.NextOrFirst().Value.transform.position;
                         }
 
                         var player1DistanceTowardsNextCheckpoint = Vector3.Distance(player1position, player1nextCheckpointPosition);

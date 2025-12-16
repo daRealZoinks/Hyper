@@ -23,17 +23,10 @@ public class PlayerProgress : MonoBehaviour
             }
             else
             {
-                if (checkpointNode == lastReachedCheckpoint.Next)
+                if (checkpointNode == lastReachedCheckpoint.NextOrFirst())
                 {
                     LapCompleted();
                 }
-            }
-        }
-        else
-        {
-            if (checkpointNode == checkpointNode.List.Last)
-            {
-                // need to loop back to start
             }
         }
 
@@ -43,5 +36,18 @@ public class PlayerProgress : MonoBehaviour
     private void LapCompleted()
     {
         lapsCompleted++;
+    }
+}
+
+public static class LinkedListNodeExtentions
+{
+    public static LinkedListNode<T> NextOrFirst<T>(this LinkedListNode<T> current)
+    {
+        return current.Next ?? current.List.First;
+    }
+
+    public static LinkedListNode<T> PreviousOrLast<T>(this LinkedListNode<T> current)
+    {
+        return current.Previous ?? current.List.Last;
     }
 }
