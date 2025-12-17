@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9001151781569187813}
   m_Layer: 3
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,9 +107,10 @@ GameObject:
   - component: {fileID: 451494572285065196}
   - component: {fileID: 9120795128593380099}
   - component: {fileID: 8582168105653550514}
+  - component: {fileID: 670716625378304606}
   m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -493,6 +494,19 @@ MonoBehaviour:
   rotationSmoothingFactor: 0.1
   teleportEnabled: 1
   teleportIfDistanceGreaterThan: 10
+--- !u!114 &670716625378304606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684836292335276868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec02a49273c8faa4297c7bad01bcc7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Hyper.Player::PlayerProgress
+  place: 0
 --- !u!1 &3741053420847457995
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +518,7 @@ GameObject:
   - component: {fileID: 414082079559515901}
   m_Layer: 3
   m_Name: Throw Point
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -535,7 +549,7 @@ GameObject:
   - component: {fileID: 778711822468206269}
   m_Layer: 3
   m_Name: Third Person Graphics
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -568,7 +582,7 @@ GameObject:
   - component: {fileID: 6216556272576259190}
   m_Layer: 3
   m_Name: Camera Tracking Target
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -601,7 +615,7 @@ GameObject:
   - component: {fileID: 5014087873250221022}
   m_Layer: 3
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -696,7 +710,7 @@ GameObject:
   - component: {fileID: 7546176787410170185}
   m_Layer: 3
   m_Name: CinemachineCamera
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -935,7 +949,7 @@ GameObject:
   - component: {fileID: 6448816616791665718}
   m_Layer: 3
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1115,7 +1129,7 @@ GameObject:
   - component: {fileID: 6476198148668637248}
   m_Layer: 3
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1205,7 +1219,7 @@ GameObject:
   - component: {fileID: 1160304534055563568}
   m_Layer: 3
   m_Name: Nested Parent
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1240,7 +1254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3469513237
+  GlobalObjectIdHash: 3643188166
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1355,7 +1369,7 @@ GameObject:
   - component: {fileID: 5193958941739314017}
   m_Layer: 3
   m_Name: First Person Graphics
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1390,7 +1404,7 @@ GameObject:
   - component: {fileID: 8489427408784648956}
   m_Layer: 3
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
