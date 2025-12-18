@@ -1,3 +1,4 @@
+using Hyper.Core;
 using UnityEngine;
 
 public class Respawn : MonoBehaviour

@@ -1,49 +1,53 @@
+using Hyper.UI.Glyphs;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
-public class MenuScreen : MonoBehaviour
+namespace Hyper.UI.Menus
 {
-    public List<Button> buttons;
-
-    public Button firstButtonToSelect;
-
-    private Button _lastButtonSelected;
-
-    private InputSystemUIInputModule _inputSystemUIInputModule;
-
-    private void Awake()
+    public class MenuScreen : MonoBehaviour
     {
-        var eventSystem = EventSystem.current;
+        public List<Button> buttons;
 
-        _inputSystemUIInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+        public Button firstButtonToSelect;
 
-        _inputSystemUIInputModule.move.action.performed += (_) =>
+        private Button _lastButtonSelected;
+
+        private InputSystemUIInputModule _inputSystemUIInputModule;
+
+        private void Awake()
         {
-            if (eventSystem.currentSelectedGameObject == null)
+            var eventSystem = EventSystem.current;
+
+            _inputSystemUIInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+
+            _inputSystemUIInputModule.move.action.performed += (_) =>
+            {
+                if (eventSystem.currentSelectedGameObject == null)
+                {
+                    (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
+                }
+
+                if (eventSystem && eventSystem.currentSelectedGameObject)
+                {
+                    var button = eventSystem.currentSelectedGameObject.GetComponent<Button>();
+
+                    if (buttons.Contains(button))
+                    {
+                        _lastButtonSelected = eventSystem.currentSelectedGameObject.GetComponent<Button>();
+                    }
+                }
+            };
+        }
+
+        private void OnEnable()
+        {
+            if (DeviceManager.Singleton && DeviceManager.Singleton.CurrentDeviceType != DeviceManager.DeviceType.Mouse)
             {
                 (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
             }
-
-            if (eventSystem && eventSystem.currentSelectedGameObject)
-            {
-                var button = eventSystem.currentSelectedGameObject.GetComponent<Button>();
-
-                if (buttons.Contains(button))
-                {
-                    _lastButtonSelected = eventSystem.currentSelectedGameObject.GetComponent<Button>();
-                }
-            }
-        };
-    }
-
-    private void OnEnable()
-    {
-        if (DeviceManager.Singleton && DeviceManager.Singleton.CurrentDeviceType != DeviceManager.DeviceType.Mouse)
-        {
-            (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
         }
     }
 }

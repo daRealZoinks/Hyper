@@ -1,21 +1,24 @@
 using UnityEngine;
 using UnityEngine.InputSystem.Users;
 
-public class CharacterSelectMenu : MonoBehaviour
+namespace Hyper.UI.Menus
 {
-    public InputUser User
+    public class CharacterSelectMenu : MonoBehaviour
     {
-        get
+        public InputUser User
         {
-            return _user;
+            get
+            {
+                return _user;
+            }
+            set
+            {
+                _user = value;
+                startText.SetActive(false);
+            }
         }
-        set
-        {
-            _user = value;
-            startText.SetActive(false);
-        }
-    }
 
-    public GameObject startText;
-    private InputUser _user;
+        public GameObject startText;
+        private InputUser _user;
+    }
 }

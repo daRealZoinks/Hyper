@@ -1,0 +1,17 @@
+{
+    "name": "Hyper.HyperBalls",
+    "rootNamespace": "Hyper.HyperBalls",
+    "references": [
+        "Hyper.Player",
+        "Unity.Netcode.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

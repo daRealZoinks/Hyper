@@ -3,35 +3,38 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class LocalMenuManager : MonoBehaviour
+namespace Hyper.UI.Menus
 {
-    public List<CharacterSelectMenu> characterSelectMenuList;
-
-    public PlayerInputManager playerInputManager;
-    public EventSystem eventSystem;
-
-    private void OnEnable()
+    public class LocalMenuManager : MonoBehaviour
     {
-        eventSystem.enabled = false;
-        playerInputManager.EnableJoining();
-    }
+        public List<CharacterSelectMenu> characterSelectMenuList;
 
-    private void OnDisable()
-    {
-        eventSystem.enabled = true;
-        playerInputManager.DisableJoining();
-    }
+        public PlayerInputManager playerInputManager;
+        public EventSystem eventSystem;
 
-    public void OnPlayerJoined(PlayerInput playerInput)
-    {
-        var characterSelectMenu = characterSelectMenuList[playerInput.playerIndex];
+        private void OnEnable()
+        {
+            eventSystem.enabled = false;
+            playerInputManager.EnableJoining();
+        }
 
-        playerInput.transform.SetParent(characterSelectMenu.transform);
+        private void OnDisable()
+        {
+            eventSystem.enabled = true;
+            playerInputManager.DisableJoining();
+        }
 
-        var rectTransform = playerInput.GetComponent<RectTransform>();
-        rectTransform.localPosition = Vector3.zero;
-        rectTransform.localScale = Vector3.one;
+        public void OnPlayerJoined(PlayerInput playerInput)
+        {
+            var characterSelectMenu = characterSelectMenuList[playerInput.playerIndex];
 
-        characterSelectMenu.User = playerInput.user;
+            playerInput.transform.SetParent(characterSelectMenu.transform);
+
+            var rectTransform = playerInput.GetComponent<RectTransform>();
+            rectTransform.localPosition = Vector3.zero;
+            rectTransform.localScale = Vector3.one;
+
+            characterSelectMenu.User = playerInput.user;
+        }
     }
 }

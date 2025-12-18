@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMenuManager : MonoBehaviour
+namespace Hyper.UI.Menus
 {
-    public void OnPlayerJoined(PlayerInput playerInput)
+    public class PlayerMenuManager : MonoBehaviour
     {
-        playerInput.transform.SetParent(transform);
+        public void OnPlayerJoined(PlayerInput playerInput)
+        {
+            playerInput.transform.SetParent(transform);
+        }
     }
 }

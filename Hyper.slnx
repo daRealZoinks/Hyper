@@ -1,9 +1,15 @@
 ﻿<Solution>
-  <Project Path="Hyper.Player.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Hyper.HyperBalls.csproj" />
   <Project Path="UnityEngine.InputSystem.Samples.UIvsGameInput.csproj" />
   <Project Path="Unity.InputSystem.Recorder.csproj" />
+  <Project Path="Hyper.UI.Menus.csproj" />
   <Project Path="Unity.InputSystem.InGameHints.csproj" />
-  <Project Path="Hyper.Player.Camera.csproj" />
+  <Project Path="Hyper.Camera.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Hyper.Player.csproj" />
+  <Project Path="Hyper.Core.csproj" />
+  <Project Path="Hyper.UI.Glyphs.csproj" />
+  <Project Path="Hyper.Netcode.csproj" />
   <Project Path="Unity.InputSystem.RebindingUI.csproj" />
+  <Project Path="Hyper.Player.Input.csproj" />
 </Solution>
