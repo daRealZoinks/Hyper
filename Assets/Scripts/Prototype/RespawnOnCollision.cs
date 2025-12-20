@@ -1,3 +1,4 @@
+using Hyper.Core;
 using Hyper.Player;
 using UnityEngine;
 

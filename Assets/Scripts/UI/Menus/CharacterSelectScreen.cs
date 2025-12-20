@@ -4,90 +4,93 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class CharacterSelectScreen : MonoBehaviour
+namespace Hyper.UI.Menus
 {
-    public Image characterProfilePicture;
-    public TextMeshProUGUI characterName;
-    public List<HyperCharacterInfo> hyperCharacterInfo;
-
-    public Button nextCharacterButton;
-    public Button previousCharacterButton;
-
-    private bool _isReady;
-    private int _currentCharacterIndex;
-
-    public bool IsReady
+    public class CharacterSelectScreen : MonoBehaviour
     {
-        get
+        public Image characterProfilePicture;
+        public TextMeshProUGUI characterName;
+        public List<HyperCharacterInfo> hyperCharacterInfo;
+
+        public Button nextCharacterButton;
+        public Button previousCharacterButton;
+
+        private bool _isReady;
+        private int _currentCharacterIndex;
+
+        public bool IsReady
         {
-            return _isReady;
+            get
+            {
+                return _isReady;
+            }
+            set
+            {
+                _isReady = value;
+                nextCharacterButton.interactable = !_isReady;
+                previousCharacterButton.interactable = !_isReady;
+            }
         }
-        set
-        {
-            _isReady = value;
-            nextCharacterButton.interactable = !_isReady;
-            previousCharacterButton.interactable = !_isReady;
-        }
-    }
 
-    private void Start()
-    {
-        UpdateCharacterDisplay();
-    }
-
-    public void NextCharacter()
-    {
-        if (!IsReady)
+        private void Start()
         {
-            _currentCharacterIndex = (_currentCharacterIndex + 1) % hyperCharacterInfo.Count;
             UpdateCharacterDisplay();
         }
-    }
 
-    public void PreviousCharacter()
-    {
-        if (!IsReady)
+        public void NextCharacter()
         {
-            _currentCharacterIndex = (_currentCharacterIndex - 1 + hyperCharacterInfo.Count) % hyperCharacterInfo.Count;
-            UpdateCharacterDisplay();
+            if (!IsReady)
+            {
+                _currentCharacterIndex = (_currentCharacterIndex + 1) % hyperCharacterInfo.Count;
+                UpdateCharacterDisplay();
+            }
         }
-    }
 
-    private void UpdateCharacterDisplay()
-    {
-        var characterInfo = hyperCharacterInfo[_currentCharacterIndex];
-        characterProfilePicture.sprite = characterInfo.characterProfilePicture;
-        characterName.text = characterInfo.characterName;
-    }
-
-    public void ToggleReady()
-    {
-        IsReady = !IsReady;
-    }
-
-    public void ChooseCharacter(InputAction.CallbackContext context)
-    {
-        if (context.performed && !IsReady)
+        public void PreviousCharacter()
         {
-            var value = context.ReadValue<Vector2>();
-            _currentCharacterIndex = (_currentCharacterIndex + (int)value.normalized.x + hyperCharacterInfo.Count) % hyperCharacterInfo.Count;
-            UpdateCharacterDisplay();
+            if (!IsReady)
+            {
+                _currentCharacterIndex = (_currentCharacterIndex - 1 + hyperCharacterInfo.Count) % hyperCharacterInfo.Count;
+                UpdateCharacterDisplay();
+            }
         }
-    }
 
-    public void ReadyUp(InputAction.CallbackContext context)
-    {
-        if (context.started)
+        private void UpdateCharacterDisplay()
         {
-            IsReady = true;
+            var characterInfo = hyperCharacterInfo[_currentCharacterIndex];
+            characterProfilePicture.sprite = characterInfo.characterProfilePicture;
+            characterName.text = characterInfo.characterName;
         }
-    }
 
-    public void Unready(InputAction.CallbackContext context)
-    {
-        if (context.started)
+        public void ToggleReady()
         {
-            IsReady = false;
+            IsReady = !IsReady;
+        }
+
+        public void ChooseCharacter(InputAction.CallbackContext context)
+        {
+            if (context.performed && !IsReady)
+            {
+                var value = context.ReadValue<Vector2>();
+                _currentCharacterIndex = (_currentCharacterIndex + (int)value.normalized.x + hyperCharacterInfo.Count) % hyperCharacterInfo.Count;
+                UpdateCharacterDisplay();
+            }
+        }
+
+        public void ReadyUp(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                IsReady = true;
+            }
+        }
+
+        public void Unready(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                IsReady = false;
+            }
         }
     }
 }
