@@ -6,8 +6,9 @@ namespace Hyper.HyperBalls
     public class ExplosiveHyperBall : MonoBehaviour
     {
         public float explosionRadius = 5f;
-        public float explosionForce = 100f;
-        public float upwardsModifier = 1f;
+        public float explosionForce = 20f;
+        public float upwardsModifier = 20f;
+        public float linearVelocityModifier = 50f;
 
         private HyperBall _hyperBall;
 
@@ -34,10 +35,26 @@ namespace Hyper.HyperBalls
 
                 if (hitRigidbody)
                 {
-                    hitRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius, upwardsModifier, ForceMode.VelocityChange);
+                    var explosionForceDirection = (hitRigidbody.position - transform.position).normalized;
+
+                    var forceDirection = (explosionForceDirection * ((100 - upwardsModifier) / 100)).normalized +
+                        (Vector3.up * (upwardsModifier / 100)).normalized;
+
+                    if (hitRigidbody == _hyperBall.OwningPlayerRigidbody)
+                    {
+                        var linearVelocity = new Vector3()
+                        {
+                            x = hitRigidbody.linearVelocity.x,
+                            z = hitRigidbody.linearVelocity.z,
+                        };
+
+                        forceDirection = ((forceDirection * ((100 - linearVelocityModifier) / 100)).normalized +
+                            (linearVelocity * (linearVelocityModifier / 100)).normalized).normalized;
+                    }
+
+                    hitRigidbody.linearVelocity = forceDirection.normalized * explosionForce;
                 }
             }
-
         }
     }
 }
