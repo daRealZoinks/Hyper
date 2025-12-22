@@ -80,7 +80,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 576a73e6d80375b4a8f5f7b2f95677df, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Hyper.Player::Hyper.Player.ExplosiveHyperBall
+  m_EditorClassIdentifier: Hyper.HyperBalls::Hyper.HyperBalls.ExplosiveHyperBall
   explosionRadius: 5
   explosionForce: 20
-  upwardsModifier: 2
+  upwardsModifier: 20
+  linearVelocityModifier: 75
