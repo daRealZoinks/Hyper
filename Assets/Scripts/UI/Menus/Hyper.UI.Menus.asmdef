@@ -1,6 +1,6 @@
 {
     "name": "Hyper.UI.Menus",
-    "rootNamespace": "Hyper.UI.Menus",
+    "rootNamespace": "",
     "references": [
         "GUID:852dc94ab1fc7c4408e0164a66ec8914",
         "GUID:979d045eb87faee4ab6436d0f08106a3",

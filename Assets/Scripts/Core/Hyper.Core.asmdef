@@ -1,6 +1,6 @@
 {
     "name": "Hyper.Core",
-    "rootNamespace": "Hyper.Core",
+    "rootNamespace": "",
     "references": [
         "GUID:c697c6b855fcf1b41b43fd44db397d9c"
     ],

@@ -1,6 +1,6 @@
 {
     "name": "Hyper.HyperBalls",
-    "rootNamespace": "Hyper.HyperBalls",
+    "rootNamespace": "",
     "references": [
         "Hyper.Player",
         "Unity.Netcode.Runtime"
