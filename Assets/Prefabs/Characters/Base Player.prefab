@@ -1112,7 +1112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrowBall
   ShowTopMostFoldoutHeaderGroup: 1
-  hyperBallPrefab: {fileID: 918155078425850008, guid: 5eae1567c23660447a3b579b86ed8b18, type: 3}
+  hyperBallPrefab: {fileID: 0}
   playerRigidbody: {fileID: 665804745902072558}
   throwPoint: {fileID: 414082079559515901}
   throwForce: 20
@@ -1219,7 +1219,7 @@ GameObject:
   - component: {fileID: 3902320517130395597}
   - component: {fileID: 1160304534055563568}
   m_Layer: 3
-  m_Name: Nested Parent
+  m_Name: Base Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1255,7 +1255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3643188166
+  GlobalObjectIdHash: 3469513237
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

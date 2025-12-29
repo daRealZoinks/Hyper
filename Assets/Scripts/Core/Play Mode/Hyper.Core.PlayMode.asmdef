@@ -1,9 +1,8 @@
 {
-    "name": "Hyper.HyperBalls",
+    "name": "Hyper.Core.PlayMode",
     "rootNamespace": "",
     "references": [
-        "Hyper.Player",
-        "Unity.Netcode.Runtime"
+        "GUID:1491147abca9d7d4bb7105af628b223e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -29,15 +29,12 @@ namespace Hyper.HyperBalls
 
         public void InstantiateAndThrowBall()
         {
-            if (IsOwner)
+            if (IsOwner && hyperBallPrefab && _nextThrowTime <= 0f)
             {
-                if (_nextThrowTime <= 0f)
-                {
-                    InstantiateAndThrowBallServerRpc(throwPoint.position, throwPoint.forward);
-                    LocalInstantiateAndThrowBall(throwPoint.position, throwPoint.forward);
+                InstantiateAndThrowBallServerRpc(throwPoint.position, throwPoint.forward);
+                LocalInstantiateAndThrowBall(throwPoint.position, throwPoint.forward);
 
-                    _nextThrowTime = throwInterval;
-                }
+                _nextThrowTime = throwInterval;
             }
         }
 
