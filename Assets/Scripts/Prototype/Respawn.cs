@@ -3,20 +3,18 @@ using UnityEngine;
 
 public class Respawn : MonoBehaviour
 {
-    private Checkpoint checkpoint;
+    public float respawnHeight = -40f;
+
+    private PlayerProgress _playerProgress;
 
     private void Awake()
     {
-        checkpoint = FindFirstObjectByType<Checkpoint>();
-        if (checkpoint == null)
-        {
-            Debug.LogError("No Checkpoint found in the scene.");
-        }
+        _playerProgress = GetComponent<PlayerProgress>();
     }
 
     private void Update()
     {
-        if (transform.position.y < -40)
+        if (transform.position.y < respawnHeight)
         {
             RespawnAtCheckpoint();
         }
@@ -24,7 +22,7 @@ public class Respawn : MonoBehaviour
 
     private void RespawnAtCheckpoint()
     {
-        transform.position = checkpoint.transform.position;
+        transform.position = _playerProgress.lastReachedCheckpoint.Value.transform.position;
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
     }
 }
