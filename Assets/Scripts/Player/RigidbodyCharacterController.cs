@@ -253,7 +253,12 @@ namespace Hyper.Player
 
                 if (positionOfMantlingRaycastHitsNumber > 0)
                 {
-                    var tallestPoint = positionOfMantlingRaycastHits.OrderByDescending(r => r.point.y).First();
+                    var validHits = positionOfMantlingRaycastHits
+                        .Take(positionOfMantlingRaycastHitsNumber)
+                        .Where(r => r.collider != null)
+                        .ToArray();
+
+                    var tallestPoint = validHits.OrderByDescending(r => r.point.y).First();
 
                     if (!IsMantling)
                     {
