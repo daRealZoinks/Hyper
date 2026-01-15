@@ -44,6 +44,7 @@ namespace Hyper.Player
 
         [Header("Mantling and Wall Climbing Settings")]
         public float frontWallDetectionAngleThreshold = 0.9f;
+        public float maxMantleDuration = 0.35f;
         public float wallClimbMaxHeight = 4f;
 
         [Header("General Settings")]
@@ -163,12 +164,13 @@ namespace Hyper.Player
                     ApplyCustomGravity(gravityScale);
                 }
 
-                if (!IsSliding)
-                {
-                    MantleCheck();
-                }
 
                 WallClimbCheck();
+            }
+
+            if (!IsGrounded && !IsSliding && IsMovingForward)
+            {
+                MantleCheck();
             }
 
             UpdateRotationBasedOnCamera();
@@ -238,30 +240,27 @@ namespace Hyper.Player
             var upperRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.25f, transform.forward);
             var lowerRay = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, transform.forward);
 
-            var upperRayHitsNumber = Physics.RaycastNonAlloc(upperRay, new RaycastHit[3], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
-            var lowerRayHitsNumber = Physics.RaycastNonAlloc(lowerRay, new RaycastHit[3], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var upperRayHitsNumber = Physics.RaycastNonAlloc(upperRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var lowerRayHitsNumber = Physics.RaycastNonAlloc(lowerRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
 
-            if (IsMovingForward)
+            if (upperRayHitsNumber == 0 && lowerRayHitsNumber > 0)
             {
-                if (upperRayHitsNumber == 0 && lowerRayHitsNumber > 0)
+                var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
+
+                var positionOfMantlingRaycastHits = new RaycastHit[5];
+
+                var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, groundCheckLayerMask);
+
+                if (positionOfMantlingRaycastHitsNumber > 0)
                 {
-                    var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
+                    var tallestPoint = positionOfMantlingRaycastHits.OrderByDescending(r => r.point.y).First();
 
-                    var positionOfMantlingRaycastHits = new RaycastHit[5];
-
-                    var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, groundCheckLayerMask);
-
-                    if (positionOfMantlingRaycastHitsNumber > 0)
+                    if (!IsMantling)
                     {
-                        var orderedArray = positionOfMantlingRaycastHits.OrderByDescending(r => r.point.y).ToArray();
-
-                        if (!IsMantling)
-                        {
-                            Mantle(orderedArray[0], IsWallClimbing ? _linearVelocityOnContact : _rigidbody.linearVelocity);
-                        }
-
-                        OnMantle?.Invoke();
+                        Mantle(tallestPoint, IsWallClimbing ? _linearVelocityOnContact : _rigidbody.linearVelocity);
                     }
+
+                    OnMantle?.Invoke();
                 }
             }
         }
@@ -667,8 +666,8 @@ namespace Hyper.Player
             var mantleElapsedTime = 0f;
             var mantleStart = transform.position;
             var mantleEnd = raycastHit.point;
-            var distance = mantleEnd - mantleStart;
-            var mantleDuration = distance.magnitude / linearVelocity.magnitude;
+            var distance = (mantleEnd - mantleStart).magnitude;
+            var mantleDuration = Mathf.Min(distance / linearVelocity.magnitude, maxMantleDuration);
 
             while (mantleElapsedTime < mantleDuration)
             {
