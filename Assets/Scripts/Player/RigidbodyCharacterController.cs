@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -42,7 +44,7 @@ namespace Hyper.Player
 
         [Header("Mantling and Wall Climbing Settings")]
         public float frontWallDetectionAngleThreshold = 0.9f;
-        public float mantleDuration = 0.2f;
+        public float maxMantleDuration = 0.35f;
         public float wallClimbMaxHeight = 4f;
 
         [Header("General Settings")]
@@ -125,10 +127,7 @@ namespace Hyper.Player
         private Vector3 _capsuleColliderOriginalCenter;
         private Vector3 _cameraTrackingTargetOriginalPosition;
 
-        private Vector3 _mantleStart;
-        private Vector3 _mantleEnd;
-        private float _mantleElapsedTime;
-
+        private Vector3 _linearVelocityOnContact;
         private bool _wallClimbFrontWallDetection;
         private bool _hasWallClimbedSinceLastNegativeVelocity = false;
 
@@ -145,11 +144,6 @@ namespace Hyper.Player
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _capsuleColliderOriginalHeight = _capsuleCollider.height;
             _capsuleColliderOriginalCenter = _capsuleCollider.center;
-        }
-
-        private void Update()
-        {
-            UpdateMantlingState();
         }
 
         private void FixedUpdate()
@@ -170,8 +164,13 @@ namespace Hyper.Player
                     ApplyCustomGravity(gravityScale);
                 }
 
-                MantleCheck();
+
                 WallClimbCheck();
+            }
+
+            if (!IsGrounded && !IsSliding && IsMovingForward)
+            {
+                MantleCheck();
             }
 
             UpdateRotationBasedOnCamera();
@@ -241,36 +240,27 @@ namespace Hyper.Player
             var upperRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.25f, transform.forward);
             var lowerRay = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, transform.forward);
 
-            var upperRaycastHits = Physics.RaycastAll(upperRay, _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
-            var lowerRaycastHits = Physics.RaycastAll(lowerRay, _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var upperRayHitsNumber = Physics.RaycastNonAlloc(upperRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var lowerRayHitsNumber = Physics.RaycastNonAlloc(lowerRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
 
-            var isTouchingWallAbove = upperRaycastHits.Length > 0;
-            var isTouchingWallBelow = lowerRaycastHits.Length > 0;
-
-            if (!IsGrounded && IsMovingForward && !IsSliding)
+            if (upperRayHitsNumber == 0 && lowerRayHitsNumber > 0)
             {
-                if (!isTouchingWallAbove && isTouchingWallBelow)
+                var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
+
+                var positionOfMantlingRaycastHits = new RaycastHit[5];
+
+                var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, groundCheckLayerMask);
+
+                if (positionOfMantlingRaycastHitsNumber > 0)
                 {
-                    var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + transform.forward, Vector3.down);
+                    var tallestPoint = positionOfMantlingRaycastHits.OrderByDescending(r => r.point.y).First();
 
-                    var positionOfMantlingRaycastHits = Physics.RaycastAll(positionOfMantlingRay, groundCheckLayerMask);
-
-                    if (positionOfMantlingRaycastHits.Length > 0)
+                    if (!IsMantling)
                     {
-                        var positionOfMantlingRaycastHit = positionOfMantlingRaycastHits[0];
-
-                        foreach (var raycastHit in positionOfMantlingRaycastHits)
-                        {
-                            if (raycastHit.point.y > positionOfMantlingRaycastHit.point.y)
-                            {
-                                positionOfMantlingRaycastHit = raycastHit;
-                            }
-                        }
-
-                        Mantle(positionOfMantlingRaycastHit);
-
-                        OnMantle?.Invoke();
+                        Mantle(tallestPoint, IsWallClimbing ? _linearVelocityOnContact : _rigidbody.linearVelocity);
                     }
+
+                    OnMantle?.Invoke();
                 }
             }
         }
@@ -292,6 +282,7 @@ namespace Hyper.Player
                 if (climbForce > 0f)
                 {
                     OnStartedWallClimbing?.Invoke();
+                    _linearVelocityOnContact = _rigidbody.linearVelocity;
                     IsWallClimbing = true;
                     _hasWallClimbedSinceLastNegativeVelocity = true;
 
@@ -666,37 +657,34 @@ namespace Hyper.Player
             IsSliding = false;
         }
 
-        private void UpdateMantlingState()
+        private async void Mantle(RaycastHit raycastHit, Vector3 linearVelocity)
         {
-            if (IsMantling)
-            {
-                _capsuleCollider.enabled = false;
-                _rigidbody.linearVelocity = Vector3.zero;
-                _mantleElapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(_mantleElapsedTime / mantleDuration);
-                transform.position = Vector3.Lerp(_mantleStart, _mantleEnd, t);
-
-                if (_mantleElapsedTime >= mantleDuration)
-                {
-                    transform.position = _mantleEnd;
-                    IsMantling = false;
-                }
-            }
-            else
-            {
-                _capsuleCollider.enabled = true;
-            }
-        }
-
-        private void Mantle(RaycastHit raycastHit)
-        {
-            if (IsMantling) return;
-
-            _mantleStart = transform.position;
-            _mantleEnd = raycastHit.point;
-            _mantleElapsedTime = 0f;
-
             IsMantling = true;
+            _capsuleCollider.enabled = false;
+            _rigidbody.linearVelocity = Vector3.zero;
+
+            var mantleElapsedTime = 0f;
+            var mantleStart = transform.position;
+            var mantleEnd = raycastHit.point;
+            var distance = (mantleEnd - mantleStart).magnitude;
+            var mantleDuration = Mathf.Min(distance / linearVelocity.magnitude, maxMantleDuration);
+
+            while (mantleElapsedTime < mantleDuration)
+            {
+                mantleElapsedTime += Time.deltaTime;
+                var t = Mathf.Clamp01(mantleElapsedTime / mantleDuration);
+                transform.position = Vector3.Lerp(mantleStart, mantleEnd, t);
+                await Task.Yield();
+            }
+
+            IsMantling = false;
+            _capsuleCollider.enabled = true;
+            _rigidbody.linearVelocity = new Vector3
+            {
+                x = linearVelocity.x,
+                z = linearVelocity.z
+            };
+            transform.position = mantleEnd;
         }
 
         private float GetWallClimbAdditiveForce()
