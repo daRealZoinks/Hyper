@@ -66,8 +66,7 @@ namespace Hyper.Player
 
         public UnityEvent OnMantle;
 
-        public UnityEvent OnStartedWallClimbing;
-        public UnityEvent OnStoppedWallClimbing;
+        public UnityEvent OnWallClimb;
 
         // private references to other objects
         [Header("References")]
@@ -105,10 +104,9 @@ namespace Hyper.Player
 
         public bool IsMantling { get; private set; }
 
-        public bool IsWallClimbing { get; private set; } = false;
-        public bool CanStartWallClimb => _wallClimbFrontWallDetection && !IsGrounded && IsMovingForward && !_hasWallClimbedSinceLastNegativeVelocity;
+        public bool IsWallClimbing => _isTouchingWallInFront && !IsGrounded && _rigidbody.linearVelocity.y > 0f;
 
-
+        // private variables
         private Vector3 groundNormal;
 
         private float _jumpBufferCounter;
@@ -127,8 +125,7 @@ namespace Hyper.Player
         private Vector3 _capsuleColliderOriginalCenter;
         private Vector3 _cameraTrackingTargetOriginalPosition;
 
-        private Vector3 _linearVelocityOnContact;
-        private bool _wallClimbFrontWallDetection;
+        private bool _isTouchingWallInFront;
         private bool _hasWallClimbedSinceLastNegativeVelocity = false;
 
         // private references to components
@@ -152,6 +149,8 @@ namespace Hyper.Player
 
             WallRunCheck();
 
+            WallClimbCheck();
+
             if (IsGrounded)
             {
                 _lastWallJumped = null;
@@ -163,9 +162,6 @@ namespace Hyper.Player
                 {
                     ApplyCustomGravity(gravityScale);
                 }
-
-
-                WallClimbCheck();
             }
 
             if (!IsGrounded && !IsSliding && IsMovingForward)
@@ -194,8 +190,6 @@ namespace Hyper.Player
             UpdateSameWallJumpCooldownCounter();
 
             UpdateSlidingState();
-
-            UpdateWallClimbingState();
         }
 
         private void GroundCheck()
@@ -253,11 +247,16 @@ namespace Hyper.Player
 
                 if (positionOfMantlingRaycastHitsNumber > 0)
                 {
-                    var tallestPoint = positionOfMantlingRaycastHits.OrderByDescending(r => r.point.y).First();
+                    var validHits = positionOfMantlingRaycastHits
+                        .Take(positionOfMantlingRaycastHitsNumber)
+                        .Where(r => r.collider != null)
+                        .ToArray();
+
+                    var tallestPoint = validHits.OrderByDescending(r => r.point.y).First();
 
                     if (!IsMantling)
                     {
-                        Mantle(tallestPoint, IsWallClimbing ? _linearVelocityOnContact : _rigidbody.linearVelocity);
+                        Mantle(tallestPoint, _rigidbody.linearVelocity);
                     }
 
                     OnMantle?.Invoke();
@@ -267,33 +266,28 @@ namespace Hyper.Player
 
         private void WallClimbCheck()
         {
-            var wasAbleToWallClimb = CanStartWallClimb;
+            var checkRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f, transform.forward);
 
-            var wallClimbCheckRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f, transform.forward);
+            var raycastHitsNumber = Physics.RaycastNonAlloc(checkRay, new RaycastHit[1], _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
 
-            var wallClimbCheckRaycastHits = Physics.RaycastAll(wallClimbCheckRay, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
+            _isTouchingWallInFront = raycastHitsNumber > 0;
 
-            _wallClimbFrontWallDetection = wallClimbCheckRaycastHits.Length > 0;
-
-            if (!wasAbleToWallClimb && CanStartWallClimb && _rigidbody.linearVelocity.y > 0)
+            if (_isTouchingWallInFront && _rigidbody.linearVelocity.y > 0f && !_hasWallClimbedSinceLastNegativeVelocity && !IsGrounded && !IsSliding && IsMovingForward)
             {
                 var climbForce = GetWallClimbAdditiveForce();
 
                 if (climbForce > 0f)
                 {
-                    OnStartedWallClimbing?.Invoke();
-                    _linearVelocityOnContact = _rigidbody.linearVelocity;
-                    IsWallClimbing = true;
+                    OnWallClimb?.Invoke();
                     _hasWallClimbedSinceLastNegativeVelocity = true;
 
                     _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
                 }
             }
 
-            if (!_wallClimbFrontWallDetection && IsWallClimbing)
+            if (_hasWallClimbedSinceLastNegativeVelocity && _rigidbody.linearVelocity.y < 0f)
             {
-                OnStoppedWallClimbing?.Invoke();
-                IsWallClimbing = false;
+                _hasWallClimbedSinceLastNegativeVelocity = false;
             }
         }
 
@@ -708,23 +702,6 @@ namespace Hyper.Player
             }
 
             return 0f;
-        }
-
-        private void UpdateWallClimbingState()
-        {
-            if (_hasWallClimbedSinceLastNegativeVelocity && _rigidbody.linearVelocity.y < 0f)
-            {
-                _hasWallClimbedSinceLastNegativeVelocity = false;
-            }
-
-            if (IsWallClimbing)
-            {
-                if (_rigidbody.linearVelocity.y < 0f)
-                {
-                    OnStoppedWallClimbing?.Invoke();
-                    IsWallClimbing = false;
-                }
-            }
         }
     }
 }
