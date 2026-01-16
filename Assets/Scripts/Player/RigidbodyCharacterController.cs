@@ -125,7 +125,6 @@ namespace Hyper.Player
         private Vector3 _capsuleColliderOriginalCenter;
         private Vector3 _cameraTrackingTargetOriginalPosition;
 
-        private Vector3 _linearVelocityOnContact;
         private bool _isTouchingWallInFront;
         private bool _hasWallClimbedSinceLastNegativeVelocity = false;
 
@@ -257,7 +256,7 @@ namespace Hyper.Player
 
                     if (!IsMantling)
                     {
-                        Mantle(tallestPoint, IsWallClimbing ? _linearVelocityOnContact : _rigidbody.linearVelocity);
+                        Mantle(tallestPoint, _rigidbody.linearVelocity);
                     }
 
                     OnMantle?.Invoke();
@@ -273,14 +272,13 @@ namespace Hyper.Player
 
             _isTouchingWallInFront = raycastHitsNumber > 0;
 
-            if (_isTouchingWallInFront && !IsGrounded && _rigidbody.linearVelocity.y > 0f && !_hasWallClimbedSinceLastNegativeVelocity)
+            if (_isTouchingWallInFront && _rigidbody.linearVelocity.y > 0f && !_hasWallClimbedSinceLastNegativeVelocity && !IsGrounded && !IsSliding && IsMovingForward)
             {
                 var climbForce = GetWallClimbAdditiveForce();
 
                 if (climbForce > 0f)
                 {
                     OnWallClimb?.Invoke();
-                    _linearVelocityOnContact = _rigidbody.linearVelocity;
                     _hasWallClimbedSinceLastNegativeVelocity = true;
 
                     _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
