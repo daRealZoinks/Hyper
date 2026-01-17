@@ -147,6 +147,11 @@ namespace Hyper.Player
         {
             GroundCheck();
 
+            if (!IsMantling)
+            {
+                ApplyCustomGravity(gravityScale);
+            }
+
             WallRunCheck();
 
             WallClimbCheck();
@@ -155,13 +160,6 @@ namespace Hyper.Player
             {
                 _lastWallJumped = null;
                 _sameWallJumpCooldownCounter = 0f;
-            }
-            else
-            {
-                if (!IsMantling)
-                {
-                    ApplyCustomGravity(gravityScale);
-                }
             }
 
             if (!IsGrounded && !IsSliding && IsMovingForward)
@@ -198,7 +196,7 @@ namespace Hyper.Player
             var radius = _capsuleCollider.radius - 0.1f;
             var maxDistance = _capsuleCollider.height / 2 - _capsuleCollider.radius + 0.15f;
 
-            RaycastHit[] results = new RaycastHit[5];
+            var results = new RaycastHit[5];
 
             var raycastHitsCount = Physics.SphereCastNonAlloc(origin, radius, Vector3.down, results, maxDistance, groundCheckLayerMask);
 
@@ -212,10 +210,11 @@ namespace Hyper.Player
 
                     if (angle <= slopeLimit)
                     {
+                        groundNormal = raycastHit.normal;
+
                         if (!IsGrounded)
                         {
                             IsGrounded = true;
-                            groundNormal = raycastHit.normal;
                             OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
                             _coyoteTimeCounter = coyoteTime;
                             break;
@@ -424,7 +423,9 @@ namespace Hyper.Player
 
         private void ApplyCustomGravity(float gravityScale)
         {
-            _rigidbody.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
+            var gravitationalForceDirection = IsGrounded ? -groundNormal : Vector3.down;
+            var gravitationalForceMagnitude = Mathf.Abs(Physics.gravity.y) * gravityScale;
+            _rigidbody.AddForce(gravitationalForceDirection * gravitationalForceMagnitude, ForceMode.Acceleration);
         }
 
         public void Jump()
