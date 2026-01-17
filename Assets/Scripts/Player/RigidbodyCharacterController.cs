@@ -202,24 +202,29 @@ namespace Hyper.Player
 
             if (raycastHitsCount > 0)
             {
-                for (int i = 0; i < raycastHitsCount; i++)
+                var validHits = results
+                        .Take(raycastHitsCount)
+                        .Where(r => r.collider != null)
+                        .ToArray();
+
+                var closestPointToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
+
+                var angle = Vector3.Angle(closestPointToCenter.normal, Vector3.up);
+
+                if (angle <= slopeLimit)
                 {
-                    var raycastHit = results[i];
+                    groundNormal = closestPointToCenter.normal;
 
-                    var angle = Vector3.Angle(raycastHit.normal, Vector3.up);
-
-                    if (angle <= slopeLimit)
+                    if (!IsGrounded)
                     {
-                        groundNormal = raycastHit.normal;
-
-                        if (!IsGrounded)
-                        {
-                            IsGrounded = true;
-                            OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
-                            _coyoteTimeCounter = coyoteTime;
-                            break;
-                        }
+                        IsGrounded = true;
+                        OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
+                        _coyoteTimeCounter = coyoteTime;
                     }
+                }
+                else
+                {
+                    IsGrounded = false;
                 }
             }
             else
