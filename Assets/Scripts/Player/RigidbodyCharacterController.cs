@@ -192,9 +192,12 @@ namespace Hyper.Player
 
         private void GroundCheck()
         {
+            const float radiusOffset = 0.1f;
+            const float maxDistanceOffset = 0.15f;
+
             var origin = _rigidbody.position + _capsuleCollider.center;
-            var radius = _capsuleCollider.radius - 0.1f;
-            var maxDistance = _capsuleCollider.height / 2 - _capsuleCollider.radius + 0.15f;
+            var radius = _capsuleCollider.radius - radiusOffset;
+            var maxDistance = _capsuleCollider.height / 2 - _capsuleCollider.radius + maxDistanceOffset;
 
             var results = new RaycastHit[5];
 
@@ -205,7 +208,14 @@ namespace Hyper.Player
                 var validHits = results
                         .Take(raycastHitsCount)
                         .Where(r => r.collider != null)
+                        .Where(r => r.point.y < (_rigidbody.position.y + _capsuleCollider.radius / Mathf.Sqrt(2)))
                         .ToArray();
+
+                if (validHits.Length == 0)
+                {
+                    IsGrounded = false;
+                    return;
+                }
 
                 var closestPointToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
 
@@ -213,7 +223,24 @@ namespace Hyper.Player
 
                 if (angle <= slopeLimit)
                 {
-                    groundNormal = closestPointToCenter.normal;
+                    var ray = new Ray(closestPointToCenter.point + Vector3.up, Vector3.down);
+
+                    raycastHitsCount = Physics.RaycastNonAlloc(ray, results, 2f, groundCheckLayerMask);
+
+                    var raycastHit = results
+                        .Take(raycastHitsCount)
+                        .Where(r => r.collider != null)
+                        .ToArray()
+                        .First();
+
+                    if (raycastHit.normal == closestPointToCenter.normal)
+                    {
+                        groundNormal = closestPointToCenter.normal;
+                    }
+                    else
+                    {
+                        groundNormal = _rigidbody.position + _capsuleCollider.radius * Vector3.up - closestPointToCenter.point;
+                    }
 
                     if (!IsGrounded)
                     {
