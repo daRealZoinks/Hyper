@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -26,7 +27,6 @@ namespace Hyper.Player
         public float wallRunDetectionAngleThreshold = 0.9f;
         public float wallStickForce = 7f;
         public float wallRunLandBoost = 2f;
-        public float wallRunAscendingHeight = 3f;
         public float wallRunDescendingForce = 10f;
 
         [Header("Wall Jump Settings")]
@@ -96,8 +96,8 @@ namespace Hyper.Player
 
         public bool IsGrounded { get; set; }
 
-        public bool IsWallRunningOnRightWall => _isTouchingWallOnRight && !IsGrounded;
-        public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !IsGrounded;
+        public bool IsWallRunningOnRightWall => _isTouchingWallOnRight && !IsGrounded && IsVelocityForward && MoveInput.normalized.y >= 0.70f;
+        public bool IsWallRunningOnLeftWall => _isTouchingWallOnLeft && !IsGrounded && IsVelocityForward && MoveInput.normalized.y >= 0.70f;
         public bool IsWallRunning => IsWallRunningOnLeftWall || IsWallRunningOnRightWall;
 
         public bool IsSliding { get; private set; }
@@ -186,13 +186,10 @@ namespace Hyper.Player
                 HandleJumpLogic();
             }
 
-            if (!IsSliding)
+            if (!IsSliding && IsWallRunning)
             {
-                if (IsWallRunning)
-                {
-                    ApplyWallRunForce();
-                    ApplyWallStickForce();
-                }
+                ApplyWallRunForce();
+                ApplyWallStickForce();
             }
         }
 
@@ -330,133 +327,54 @@ namespace Hyper.Player
 
         private void WallRunCheck()
         {
-            RightWallRunCheck();
-            LeftWallRunCheck();
+            WallRunCheck(() => { return IsWallRunningOnRightWall; }, transform.right, ref _isTouchingWallOnRight, OnStartedWallRunningRight);
+            WallRunCheck(() => { return IsWallRunningOnLeftWall; }, -transform.right, ref _isTouchingWallOnLeft, OnStartedWallRunningLeft);
         }
 
-        private void RightWallRunCheck()
+        private void WallRunCheck(Func<bool> IsWallRunningOnWall, Vector3 direction, ref bool isTouchingWall, UnityEvent OnStartedWallRunning)
         {
-            var wasWallRunningOnWall = IsWallRunningOnRightWall;
+            var wasWallRunningOnWall = IsWallRunningOnWall.Invoke();
 
-            var raycastHits = Physics.RaycastAll(_rigidbody.position + _capsuleCollider.center, transform.right, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
+            var ray = new Ray(_rigidbody.position + _capsuleCollider.center, direction);
+            var maxDistance = _capsuleCollider.radius + 0.1f;
 
-            _isTouchingWallOnRight = raycastHits.Length > 0;
+            var results = new RaycastHit[5];
 
-            if (!wasWallRunningOnWall && IsWallRunningOnRightWall)
+            var raycastHitsCount = Physics.RaycastNonAlloc(ray, results, maxDistance, groundCheckLayerMask);
+
+            isTouchingWall = raycastHitsCount > 0;
+
+            if (!wasWallRunningOnWall && IsWallRunningOnWall.Invoke())
             {
-                OnStartedWallRunningRight?.Invoke();
+                var validHits = results
+                        .Take(raycastHitsCount)
+                        .Where(r => r.collider != null)
+                        .ToArray();
 
-                var raycastHit = raycastHits[0];
+                if (validHits.Length == 0)
+                {
+                    return;
+                }
 
-                _wallRunningWall = raycastHit.collider.gameObject;
-                _wallContactNormal = raycastHit.normal;
+                OnStartedWallRunning?.Invoke();
+
+                var closestHitToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position + _capsuleCollider.center)).First();
+
+                _wallRunningWall = closestHitToCenter.collider.gameObject;
+                _wallContactNormal = closestHitToCenter.normal;
 
                 var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
 
-                _rigidbody.AddForce(forwardDirectionAlongSideWall * wallRunLandBoost, ForceMode.VelocityChange);
-
-                if (_rigidbody.linearVelocity.y > 0f)
+                var horizontalVelocity = new Vector3()
                 {
-                    var upwardsVelocity = _rigidbody.linearVelocity.y;
-                    var gravity = Physics.gravity.y * gravityScale;
-                    var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+                    x = _rigidbody.linearVelocity.x,
+                    z = _rigidbody.linearVelocity.z,
+                };
 
-                    if (currentAirHeight < 0)
-                    {
-                        currentAirHeight = 0;
-                    }
+                var horizontalVelocityMagnitude = horizontalVelocity.magnitude;
 
-                    var heightDifference = wallRunAscendingHeight - currentAirHeight;
-
-                    if (heightDifference > 0)
-                    {
-                        var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
-                        var forceToAdd = upwardForce - upwardsVelocity;
-                        _rigidbody.AddForce(Vector3.up * Mathf.Max(forceToAdd, 0f), ForceMode.VelocityChange);
-                    }
-                }
+                _rigidbody.linearVelocity = forwardDirectionAlongSideWall * (horizontalVelocityMagnitude + wallRunLandBoost) + Vector3.up * _rigidbody.linearVelocity.y;
             }
-        }
-
-        private void LeftWallRunCheck()
-        {
-            var wasWallRunningOnWall = IsWallRunningOnLeftWall;
-
-            var raycastHits = Physics.RaycastAll(_rigidbody.position + _capsuleCollider.center, -transform.right, _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
-
-            _isTouchingWallOnLeft = raycastHits.Length > 0;
-
-            if (!wasWallRunningOnWall && IsWallRunningOnLeftWall)
-            {
-                OnStartedWallRunningLeft?.Invoke();
-
-                var raycastHit = raycastHits[0];
-
-                _wallRunningWall = raycastHit.collider.gameObject;
-                _wallContactNormal = raycastHit.normal;
-
-                var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
-
-                _rigidbody.AddForce(forwardDirectionAlongSideWall * wallRunLandBoost, ForceMode.VelocityChange);
-
-                if (_rigidbody.linearVelocity.y > 0f)
-                {
-                    var upwardsVelocity = _rigidbody.linearVelocity.y;
-                    var gravity = Physics.gravity.y * gravityScale;
-                    var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
-
-                    if (currentAirHeight < 0)
-                    {
-                        currentAirHeight = 0;
-                    }
-
-                    var heightDifference = wallRunAscendingHeight - currentAirHeight;
-
-                    if (heightDifference > 0)
-                    {
-                        var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
-                        var forceToAdd = upwardForce - upwardsVelocity;
-                        _rigidbody.AddForce(Vector3.up * Mathf.Max(forceToAdd, 0f), ForceMode.VelocityChange);
-                    }
-                }
-            }
-        }
-
-        private void OnCollisionStay(Collision collision)
-        {
-            //foreach (var contactPoint in collision.contacts)
-            //{
-            //    var minimumHeightCollisionPoint = _rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f;
-
-            //    if (contactPoint.point.y >= minimumHeightCollisionPoint.y)
-            //    {
-            //        var wasWallRunningOnRightWall = IsWallRunningOnRightWall;
-            //        var wasWallRunningOnLeftWall = IsWallRunningOnLeftWall;
-
-            //        _isTouchingWallOnRight = Vector3.Dot(contactPoint.normal, -transform.right) > frontWallDetectionAngleThreshold;
-            //        _isTouchingWallOnLeft = Vector3.Dot(contactPoint.normal, transform.right) > frontWallDetectionAngleThreshold;
-
-            //        if (!wasWallRunningOnRightWall && IsWallRunningOnRightWall)
-            //        {
-            //            OnStartedWallRunningRight?.Invoke();
-            //            _wallRunningWall = collision.gameObject;
-            //        }
-
-            //        if (!wasWallRunningOnLeftWall && IsWallRunningOnLeftWall)
-            //        {
-            //            OnStartedWallRunningLeft?.Invoke();
-            //            _wallRunningWall = collision.gameObject;
-            //        }
-            //    }
-            //}
-        }
-
-        private void OnCollisionExit(Collision collision)
-        {
-            //_isTouchingWallOnRight = false;
-            //_isTouchingWallOnLeft = false;
-
-            //_wallContactPoint = new ContactPoint();
         }
 
         private void ApplyCustomGravity(float gravityScale)
