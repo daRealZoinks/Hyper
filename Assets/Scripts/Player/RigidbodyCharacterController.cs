@@ -147,21 +147,28 @@ namespace Hyper.Player
         {
             GroundCheck();
 
+            UpdateRotationBasedOnCamera();
+
+            UpdateJumpBufferCounter();
+            UpdateCoyoteTimeCounter();
+
             WallRunCheck();
 
             WallClimbCheck();
+
+            UpdateSlidingState();
+
+            UpdateSameWallJumpCooldownCounter();
+
+            if (!IsMantling)
+            {
+                ApplyCustomGravity(gravityScale);
+            }
 
             if (IsGrounded)
             {
                 _lastWallJumped = null;
                 _sameWallJumpCooldownCounter = 0f;
-            }
-            else
-            {
-                if (!IsMantling)
-                {
-                    ApplyCustomGravity(gravityScale);
-                }
             }
 
             if (!IsGrounded && !IsSliding && IsMovingForward)
@@ -169,14 +176,15 @@ namespace Hyper.Player
                 MantleCheck();
             }
 
-            UpdateRotationBasedOnCamera();
-
             if (!IsSliding)
             {
                 Move(MoveInput);
             }
 
-            HandleJumpLogic();
+            if (!IsSliding)
+            {
+                HandleJumpLogic();
+            }
 
             if (!IsSliding)
             {
@@ -186,46 +194,75 @@ namespace Hyper.Player
                     ApplyWallStickForce();
                 }
             }
-
-            UpdateSameWallJumpCooldownCounter();
-
-            UpdateSlidingState();
         }
 
         private void GroundCheck()
         {
-            var origin = _rigidbody.position + _capsuleCollider.center;
-            var radius = _capsuleCollider.radius - 0.1f;
-            var maxDistance = _capsuleCollider.height / 2 - _capsuleCollider.radius + 0.15f;
+            const float radiusOffset = 0.1f;
+            const float maxDistanceOffset = 0.15f;
 
-            RaycastHit[] results = new RaycastHit[5];
+            var ray = new Ray(_rigidbody.position + _capsuleCollider.center, Vector3.down);
+            var radius = _capsuleCollider.radius - radiusOffset;
+            var maxDistance = _capsuleCollider.height / 2 - _capsuleCollider.radius + maxDistanceOffset;
 
-            var raycastHitsCount = Physics.SphereCastNonAlloc(origin, radius, Vector3.down, results, maxDistance, groundCheckLayerMask);
+            var results = new RaycastHit[5];
 
-            if (raycastHitsCount > 0)
+            var sphereCastHitsCount = Physics.SphereCastNonAlloc(ray, radius, results, maxDistance, groundCheckLayerMask);
+
+            if (sphereCastHitsCount <= 0)
             {
-                for (int i = 0; i < raycastHitsCount; i++)
-                {
-                    var raycastHit = results[i];
+                IsGrounded = false;
+                return;
+            }
 
-                    var angle = Vector3.Angle(raycastHit.normal, Vector3.up);
+            var validHits = results
+                    .Take(sphereCastHitsCount)
+                    .Where(r => r.collider != null)
+                    .Where(r => r.point.y < (_rigidbody.position.y + _capsuleCollider.radius / Mathf.Sqrt(2)))
+                    .ToArray();
 
-                    if (angle <= slopeLimit)
-                    {
-                        if (!IsGrounded)
-                        {
-                            IsGrounded = true;
-                            groundNormal = raycastHit.normal;
-                            OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
-                            _coyoteTimeCounter = coyoteTime;
-                            break;
-                        }
-                    }
-                }
+            if (validHits.Length == 0)
+            {
+                IsGrounded = false;
+                return;
+            }
+
+            var closestHitToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
+
+            var groundNormalAngle = Vector3.Angle(closestHitToCenter.normal, Vector3.up);
+
+            if (groundNormalAngle > slopeLimit)
+            {
+                IsGrounded = false;
+                return;
+            }
+
+            ray = new Ray(closestHitToCenter.point + Vector3.up, Vector3.down);
+
+            sphereCastHitsCount = Physics.RaycastNonAlloc(ray, results, 2f, groundCheckLayerMask);
+
+            var raycastHit = results
+                .Take(sphereCastHitsCount)
+                .Where(r => r.collider != null)
+                .ToArray()
+                .First();
+
+            var isOnSlope = raycastHit.normal == closestHitToCenter.normal;
+
+            if (isOnSlope)
+            {
+                groundNormal = closestHitToCenter.normal;
             }
             else
             {
-                IsGrounded = false;
+                groundNormal = _rigidbody.position + _capsuleCollider.radius * Vector3.up - closestHitToCenter.point;
+            }
+
+            if (!IsGrounded)
+            {
+                IsGrounded = true;
+                OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
+                _coyoteTimeCounter = coyoteTime;
             }
         }
 
@@ -424,7 +461,9 @@ namespace Hyper.Player
 
         private void ApplyCustomGravity(float gravityScale)
         {
-            _rigidbody.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
+            var gravitationalForceDirection = IsGrounded ? -groundNormal : Vector3.down;
+            var gravitationalForceMagnitude = Mathf.Abs(Physics.gravity.y) * gravityScale;
+            _rigidbody.AddForce(gravitationalForceDirection * gravitationalForceMagnitude, ForceMode.Acceleration);
         }
 
         public void Jump()
@@ -469,24 +508,16 @@ namespace Hyper.Player
 
         private void HandleJumpLogic()
         {
-            UpdateJumpBufferCounter();
-            UpdateCoyoteTimeCounter();
-
-            if (!IsSliding)
+            if (_jumpBufferCounter > 0f)
             {
-                if (_jumpBufferCounter > 0f)
+                if (_coyoteTimeCounter > 0f || IsGrounded)
                 {
-                    if (_coyoteTimeCounter > 0f || IsGrounded)
-                    {
-                        // TODO: Jump is being triggered multiple times, fix
+                    GroundJump();
+                }
 
-                        GroundJump();
-                    }
-
-                    if (!IsGrounded && IsWallRunning)
-                    {
-                        WallJump();
-                    }
+                if (!IsGrounded && IsWallRunning)
+                {
+                    WallJump();
                 }
             }
         }
