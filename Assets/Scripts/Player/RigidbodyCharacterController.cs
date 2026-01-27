@@ -27,7 +27,7 @@ namespace Hyper.Player
         public float wallRunDetectionAngleThreshold = 0.9f;
         public float wallStickForce = 7f;
         public float wallRunLandBoost = 2f;
-        public float wallRunDescendingForce = 10f;
+        public float wallRunGravityResistanceForce = 10f;
 
         [Header("Wall Jump Settings")]
         public float wallJumpHeight = 1.5f;
@@ -116,9 +116,9 @@ namespace Hyper.Player
         private bool _isTouchingWallOnLeft;
 
         private Vector3 _wallContactNormal;
-        private GameObject _wallRunningWall;
+        private Collider _wallRunningWall;
 
-        private GameObject _lastWallJumped;
+        private Collider _lastWallJumped;
         private float _sameWallJumpCooldownCounter;
 
         private float _capsuleColliderOriginalHeight;
@@ -188,7 +188,7 @@ namespace Hyper.Player
 
             if (!IsSliding && IsWallRunning)
             {
-                ApplyWallRunForce();
+                ApplyWallRunGravityResistanceForce();
                 ApplyWallStickForce();
             }
         }
@@ -360,20 +360,12 @@ namespace Hyper.Player
 
                 var closestHitToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position + _capsuleCollider.center)).First();
 
-                _wallRunningWall = closestHitToCenter.collider.gameObject;
+                _wallRunningWall = closestHitToCenter.collider;
                 _wallContactNormal = closestHitToCenter.normal;
 
                 var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
 
-                var horizontalVelocity = new Vector3()
-                {
-                    x = _rigidbody.linearVelocity.x,
-                    z = _rigidbody.linearVelocity.z,
-                };
-
-                var horizontalVelocityMagnitude = horizontalVelocity.magnitude;
-
-                _rigidbody.linearVelocity = forwardDirectionAlongSideWall * (horizontalVelocityMagnitude + wallRunLandBoost) + Vector3.up * _rigidbody.linearVelocity.y;
+                _rigidbody.AddForce(forwardDirectionAlongSideWall * wallRunLandBoost, ForceMode.VelocityChange);
             }
         }
 
@@ -440,11 +432,11 @@ namespace Hyper.Player
             }
         }
 
-        private void ApplyWallRunForce()
+        private void ApplyWallRunGravityResistanceForce()
         {
             if (_rigidbody.linearVelocity.y < 0)
             {
-                _rigidbody.AddForce(Vector3.up * wallRunDescendingForce, ForceMode.Acceleration);
+                _rigidbody.AddForce(Vector3.up * wallRunGravityResistanceForce, ForceMode.Acceleration);
             }
         }
 
