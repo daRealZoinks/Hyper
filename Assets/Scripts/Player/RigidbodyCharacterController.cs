@@ -482,7 +482,7 @@ namespace Hyper.Player
 
         private void WallJump()
         {
-            if ((!_wallRunningWall || _wallRunningWall != _lastWallJumped || sameWallJumpCooldown <= 0f) && IsWallRunning)
+            if ((!_wallRunningWall || _wallRunningWall != _lastWallJumped || _sameWallJumpCooldownCounter <= 0f) && IsWallRunning)
             {
                 _lastWallJumped = _wallRunningWall;
                 _sameWallJumpCooldownCounter = sameWallJumpCooldown;
