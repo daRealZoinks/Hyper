@@ -359,11 +359,6 @@ namespace Hyper.Player
                 if (!wasWallRunningOnWall
                     && (!_lastWallRunningWall || _wallRunningWall != _lastWallRunningWall))
                 {
-                    if (_lastWallRunningWall != null && _wallRunningWall == _lastWallRunningWall)
-                    {
-                        Debug.Log("Same wall");
-                    }
-
                     isWallRunningOnWall = true;
 
                     var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
