@@ -393,10 +393,9 @@ MonoBehaviour:
   wallStickForce: 7
   wallRunLandBoost: 2
   wallRunGravityResistanceForce: 10
+  wallJumpAngleFromWallNormal: 25
   wallJumpHeight: 1.5
-  wallJumpSideForce: 4
-  wallJumpForwardForce: 5
-  sameWallJumpCooldown: 2.5
+  wallJumpBoost: 3
   slidingDownForce: 5
   slidingTurnSpeed: 0.2
   slidingCapsuleColliderHeight: 1
@@ -435,6 +434,9 @@ MonoBehaviour:
   OnStartedWallRunningLeft:
     m_PersistentCalls:
       m_Calls: []
+  OnStoppedWallrunning:
+    m_PersistentCalls:
+      m_Calls: []
   OnRightWallJump:
     m_PersistentCalls:
       m_Calls: []
@@ -449,6 +451,8 @@ MonoBehaviour:
       m_Calls: []
   _camera: {fileID: 7681188787058825366}
   _cameraTrackingTarget: {fileID: 6216556272576259190}
+  _isWallRunningOnRightWall: 0
+  _isWallRunningOnLeftWall: 0
 --- !u!114 &451494572285065196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1277,7 +1281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3643188166
+  GlobalObjectIdHash: 3469513237
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
