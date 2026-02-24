@@ -265,35 +265,47 @@ namespace Hyper.Player
 
         private void MantleCheck()
         {
-            var upperRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.25f, transform.forward);
-            var lowerRay = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, transform.forward);
+            var upperBoxCastHitsResults = new RaycastHit[5];
+            var lowerBoxCastHitsResults = new RaycastHit[5];
 
-            var upperRayHitsNumber = Physics.RaycastNonAlloc(upperRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
-            var lowerRayHitsNumber = Physics.RaycastNonAlloc(lowerRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var upperBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.25f, new Vector3(0.25f, 0.25f, 0.25f), transform.forward, upperBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var lowerBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + Vector3.up * _capsuleCollider.radius, new Vector3(0.25f, 0.1f, 0.25f), transform.forward, lowerBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
 
-            if (upperRayHitsNumber == 0 && lowerRayHitsNumber > 0)
+            if (upperBoxCastHitsNumber == 0 && lowerBoxCastHitsNumber > 0)
             {
-                var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
+                var validHits = lowerBoxCastHitsResults
+                    .Take(lowerBoxCastHitsNumber)
+                    .Where(r => r.collider != null)
+                    .ToArray();
 
-                var positionOfMantlingRaycastHits = new RaycastHit[5];
+                var closestHitToPlayer = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
 
-                var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, groundCheckLayerMask);
+                var hasHitRightAngleSurface = closestHitToPlayer.normal.y == 0;
 
-                if (positionOfMantlingRaycastHitsNumber > 0)
+                if (hasHitRightAngleSurface)
                 {
-                    var validHits = positionOfMantlingRaycastHits
-                        .Take(positionOfMantlingRaycastHitsNumber)
-                        .Where(r => r.collider != null)
-                        .ToArray();
+                    var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
 
-                    var tallestPoint = validHits.OrderByDescending(r => r.point.y).First();
+                    var positionOfMantlingRaycastHits = new RaycastHit[5];
 
-                    if (!IsMantling)
+                    var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, groundCheckLayerMask);
+
+                    if (positionOfMantlingRaycastHitsNumber > 0)
                     {
-                        Mantle(tallestPoint, _rigidbody.linearVelocity);
-                    }
+                        validHits = positionOfMantlingRaycastHits
+                           .Take(positionOfMantlingRaycastHitsNumber)
+                           .Where(r => r.collider != null)
+                           .ToArray();
 
-                    OnMantle?.Invoke();
+                        var tallestPoint = validHits.OrderByDescending(r => r.point.y).First();
+
+                        if (!IsMantling)
+                        {
+                            Mantle(tallestPoint, _rigidbody.linearVelocity);
+                        }
+
+                        OnMantle?.Invoke();
+                    }
                 }
             }
         }
