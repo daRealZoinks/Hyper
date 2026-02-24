@@ -392,12 +392,10 @@ MonoBehaviour:
   wallRunDetectionAngleThreshold: 0.9
   wallStickForce: 7
   wallRunLandBoost: 2
-  wallRunAscendingHeight: 3
-  wallRunDescendingForce: 10
+  wallRunGravityResistanceForce: 10
+  wallJumpAngleFromWallNormal: 25
   wallJumpHeight: 1.5
-  wallJumpSideForce: 4
-  wallJumpForwardForce: 5
-  sameWallJumpCooldown: 2.5
+  wallJumpBoost: 3
   slidingDownForce: 5
   slidingTurnSpeed: 0.2
   slidingCapsuleColliderHeight: 1
@@ -436,6 +434,9 @@ MonoBehaviour:
   OnStartedWallRunningLeft:
     m_PersistentCalls:
       m_Calls: []
+  OnStoppedWallrunning:
+    m_PersistentCalls:
+      m_Calls: []
   OnRightWallJump:
     m_PersistentCalls:
       m_Calls: []
@@ -450,6 +451,8 @@ MonoBehaviour:
       m_Calls: []
   _camera: {fileID: 7681188787058825366}
   _cameraTrackingTarget: {fileID: 6216556272576259190}
+  _isWallRunningOnRightWall: 0
+  _isWallRunningOnLeftWall: 0
 --- !u!114 &451494572285065196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,11 +705,12 @@ GameObject:
   - component: {fileID: 8534265408217820089}
   - component: {fileID: 6677576525999248474}
   - component: {fileID: 1198710453116582528}
-  - component: {fileID: 6487292247844961331}
-  - component: {fileID: 4698619195359147837}
-  - component: {fileID: 1414012690279855362}
+  - component: {fileID: 5321516086130265500}
+  - component: {fileID: 790441312844195359}
+  - component: {fileID: 7180242893125300934}
   - component: {fileID: 7498498206540703137}
   - component: {fileID: 7546176787410170185}
+  - component: {fileID: 8775004350063559965}
   m_Layer: 3
   m_Name: CinemachineCamera
   m_TagString: Player
@@ -785,7 +789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLockToTarget
   Damping: 0
---- !u!114 &6487292247844961331
+--- !u!114 &5321516086130265500
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -794,9 +798,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7171026161743700207}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62d54399b04b4fa48a73e121d4937dd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b3280614ce9d41419a06ced48bf751e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePanTilt
+  m_EditorClassIdentifier: Hyper.Camera::CinemachinePanTiltRoll
   ReferenceFrame: 0
   RecenterTarget: 0
   PanAxis:
@@ -819,7 +823,17 @@ MonoBehaviour:
       Wait: 1
       Time: 2
     Restrictions: 0
---- !u!114 &4698619195359147837
+  RollAxis:
+    Value: 0
+    Center: 0
+    Range: {x: -7, y: 7}
+    Wrap: 0
+    Recentering:
+      Enabled: 0
+      Wait: 1
+      Time: 2
+    Restrictions: 0
+--- !u!114 &790441312844195359
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -837,7 +851,7 @@ MonoBehaviour:
   m_ControllerManager:
     Controllers:
     - Name: Look X (Pan)
-      Owner: {fileID: 6487292247844961331}
+      Owner: {fileID: 5321516086130265500}
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -848,19 +862,19 @@ MonoBehaviour:
         AccelTime: 0
         DecelTime: 0
     - Name: Look Y (Tilt)
-      Owner: {fileID: 6487292247844961331}
+      Owner: {fileID: 5321516086130265500}
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -1
         CancelDeltaTime: 0
-      InputValue: -0
+      InputValue: 0
       Driver:
         AccelTime: 0
         DecelTime: 0
   PlayerIndex: -1
   AutoEnableInputs: 1
---- !u!114 &1414012690279855362
+--- !u!114 &7180242893125300934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -878,7 +892,7 @@ MonoBehaviour:
   m_ControllerManager:
     Controllers:
     - Name: Look X (Pan)
-      Owner: {fileID: 6487292247844961331}
+      Owner: {fileID: 5321516086130265500}
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -889,13 +903,13 @@ MonoBehaviour:
         AccelTime: 0.75
         DecelTime: 0.15
     - Name: Look Y (Tilt)
-      Owner: {fileID: 6487292247844961331}
+      Owner: {fileID: 5321516086130265500}
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -3
         CancelDeltaTime: 0
-      InputValue: -0
+      InputValue: 0
       Driver:
         AccelTime: 0.75
         DecelTime: 0.15
@@ -914,8 +928,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   playerInput: {fileID: 3242451747582740897}
-  mouseCinemachineInputAxisController: {fileID: 4698619195359147837}
-  controllerCinemachineInputAxisController: {fileID: 1414012690279855362}
+  mouseCinemachineInputAxisController: {fileID: 790441312844195359}
+  controllerCinemachineInputAxisController: {fileID: 7180242893125300934}
 --- !u!114 &7546176787410170185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -931,8 +945,22 @@ MonoBehaviour:
   playerInput: {fileID: 3242451747582740897}
   cinemachineCamera: {fileID: 6677576525999248474}
   cinemachineBrain: {fileID: 4176342853401186312}
-  mouseCinemachineInputAxisController: {fileID: 4698619195359147837}
-  controllerCinemachineInputAxisController: {fileID: 1414012690279855362}
+  mouseCinemachineInputAxisController: {fileID: 790441312844195359}
+  controllerCinemachineInputAxisController: {fileID: 7180242893125300934}
+--- !u!114 &8775004350063559965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171026161743700207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80141db007109a4438b4e2c49cafaa63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  rigidbodyCharacterController: {fileID: 2907560510715554554}
+  rollSpeed: 5
 --- !u!1 &7229300285507892601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,7 +1281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3643188166
+  GlobalObjectIdHash: 3469513237
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

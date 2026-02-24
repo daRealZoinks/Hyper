@@ -2,6 +2,7 @@
     "name": "Hyper.Camera",
     "rootNamespace": "",
     "references": [
+        "GUID:c697c6b855fcf1b41b43fd44db397d9c",
         "GUID:4307f53044263cf4b835bd812fc161a4",
         "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
