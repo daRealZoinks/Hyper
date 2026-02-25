@@ -43,6 +43,7 @@ namespace Hyper.Player
         [Header("Mantling and Wall Climbing Settings")]
         public float frontWallDetectionAngleThreshold = 0.9f;
         public float maxMantleDuration = 0.35f;
+        public float mantleBoost = 3f;
         public float wallClimbMaxHeight = 4f;
 
         [Header("General Settings")]
@@ -129,6 +130,7 @@ namespace Hyper.Player
 
         private bool _isTouchingWallInFront;
         private bool _hasWallClimbedSinceLastNegativeVelocity = false;
+        private Vector3 _linearVelocityBeforeClimb;
 
         // private references to components
         private Rigidbody _rigidbody;
@@ -268,7 +270,7 @@ namespace Hyper.Player
             var upperBoxCastHitsResults = new RaycastHit[5];
             var lowerBoxCastHitsResults = new RaycastHit[5];
 
-            var upperBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.25f, new Vector3(0.25f, 0.25f, 0.25f), transform.forward, upperBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var upperBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.5f, new Vector3(0.25f, 0.25f, 0.25f), transform.forward, upperBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
             var lowerBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + Vector3.up * _capsuleCollider.radius, new Vector3(0.25f, 0.1f, 0.25f), transform.forward, lowerBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
 
             if (upperBoxCastHitsNumber == 0 && lowerBoxCastHitsNumber > 0)
@@ -278,11 +280,7 @@ namespace Hyper.Player
                     .Where(r => r.collider != null)
                     .ToArray();
 
-                var closestHitToPlayer = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
-
-                var hasHitRightAngleSurface = closestHitToPlayer.normal.y == 0;
-
-                if (hasHitRightAngleSurface)
+                if (validHits.Length > 0)
                 {
                     var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
 
@@ -326,6 +324,8 @@ namespace Hyper.Player
                 {
                     OnWallClimb?.Invoke();
                     _hasWallClimbedSinceLastNegativeVelocity = true;
+
+                    _linearVelocityBeforeClimb = _rigidbody.linearVelocity;
 
                     _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
                 }
@@ -603,6 +603,10 @@ namespace Hyper.Player
 
         private async void Mantle(RaycastHit raycastHit, Vector3 linearVelocity)
         {
+            var upwardsVelocity = linearVelocity.y;
+            var gravity = Physics.gravity.y * gravityScale;
+            var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+
             IsMantling = true;
             _capsuleCollider.enabled = false;
             _rigidbody.linearVelocity = Vector3.zero;
@@ -623,11 +627,40 @@ namespace Hyper.Player
 
             IsMantling = false;
             _capsuleCollider.enabled = true;
-            _rigidbody.linearVelocity = new Vector3
+
+            Debug.Log($"IsWallClimbing: {IsWallClimbing}");
+
+            if (IsWallClimbing)
             {
-                x = linearVelocity.x,
-                z = linearVelocity.z
-            };
+                var oldHorizontalLinearVelocity = new Vector3
+                {
+                    x = _linearVelocityBeforeClimb.x,
+                    z = _linearVelocityBeforeClimb.z
+                };
+
+                if (currentAirHeight < 0)
+                {
+                    _rigidbody.linearVelocity = oldHorizontalLinearVelocity.normalized * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+                    Debug.Log("isWallClimbing but on small wall");
+                }
+                else
+                {
+                    _rigidbody.linearVelocity = oldHorizontalLinearVelocity;
+                    Debug.Log("isWallClimbing but on big wall");
+                }
+            }
+            else
+            {
+                var oldHorizontalLinearVelocity = new Vector3
+                {
+                    x = linearVelocity.x,
+                    z = linearVelocity.z
+                };
+
+                _rigidbody.linearVelocity = oldHorizontalLinearVelocity.normalized * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+                Debug.Log("is not WallClimbing");
+            }
+
             transform.position = mantleEnd;
         }
 
