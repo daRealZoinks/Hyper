@@ -607,6 +607,8 @@ namespace Hyper.Player
             var gravity = Physics.gravity.y * gravityScale;
             var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
 
+            var isWallClimbingBeforeMantle = IsWallClimbing;
+
             IsMantling = true;
             _capsuleCollider.enabled = false;
             _rigidbody.linearVelocity = Vector3.zero;
@@ -628,9 +630,7 @@ namespace Hyper.Player
             IsMantling = false;
             _capsuleCollider.enabled = true;
 
-            Debug.Log($"IsWallClimbing: {IsWallClimbing}");
-
-            if (IsWallClimbing)
+            if (isWallClimbingBeforeMantle)
             {
                 var oldHorizontalLinearVelocity = new Vector3
                 {
@@ -641,12 +641,10 @@ namespace Hyper.Player
                 if (currentAirHeight < 0)
                 {
                     _rigidbody.linearVelocity = oldHorizontalLinearVelocity.normalized * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
-                    Debug.Log("isWallClimbing but on small wall");
                 }
                 else
                 {
                     _rigidbody.linearVelocity = oldHorizontalLinearVelocity;
-                    Debug.Log("isWallClimbing but on big wall");
                 }
             }
             else
@@ -658,7 +656,6 @@ namespace Hyper.Player
                 };
 
                 _rigidbody.linearVelocity = oldHorizontalLinearVelocity.normalized * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
-                Debug.Log("is not WallClimbing");
             }
 
             transform.position = mantleEnd;
