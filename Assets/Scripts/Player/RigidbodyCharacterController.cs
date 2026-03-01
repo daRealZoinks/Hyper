@@ -240,6 +240,12 @@ namespace Hyper.Player
 
             sphereCastHitsCount = Physics.RaycastNonAlloc(ray, results, 2f, groundCheckLayerMask);
 
+            if (sphereCastHitsCount <= 0)
+            {
+                IsGrounded = false;
+                return;
+            }
+
             var raycastHit = results
                 .Take(sphereCastHitsCount)
                 .Where(r => r.collider != null)
@@ -282,13 +288,19 @@ namespace Hyper.Player
 
                 var closestHitToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
 
-                if (validHits.Length > 0)
+                var hasHitRightAngleSurface = closestHitToCenter.normal.y == 0;
+
+                if (hasHitRightAngleSurface)
                 {
                     var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
 
                     var positionOfMantlingRaycastHits = new RaycastHit[5];
 
-                    var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, groundCheckLayerMask);
+                    var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, 2f, groundCheckLayerMask);
+
+                    Debug.DrawLine(positionOfMantlingRay.origin, positionOfMantlingRay.origin + positionOfMantlingRay.direction * 2, Color.red, 2f);
+
+                    RaycastHit hit;
 
                     if (positionOfMantlingRaycastHitsNumber > 0)
                     {
@@ -299,13 +311,22 @@ namespace Hyper.Player
 
                         var tallestPoint = validHits.OrderByDescending(r => r.point.y).First();
 
-                        if (!IsMantling)
-                        {
-                            Mantle(tallestPoint, closestHitToCenter.normal, _rigidbody.linearVelocity);
-                        }
-
-                        OnMantle?.Invoke();
+                        hit = tallestPoint;
                     }
+                    else
+                    {
+                        hit = new RaycastHit
+                        {
+                            point = positionOfMantlingRay.origin + Vector3.down * 2f
+                        };
+                    }
+
+                    if (!IsMantling)
+                    {
+                        Mantle(hit, closestHitToCenter.normal, _rigidbody.linearVelocity);
+                    }
+
+                    OnMantle?.Invoke();
                 }
             }
         }
