@@ -280,6 +280,8 @@ namespace Hyper.Player
                     .Where(r => r.collider != null)
                     .ToArray();
 
+                var closestHitToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
+
                 if (validHits.Length > 0)
                 {
                     var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
@@ -299,7 +301,7 @@ namespace Hyper.Player
 
                         if (!IsMantling)
                         {
-                            Mantle(tallestPoint, _rigidbody.linearVelocity);
+                            Mantle(tallestPoint, closestHitToCenter.normal, _rigidbody.linearVelocity);
                         }
 
                         OnMantle?.Invoke();
@@ -601,11 +603,9 @@ namespace Hyper.Player
             IsSliding = false;
         }
 
-        private async void Mantle(RaycastHit raycastHit, Vector3 linearVelocity)
+        private async void Mantle(RaycastHit raycastHit, Vector3 forwardWallNormal, Vector3 linearVelocity)
         {
-            var upwardsVelocity = linearVelocity.y;
-            var gravity = Physics.gravity.y * gravityScale;
-            var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+            var currentAirHeight = CurrentAirHeightBasedOnVelocity(linearVelocity);
 
             var isWallClimbingBeforeMantle = IsWallClimbing;
 
@@ -640,11 +640,11 @@ namespace Hyper.Player
 
                 if (currentAirHeight < 0)
                 {
-                    _rigidbody.linearVelocity = oldHorizontalLinearVelocity.normalized * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+                    _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
                 }
                 else
                 {
-                    _rigidbody.linearVelocity = oldHorizontalLinearVelocity;
+                    _rigidbody.linearVelocity = -forwardWallNormal * oldHorizontalLinearVelocity.magnitude;
                 }
             }
             else
@@ -655,7 +655,7 @@ namespace Hyper.Player
                     z = linearVelocity.z
                 };
 
-                _rigidbody.linearVelocity = oldHorizontalLinearVelocity.normalized * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+                _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
             }
 
             transform.position = mantleEnd;
@@ -663,9 +663,7 @@ namespace Hyper.Player
 
         private float GetWallClimbAdditiveForce()
         {
-            var upwardsVelocity = _rigidbody.linearVelocity.y;
-            var gravity = Physics.gravity.y * gravityScale;
-            var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+            var currentAirHeight = CurrentAirHeightBasedOnVelocity(_rigidbody.linearVelocity);
 
             if (currentAirHeight < 0)
             {
@@ -676,12 +674,19 @@ namespace Hyper.Player
 
             if (heightDifference > 0)
             {
-                var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
-                var forceToAdd = upwardForce - upwardsVelocity;
+                var upwardForce = Mathf.Sqrt(2 * -(Physics.gravity.y * gravityScale) * heightDifference);
+                var forceToAdd = upwardForce - _rigidbody.linearVelocity.y;
                 return forceToAdd > 0f ? forceToAdd : 0f;
             }
 
             return 0f;
+        }
+
+        private float CurrentAirHeightBasedOnVelocity(Vector3 linearVelocity)
+        {
+            var upwardsVelocity = linearVelocity.y;
+            var gravity = Physics.gravity.y * gravityScale;
+            return jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
         }
     }
 }
