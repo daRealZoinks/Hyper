@@ -43,6 +43,7 @@ namespace Hyper.Player
         [Header("Mantling and Wall Climbing Settings")]
         public float frontWallDetectionAngleThreshold = 0.9f;
         public float maxMantleDuration = 0.35f;
+        public float mantleBoost = 3f;
         public float wallClimbMaxHeight = 4f;
 
         [Header("General Settings")]
@@ -129,6 +130,7 @@ namespace Hyper.Player
 
         private bool _isTouchingWallInFront;
         private bool _hasWallClimbedSinceLastNegativeVelocity = false;
+        private Vector3 _linearVelocityBeforeClimb;
 
         // private references to components
         private Rigidbody _rigidbody;
@@ -238,6 +240,12 @@ namespace Hyper.Player
 
             sphereCastHitsCount = Physics.RaycastNonAlloc(ray, results, 2f, groundCheckLayerMask);
 
+            if (sphereCastHitsCount <= 0)
+            {
+                IsGrounded = false;
+                return;
+            }
+
             var raycastHit = results
                 .Take(sphereCastHitsCount)
                 .Where(r => r.collider != null)
@@ -265,32 +273,57 @@ namespace Hyper.Player
 
         private void MantleCheck()
         {
-            var upperRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.25f, transform.forward);
-            var lowerRay = new Ray(_rigidbody.position + Vector3.up * _capsuleCollider.radius, transform.forward);
+            var upperBoxCastHitsResults = new RaycastHit[5];
+            var lowerBoxCastHitsResults = new RaycastHit[5];
 
-            var upperRayHitsNumber = Physics.RaycastNonAlloc(upperRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
-            var lowerRayHitsNumber = Physics.RaycastNonAlloc(lowerRay, new RaycastHit[1], _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var upperBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.5f, new Vector3(0.25f, 0.25f, 0.25f), transform.forward, upperBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var lowerBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + Vector3.up * _capsuleCollider.radius, new Vector3(0.25f, 0.1f, 0.25f), transform.forward, lowerBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
 
-            if (upperRayHitsNumber == 0 && lowerRayHitsNumber > 0)
+            if (upperBoxCastHitsNumber == 0 && lowerBoxCastHitsNumber > 0)
             {
-                var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
+                var validHits = lowerBoxCastHitsResults
+                    .Take(lowerBoxCastHitsNumber)
+                    .Where(r => r.collider != null)
+                    .ToArray();
 
-                var positionOfMantlingRaycastHits = new RaycastHit[5];
+                var closestHitToCenter = validHits.OrderBy(r => Vector3.Distance(r.point, _rigidbody.position)).First();
 
-                var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, groundCheckLayerMask);
+                var hasHitRightAngleSurface = closestHitToCenter.normal.y == 0;
 
-                if (positionOfMantlingRaycastHitsNumber > 0)
+                if (hasHitRightAngleSurface)
                 {
-                    var validHits = positionOfMantlingRaycastHits
-                        .Take(positionOfMantlingRaycastHitsNumber)
-                        .Where(r => r.collider != null)
-                        .ToArray();
+                    var positionOfMantlingRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * _capsuleCollider.height + (_capsuleCollider.radius + 0.5f) * transform.forward, Vector3.down);
 
-                    var tallestPoint = validHits.OrderByDescending(r => r.point.y).First();
+                    var positionOfMantlingRaycastHits = new RaycastHit[5];
+
+                    var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, 2f, groundCheckLayerMask);
+
+                    Debug.DrawLine(positionOfMantlingRay.origin, positionOfMantlingRay.origin + positionOfMantlingRay.direction * 2, Color.red, 2f);
+
+                    RaycastHit hit;
+
+                    if (positionOfMantlingRaycastHitsNumber > 0)
+                    {
+                        validHits = positionOfMantlingRaycastHits
+                           .Take(positionOfMantlingRaycastHitsNumber)
+                           .Where(r => r.collider != null)
+                           .ToArray();
+
+                        var tallestPoint = validHits.OrderByDescending(r => r.point.y).First();
+
+                        hit = tallestPoint;
+                    }
+                    else
+                    {
+                        hit = new RaycastHit
+                        {
+                            point = positionOfMantlingRay.origin + Vector3.down * 2f
+                        };
+                    }
 
                     if (!IsMantling)
                     {
-                        Mantle(tallestPoint, _rigidbody.linearVelocity);
+                        Mantle(hit, closestHitToCenter.normal, _rigidbody.linearVelocity);
                     }
 
                     OnMantle?.Invoke();
@@ -314,6 +347,8 @@ namespace Hyper.Player
                 {
                     OnWallClimb?.Invoke();
                     _hasWallClimbedSinceLastNegativeVelocity = true;
+
+                    _linearVelocityBeforeClimb = _rigidbody.linearVelocity;
 
                     _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.VelocityChange);
                 }
@@ -589,8 +624,12 @@ namespace Hyper.Player
             IsSliding = false;
         }
 
-        private async void Mantle(RaycastHit raycastHit, Vector3 linearVelocity)
+        private async void Mantle(RaycastHit raycastHit, Vector3 forwardWallNormal, Vector3 linearVelocity)
         {
+            var currentAirHeight = CurrentAirHeightBasedOnVelocity(linearVelocity);
+
+            var isWallClimbingBeforeMantle = IsWallClimbing;
+
             IsMantling = true;
             _capsuleCollider.enabled = false;
             _rigidbody.linearVelocity = Vector3.zero;
@@ -611,19 +650,41 @@ namespace Hyper.Player
 
             IsMantling = false;
             _capsuleCollider.enabled = true;
-            _rigidbody.linearVelocity = new Vector3
+
+            if (isWallClimbingBeforeMantle)
             {
-                x = linearVelocity.x,
-                z = linearVelocity.z
-            };
+                var oldHorizontalLinearVelocity = new Vector3
+                {
+                    x = _linearVelocityBeforeClimb.x,
+                    z = _linearVelocityBeforeClimb.z
+                };
+
+                if (currentAirHeight < 0)
+                {
+                    _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+                }
+                else
+                {
+                    _rigidbody.linearVelocity = -forwardWallNormal * oldHorizontalLinearVelocity.magnitude;
+                }
+            }
+            else
+            {
+                var oldHorizontalLinearVelocity = new Vector3
+                {
+                    x = linearVelocity.x,
+                    z = linearVelocity.z
+                };
+
+                _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+            }
+
             transform.position = mantleEnd;
         }
 
         private float GetWallClimbAdditiveForce()
         {
-            var upwardsVelocity = _rigidbody.linearVelocity.y;
-            var gravity = Physics.gravity.y * gravityScale;
-            var currentAirHeight = jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+            var currentAirHeight = CurrentAirHeightBasedOnVelocity(_rigidbody.linearVelocity);
 
             if (currentAirHeight < 0)
             {
@@ -634,12 +695,19 @@ namespace Hyper.Player
 
             if (heightDifference > 0)
             {
-                var upwardForce = Mathf.Sqrt(2 * -gravity * heightDifference);
-                var forceToAdd = upwardForce - upwardsVelocity;
+                var upwardForce = Mathf.Sqrt(2 * -(Physics.gravity.y * gravityScale) * heightDifference);
+                var forceToAdd = upwardForce - _rigidbody.linearVelocity.y;
                 return forceToAdd > 0f ? forceToAdd : 0f;
             }
 
             return 0f;
+        }
+
+        private float CurrentAirHeightBasedOnVelocity(Vector3 linearVelocity)
+        {
+            var upwardsVelocity = linearVelocity.y;
+            var gravity = Physics.gravity.y * gravityScale;
+            return jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
         }
     }
 }
