@@ -6,19 +6,24 @@ using UnityEngine;
 public class GrapplingGun : MonoBehaviour
 {
     public float maxDistance = 100f;
-    public float grapplePower = 1f;
-    public float dampingFactor = 5f;
-    public float maxForce = 100f;
+
+    public float maxDistanceFromPoint = 0.8f;
+    public float minDistanceFromPoint = 0.25f;
+
+    public float spring = 4.5f;
+    public float damper = 7f;
+    public float massScale = 4.5f;
 
     public RigidbodyCharacterController characterController;
 
-    private float distanceFromPoint;
     private Vector3? grapplePoint;
 
     private Camera _camera;
     private LineRenderer _lineRenderer;
+    private SpringJoint _springJoint;
 
     private Rigidbody _playerRigidbody;
+
     private void Awake()
     {
         _camera = GetComponent<Camera>();
@@ -36,41 +41,24 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (grapplePoint.HasValue)
-        {
-            var toPoint = grapplePoint.Value - _playerRigidbody.position;
-            var currentDistance = toPoint.magnitude;
-
-            if (currentDistance > 0.001f)
-            {
-                var displacement = currentDistance - distanceFromPoint;
-
-                if (displacement > 0f)
-                {
-                    var springForce = toPoint.normalized * (displacement * grapplePower);
-
-                    var radialVelocity = Vector3.Dot(_playerRigidbody.linearVelocity, toPoint.normalized);
-                    var dampingForce = -toPoint.normalized * (radialVelocity * dampingFactor);
-
-                    var totalForce = springForce + dampingForce;
-
-                    totalForce = Vector3.Min(totalForce, totalForce.normalized * maxForce);
-
-                    _playerRigidbody.AddForce(totalForce, ForceMode.Acceleration);
-                }
-            }
-        }
-    }
-
     public void StartGrapple()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, maxDistance))
         {
             grapplePoint = hit.point;
 
-            distanceFromPoint = Vector3.Distance(transform.position, grapplePoint.Value);
+            _springJoint = _playerRigidbody.gameObject.AddComponent<SpringJoint>();
+            _springJoint.autoConfigureConnectedAnchor = false;
+            _springJoint.connectedAnchor = grapplePoint.Value;
+
+            var distanceFromPoint = Vector3.Distance(transform.position, grapplePoint.Value);
+
+            _springJoint.maxDistance = distanceFromPoint * maxDistanceFromPoint;
+            _springJoint.minDistance = distanceFromPoint * minDistanceFromPoint;
+
+            _springJoint.spring = spring;
+            _springJoint.damper = damper;
+            _springJoint.massScale = _playerRigidbody.mass * characterController.gravityScale * massScale;
 
             _lineRenderer.enabled = true;
         }
@@ -81,6 +69,11 @@ public class GrapplingGun : MonoBehaviour
         _lineRenderer.enabled = false;
 
         grapplePoint = null;
+
+        if (_springJoint != null)
+        {
+            Destroy(_springJoint);
+        }
     }
 
     private void OnDisable()
