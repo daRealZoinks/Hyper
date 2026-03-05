@@ -52,7 +52,7 @@ namespace Hyper.Player.Input
         {
             switch (context.phase)
             {
-                case InputActionPhase.Started:
+                case InputActionPhase.Performed:
                     grapplingGun.StartGrapple();
                     break;
                 case InputActionPhase.Canceled:

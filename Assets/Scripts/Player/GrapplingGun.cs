@@ -43,6 +43,8 @@ public class GrapplingGun : MonoBehaviour
 
     public void StartGrapple()
     {
+        StopGrapple();
+
         if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, maxDistance))
         {
             grapplePoint = hit.point;

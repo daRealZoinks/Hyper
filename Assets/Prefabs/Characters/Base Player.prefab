@@ -1143,7 +1143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Hyper.Player::GrapplingGun
   maxDistance: 100
   maxDistanceFromPoint: 0.8
-  minDistanceFromPoint: 0.25
+  minDistanceFromPoint: 0
   spring: 4.5
   damper: 7
   massScale: 4.5
