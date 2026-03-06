@@ -1144,6 +1144,7 @@ MonoBehaviour:
   maxDistance: 100
   maxDistanceFromPoint: 0.8
   minDistanceFromPoint: 0
+  selectionBoxRatio: 0.75
   spring: 4.5
   damper: 7
   massScale: 4.5
