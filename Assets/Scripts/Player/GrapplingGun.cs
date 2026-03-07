@@ -6,15 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class GrapplingGun : MonoBehaviour
 {
-    public float maxDistance = 100f;
+    public float maxDistance = 40f;
+    public float grappleSpeed = 100f; // m/s
 
     public float maxDistanceFromPoint = 0.8f;
     public float minDistanceFromPoint = 0f;
 
-    // Fraction of the camera viewport's smaller dimension used for the
-    // square selection box (0..1). This makes the selection box work
-    // correctly for split-screen when each player uses their own camera.
-    // e.g. 0.75f uses 75% of the smaller viewport dimension for the box size
     public float selectionBoxRatio = 0.75f;
 
     public float spring = 4.5f;
@@ -23,8 +20,15 @@ public class GrapplingGun : MonoBehaviour
 
     public RigidbodyCharacterController characterController;
 
+    public LayerMask grapplePointLayerMask;
+
     private GrapplePoint _candidate;
     private GrapplePoint _grapplePoint;
+    private GrapplePoint _targetGrapplePoint; // the point we're shooting the hook to
+
+    private bool _isHookShot = false;
+    private Vector3 _hookPosition;
+    private Vector3 _hookTargetPosition;
 
     private Camera _camera;
     private LineRenderer _lineRenderer;
@@ -36,38 +40,42 @@ public class GrapplingGun : MonoBehaviour
     {
         _camera = GetComponent<Camera>();
         _lineRenderer = GetComponent<LineRenderer>();
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.enabled = false;
 
         _playerRigidbody = characterController.GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        _candidate = FindClosestGrapplePointInSelectionBox();
+        if (_isHookShot)
+        {
+            // move the hook towards the target
+            var step = grappleSpeed * Time.deltaTime;
+            _hookPosition = Vector3.MoveTowards(_hookPosition, _hookTargetPosition, step);
 
-        RenderLine();
+            // render hook line
+            _lineRenderer.SetPosition(0, transform.position + Vector3.down);
+            _lineRenderer.SetPosition(1, _hookPosition);
+
+            // if reached target, attach the grapple
+            if (Vector3.Distance(_hookPosition, _hookTargetPosition) <= 0.25f)
+            {
+                AttachGrapple();
+            }
+        }
+        else
+        {
+            _candidate = FindClosestGrapplePointInSelectionCircle();
+
+            RenderLine();
+        }
     }
 
     private void OnGUI()
     {
-        // Use the camera's viewport (pixelRect) so split-screen cameras work
-        var vp = _camera.pixelRect;
-        var vpWidth = vp.width;
-        var vpHeight = vp.height;
-        var baseSize = Mathf.Min(vpWidth, vpHeight);
-        var boxSize = baseSize * selectionBoxRatio;
-        var half = boxSize * 0.5f;
-
-        var centerX = vp.x + vpWidth * 0.5f;
-        var centerY = vp.y + vpHeight * 0.5f; // origin is bottom-left
-
-        // GUI coordinates origin is top-left, so convert Y
-        var rectX = centerX - half;
-        var rectY = Screen.height - (centerY + half);
-        var rect = new Rect(rectX, rectY, boxSize, boxSize);
-        GUI.Box(rect, "Grapple Point Selection Box");
-
         // draw text for the candidate grapple point
-        if (_candidate != null)
+        if (_candidate != null && _candidate != _grapplePoint)
         {
             var screenPoint = _camera.WorldToScreenPoint(_candidate.transform.position);
             if (screenPoint.z > 0f)
@@ -105,50 +113,73 @@ public class GrapplingGun : MonoBehaviour
     public void StartGrapple()
     {
         StopGrapple();
-
-        // Find the best grapple point candidate from GrapplePoint objects that
-        // are inside a screen-space square centered on the screen. Pick the one
-        // closest to the screen center.
         if (_candidate != null)
         {
-            // Respect maximum world distance to the grapple point
-            if (Vector3.Distance(_playerRigidbody.position, _candidate.transform.position) <= maxDistance)
-            {
-                _grapplePoint = _candidate;
+            // start shooting the hook towards the candidate
+            _targetGrapplePoint = _candidate;
+            _isHookShot = true;
+            _hookPosition = transform.position;
+            _hookTargetPosition = _targetGrapplePoint.transform.position;
 
-                _springJoint = _playerRigidbody.gameObject.AddComponent<SpringJoint>();
-                _springJoint.autoConfigureConnectedAnchor = false;
-                _springJoint.connectedAnchor = _grapplePoint.transform.position;
-
-                var distanceFromPoint = Vector3.Distance(transform.position, _grapplePoint.transform.position);
-
-                _springJoint.maxDistance = distanceFromPoint * maxDistanceFromPoint;
-                _springJoint.minDistance = distanceFromPoint * minDistanceFromPoint;
-
-                _springJoint.spring = spring;
-                _springJoint.damper = damper;
-                _springJoint.massScale = _playerRigidbody.mass * characterController.gravityScale * massScale;
-
-                _lineRenderer.enabled = true;
-            }
+            _lineRenderer.enabled = true;
         }
     }
 
-    private GrapplePoint FindClosestGrapplePointInSelectionBox()
+    private void AttachGrapple()
     {
-        var allGrapplePointsOnTheMap = FindObjectsByType<GrapplePoint>(FindObjectsSortMode.None);
+        if (_targetGrapplePoint == null)
+        {
+            _isHookShot = false;
+            _lineRenderer.enabled = false;
+            return;
+        }
 
-        if (allGrapplePointsOnTheMap == null || allGrapplePointsOnTheMap.Length == 0)
+        _grapplePoint = _targetGrapplePoint;
+        _targetGrapplePoint = null;
+        _isHookShot = false;
+
+        _springJoint = _playerRigidbody.gameObject.AddComponent<SpringJoint>();
+        _springJoint.autoConfigureConnectedAnchor = false;
+        _springJoint.connectedAnchor = _grapplePoint.transform.position;
+
+        var distanceFromPoint = Vector3.Distance(transform.position, _grapplePoint.transform.position);
+
+        _springJoint.maxDistance = distanceFromPoint * maxDistanceFromPoint;
+        _springJoint.minDistance = distanceFromPoint * minDistanceFromPoint;
+
+        _springJoint.spring = spring;
+        _springJoint.damper = damper;
+        _springJoint.massScale = _playerRigidbody.mass * characterController.gravityScale * massScale;
+
+        _lineRenderer.enabled = true;
+    }
+
+    private GrapplePoint FindClosestGrapplePointInSelectionCircle()
+    {
+        var results = new Collider[10];
+
+        var overlapSphereHitNumber = Physics.OverlapSphereNonAlloc(_camera.transform.position, maxDistance, results, grapplePointLayerMask);
+
+        var colliders = results.Take(overlapSphereHitNumber);
+
+        if (colliders == null || colliders.Count() == 0)
         {
             return null;
         }
 
-        var grapplePoints = allGrapplePointsOnTheMap.Where(gp => Vector3.Distance(_playerRigidbody.position, gp.transform.position) <= maxDistance);
+        var grapplePoints = colliders
+            .Where(collider => collider != null)
+            .Select(collider => collider.GetComponent<GrapplePoint>())
+            .Where(gp => gp != null)
+            .ToList();
+
+        if (grapplePoints.Count == 0)
+        {
+            return null;
+        }
 
         var viewPort = _camera.pixelRect;
-        var baseSize = Mathf.Min(viewPort.width, viewPort.height);
-        var boxSize = baseSize * selectionBoxRatio;
-        var half = boxSize * 0.5f;
+        var half = (float)(Mathf.Min(viewPort.width, viewPort.height) * selectionBoxRatio) * 0.5f;
 
         var screenCenter = new Vector2(viewPort.x + viewPort.width * 0.5f, viewPort.y + viewPort.height * 0.5f);
 
@@ -163,14 +194,13 @@ public class GrapplingGun : MonoBehaviour
                 continue;
             }
 
-            var delta = new Vector2(screenPoint.x - screenCenter.x, screenPoint.y - screenCenter.y);
+            var distanceFromTheCenter = Vector2.Distance(screenPoint, screenCenter);
 
-            if (Mathf.Abs(delta.x) <= half && Mathf.Abs(delta.y) <= half)
+            if (distanceFromTheCenter <= half)
             {
-                var distanceSquared = delta.sqrMagnitude;
-                if (distanceSquared < bestDistanceSquared)
+                if (distanceFromTheCenter < bestDistanceSquared)
                 {
-                    bestDistanceSquared = distanceSquared;
+                    bestDistanceSquared = distanceFromTheCenter;
                     bestGrapplePoint = grapplePoint;
                 }
             }
