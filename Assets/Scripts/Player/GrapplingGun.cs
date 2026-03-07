@@ -27,8 +27,8 @@ public class GrapplingGun : MonoBehaviour
     private GrapplePoint _targetGrapplePoint; // the point we're shooting the hook to
 
     private bool _isHookShot = false;
+    private bool _isHookRetracting = false;
     private Vector3 _hookPosition;
-    private Vector3 _hookTargetPosition;
 
     private Camera _camera;
     private LineRenderer _lineRenderer;
@@ -50,26 +50,39 @@ public class GrapplingGun : MonoBehaviour
     {
         if (_isHookShot)
         {
-            // move the hook towards the target
             var step = grappleSpeed * Time.deltaTime;
-            _hookPosition = Vector3.MoveTowards(_hookPosition, _hookTargetPosition, step);
+            _hookPosition = Vector3.MoveTowards(_hookPosition, _targetGrapplePoint.transform.position, step);
 
-            // render hook line
-            _lineRenderer.SetPosition(0, transform.position + Vector3.down);
-            _lineRenderer.SetPosition(1, _hookPosition);
-
-            // if reached target, attach the grapple
-            if (Vector3.Distance(_hookPosition, _hookTargetPosition) <= 0.25f)
+            if (Vector3.Distance(_hookPosition, _targetGrapplePoint.transform.position) <= 0.25f)
             {
                 AttachGrapple();
             }
         }
         else
         {
-            _candidate = FindClosestGrapplePointInSelectionCircle();
+            if (_isHookRetracting)
+            {
+                var step = grappleSpeed * Time.deltaTime;
+                _hookPosition = Vector3.MoveTowards(_hookPosition, transform.position, step);
 
-            RenderLine();
+                if (Vector3.Distance(_hookPosition, transform.position) <= 0.25f)
+                {
+                    _isHookRetracting = false;
+                    _lineRenderer.enabled = false;
+                }
+            }
+            else
+            {
+                _candidate = FindClosestGrapplePointInSelectionCircle();
+
+                if (_grapplePoint != null)
+                {
+                    _hookPosition = _grapplePoint.transform.position;
+                }
+            }
         }
+
+        RenderLine();
     }
 
     private void OnGUI()
@@ -103,23 +116,24 @@ public class GrapplingGun : MonoBehaviour
 
     private void RenderLine()
     {
-        if (_grapplePoint)
-        {
-            _lineRenderer.SetPosition(0, transform.position + Vector3.down);
-            _lineRenderer.SetPosition(1, _grapplePoint.transform.position);
-        }
+        _lineRenderer.SetPosition(0, transform.position + Vector3.down);
+        _lineRenderer.SetPosition(1, _hookPosition);
     }
 
     public void StartGrapple()
     {
-        StopGrapple();
+        _grapplePoint = null;
+
+        if (_springJoint != null)
+        {
+            Destroy(_springJoint);
+        }
+
         if (_candidate != null)
         {
-            // start shooting the hook towards the candidate
             _targetGrapplePoint = _candidate;
             _isHookShot = true;
             _hookPosition = transform.position;
-            _hookTargetPosition = _targetGrapplePoint.transform.position;
 
             _lineRenderer.enabled = true;
         }
@@ -167,6 +181,8 @@ public class GrapplingGun : MonoBehaviour
             return null;
         }
 
+        // TODO: fire raycasts 2 check if they're not obstructed
+
         var grapplePoints = colliders
             .Where(collider => collider != null)
             .Select(collider => collider.GetComponent<GrapplePoint>())
@@ -211,9 +227,8 @@ public class GrapplingGun : MonoBehaviour
 
     public void StopGrapple()
     {
-        _lineRenderer.enabled = false;
-
         _grapplePoint = null;
+        _isHookRetracting = true;
 
         if (_springJoint != null)
         {
