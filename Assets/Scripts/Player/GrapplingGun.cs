@@ -48,20 +48,23 @@ public class GrapplingGun : MonoBehaviour
 
     private void Update()
     {
-        if (_isHookShot)
+        if (_isHookShot || _isHookRetracting)
         {
-            var step = grappleSpeed * Time.deltaTime;
-            _hookPosition = Vector3.MoveTowards(_hookPosition, _targetGrapplePoint.transform.position, step);
-
-            if (Vector3.Distance(_hookPosition, _targetGrapplePoint.transform.position) <= 0.25f)
+            if (_isHookShot)
             {
-                AttachGrapple();
+                _isHookRetracting = false;
+                var step = grappleSpeed * Time.deltaTime;
+                _hookPosition = Vector3.MoveTowards(_hookPosition, _targetGrapplePoint.transform.position, step);
+
+                if (Vector3.Distance(_hookPosition, _targetGrapplePoint.transform.position) <= 0.25f)
+                {
+                    AttachGrapple();
+                }
             }
-        }
-        else
-        {
+
             if (_isHookRetracting)
             {
+                _isHookShot = false;
                 var step = grappleSpeed * Time.deltaTime;
                 _hookPosition = Vector3.MoveTowards(_hookPosition, transform.position, step);
 
@@ -71,14 +74,14 @@ public class GrapplingGun : MonoBehaviour
                     _lineRenderer.enabled = false;
                 }
             }
-            else
-            {
-                _candidate = FindClosestGrapplePointInSelectionCircle();
+        }
+        else
+        {
+            _candidate = FindClosestGrapplePointInSelectionCircle();
 
-                if (_grapplePoint != null)
-                {
-                    _hookPosition = _grapplePoint.transform.position;
-                }
+            if (_grapplePoint != null)
+            {
+                _hookPosition = _grapplePoint.transform.position;
             }
         }
 
@@ -181,10 +184,20 @@ public class GrapplingGun : MonoBehaviour
             return null;
         }
 
-        // TODO: fire raycasts 2 check if they're not obstructed
-
         var grapplePoints = colliders
             .Where(collider => collider != null)
+            .Where(collider =>
+            {
+                if (Physics.Raycast(_camera.transform.position, collider.transform.position - _camera.transform.position, out var hitInfo))
+                {
+                    if (collider.gameObject == hitInfo.collider.gameObject)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            })
             .Select(collider => collider.GetComponent<GrapplePoint>())
             .Where(gp => gp != null)
             .ToList();
