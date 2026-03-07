@@ -7,7 +7,7 @@ using UnityEngine;
 public class GrapplingGun : MonoBehaviour
 {
     public float maxDistance = 40f;
-    public float grappleSpeed = 100f; // m/s
+    public float grappleSpeed = 100f;
 
     public float maxDistanceFromPoint = 0.8f;
     public float minDistanceFromPoint = 0f;
@@ -24,7 +24,7 @@ public class GrapplingGun : MonoBehaviour
 
     private GrapplePoint _candidate;
     private GrapplePoint _grapplePoint;
-    private GrapplePoint _targetGrapplePoint; // the point we're shooting the hook to
+    private GrapplePoint _targetGrapplePoint;
 
     private bool _isHookShot = false;
     private bool _isHookRetracting = false;
@@ -50,9 +50,20 @@ public class GrapplingGun : MonoBehaviour
     {
         if (_isHookShot || _isHookRetracting)
         {
-            if (_isHookShot)
+            if (_isHookRetracting && !_isHookShot)
             {
-                _isHookRetracting = false;
+                var step = grappleSpeed * Time.deltaTime;
+                _hookPosition = Vector3.MoveTowards(_hookPosition, _camera.transform.position, step);
+
+                if (Vector3.Distance(_hookPosition, _camera.transform.position) <= 0.25f)
+                {
+                    _isHookRetracting = false;
+                    _lineRenderer.enabled = false;
+                }
+            }
+
+            if (_isHookShot && !_isHookRetracting)
+            {
                 var step = grappleSpeed * Time.deltaTime;
                 _hookPosition = Vector3.MoveTowards(_hookPosition, _targetGrapplePoint.transform.position, step);
 
@@ -62,17 +73,9 @@ public class GrapplingGun : MonoBehaviour
                 }
             }
 
-            if (_isHookRetracting)
+            if (_isHookShot && _isHookRetracting)
             {
-                _isHookShot = false;
-                var step = grappleSpeed * Time.deltaTime;
-                _hookPosition = Vector3.MoveTowards(_hookPosition, transform.position, step);
-
-                if (Vector3.Distance(_hookPosition, transform.position) <= 0.25f)
-                {
-                    _isHookRetracting = false;
-                    _lineRenderer.enabled = false;
-                }
+                _isHookRetracting = false;
             }
         }
         else
@@ -119,26 +122,31 @@ public class GrapplingGun : MonoBehaviour
 
     private void RenderLine()
     {
-        _lineRenderer.SetPosition(0, transform.position + Vector3.down);
+        _lineRenderer.SetPosition(0, _camera.transform.position + Vector3.down);
         _lineRenderer.SetPosition(1, _hookPosition);
     }
 
     public void StartGrapple()
+    {
+        DetachGrapple();
+
+        if (_candidate != null)
+        {
+            _targetGrapplePoint = _candidate;
+            _isHookShot = true;
+            _hookPosition = _camera.transform.position;
+
+            _lineRenderer.enabled = true;
+        }
+    }
+
+    private void DetachGrapple()
     {
         _grapplePoint = null;
 
         if (_springJoint != null)
         {
             Destroy(_springJoint);
-        }
-
-        if (_candidate != null)
-        {
-            _targetGrapplePoint = _candidate;
-            _isHookShot = true;
-            _hookPosition = transform.position;
-
-            _lineRenderer.enabled = true;
         }
     }
 
@@ -240,13 +248,9 @@ public class GrapplingGun : MonoBehaviour
 
     public void StopGrapple()
     {
-        _grapplePoint = null;
         _isHookRetracting = true;
 
-        if (_springJoint != null)
-        {
-            Destroy(_springJoint);
-        }
+        DetachGrapple();
     }
 
     private void OnDisable()
