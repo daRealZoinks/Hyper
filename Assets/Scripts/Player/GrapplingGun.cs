@@ -50,18 +50,6 @@ public class GrapplingGun : MonoBehaviour
     {
         if (_isHookShot || _isHookRetracting)
         {
-            if (_isHookRetracting && !_isHookShot)
-            {
-                var step = grappleSpeed * Time.deltaTime;
-                _hookPosition = Vector3.MoveTowards(_hookPosition, _camera.transform.position, step);
-
-                if (Vector3.Distance(_hookPosition, _camera.transform.position) <= 0.25f)
-                {
-                    _isHookRetracting = false;
-                    _lineRenderer.enabled = false;
-                }
-            }
-
             if (_isHookShot && !_isHookRetracting)
             {
                 var step = grappleSpeed * Time.deltaTime;
@@ -73,9 +61,16 @@ public class GrapplingGun : MonoBehaviour
                 }
             }
 
-            if (_isHookShot && _isHookRetracting)
+            if (_isHookRetracting && !_isHookShot)
             {
-                _isHookRetracting = false;
+                var step = grappleSpeed * Time.deltaTime;
+                _hookPosition = Vector3.MoveTowards(_hookPosition, _camera.transform.position, step);
+
+                if (Vector3.Distance(_hookPosition, _camera.transform.position) <= 0.25f)
+                {
+                    _isHookRetracting = false;
+                    _lineRenderer.enabled = false;
+                }
             }
         }
         else
@@ -134,8 +129,8 @@ public class GrapplingGun : MonoBehaviour
         {
             _targetGrapplePoint = _candidate;
             _isHookShot = true;
+            _isHookRetracting = false;
             _hookPosition = _camera.transform.position;
-
             _lineRenderer.enabled = true;
         }
     }
@@ -249,6 +244,7 @@ public class GrapplingGun : MonoBehaviour
     public void StopGrapple()
     {
         _isHookRetracting = true;
+        _isHookShot = false;
 
         DetachGrapple();
     }
