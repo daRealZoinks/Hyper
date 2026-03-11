@@ -21,6 +21,7 @@ public class GrapplingGun : MonoBehaviour
     public RigidbodyCharacterController characterController;
 
     public LayerMask grapplePointLayerMask;
+    public LayerMask ignoreThisWhenCheckingForGrapplePointsLayerMask;
 
     private GrapplePoint _candidate;
     private GrapplePoint _grapplePoint;
@@ -191,7 +192,7 @@ public class GrapplingGun : MonoBehaviour
             .Where(collider => collider != null)
             .Where(collider =>
             {
-                if (Physics.Raycast(_camera.transform.position, collider.transform.position - _camera.transform.position, out var hitInfo))
+                if (Physics.Raycast(_camera.transform.position, collider.transform.position - _camera.transform.position, out var hitInfo, maxDistance, ignoreThisWhenCheckingForGrapplePointsLayerMask))
                 {
                     if (collider.gameObject == hitInfo.collider.gameObject)
                     {

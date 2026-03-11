@@ -1153,6 +1153,9 @@ MonoBehaviour:
   grapplePointLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  ignoreThisWhenCheckingForGrapplePointsLayerMask:
+    serializedVersion: 2
+    m_Bits: 247
 --- !u!114 &6448816616791665718
 MonoBehaviour:
   m_ObjectHideFlags: 0
