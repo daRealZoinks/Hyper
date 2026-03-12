@@ -44,9 +44,22 @@ namespace Hyper.UI.Menus
 
         private void OnEnable()
         {
+            if (CursorManager.Singleton)
+            {
+                CursorManager.Singleton.UnlockAndShowCursor();
+            }
+
             if (DeviceManager.Singleton && DeviceManager.Singleton.CurrentDeviceType != DeviceManager.DeviceType.Mouse)
             {
                 (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (CursorManager.Singleton)
+            {
+                CursorManager.Singleton.LockAndHideCursor();
             }
         }
     }
