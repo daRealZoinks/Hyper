@@ -9,6 +9,8 @@ namespace Hyper.Player.Input
     {
         public ThrowBall throwBall;
 
+        public GrapplingGun grapplingGun;
+
         private RigidbodyCharacterController _rigidbodyCharacterController;
 
         private void Awake()
@@ -44,6 +46,19 @@ namespace Hyper.Player.Input
             };
 
             _rigidbodyCharacterController.Sliding = slide;
+        }
+
+        public void OnGrapple(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Performed:
+                    grapplingGun.StartGrapple();
+                    break;
+                case InputActionPhase.Canceled:
+                    grapplingGun.StopGrapple();
+                    break;
+            }
         }
 
         public void OnThrow(InputAction.CallbackContext context)

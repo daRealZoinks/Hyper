@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GrapplingGun : MonoBehaviour
+public class GrapplingGunPrototype : MonoBehaviour
 {
     public bool GrapplingEnabled { get; internal set; }
 

@@ -455,7 +455,6 @@ namespace Hyper.Player
             }
             else
             {
-                // TODO: make better 1 - default transitions between airControl and airBreak 
                 finalForce *= inputDirection != Vector3.zero ? airControl : airBreak;
             }
 

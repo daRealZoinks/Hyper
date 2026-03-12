@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public GrapplingGun grapplingGun;
+    public GrapplingGunPrototype grapplingGun;
     public bool isGrapplingEnabled;
 
     private void Update()
