@@ -1,4 +1,5 @@
 using Hyper.HyperBalls;
+using Hyper.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,11 @@ namespace Hyper.Player.Input
         private void Awake()
         {
             _rigidbodyCharacterController = GetComponent<RigidbodyCharacterController>();
+
+            if (CursorManager.Singleton)
+            {
+                CursorManager.Singleton.LockAndHideCursor();
+            }
         }
 
         public void OnMove(InputAction.CallbackContext context)
