@@ -382,9 +382,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
-  acceleration: 60
-  topSpeed: 8
-  deceleration: 120
+  acceleration: 90
+  topSpeed: 13
+  deceleration: 180
   airControl: 0.25
   airBreak: 0
   jumpHeight: 2
@@ -396,7 +396,7 @@ MonoBehaviour:
   wallRunGravityResistanceForce: 10
   wallJumpAngleFromWallNormal: 25
   wallJumpHeight: 1.5
-  wallJumpBoost: 3
+  wallJumpBoost: 1
   slidingDownForce: 5
   slidingTurnSpeed: 0.2
   slidingCapsuleColliderHeight: 1
@@ -404,7 +404,7 @@ MonoBehaviour:
   slidingCameraTrackingTargetPosition: {x: 0, y: 0.5, z: 0}
   frontWallDetectionAngleThreshold: 0.9
   maxMantleDuration: 0.35
-  mantleBoost: 3
+  mantleBoost: 2
   wallClimbMaxHeight: 4
   useGravity: 1
   gravityScale: 1.5
