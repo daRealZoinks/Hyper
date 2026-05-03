@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Switch;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.InputSystem.XInput;
 
 namespace Hyper.UI.Glyphs
@@ -20,9 +21,11 @@ namespace Hyper.UI.Glyphs
             SwitchController
         }
 
-        public DeviceType CurrentDeviceType { get; private set; }
+        public event Action<DeviceType> OnDeviceTypeChanged;
 
-        public InputSystemUIInputModule inputModule;
+        private DeviceType currentDeviceType;
+
+        private PlayerInput playerInput;
 
         private void Awake()
         {
@@ -35,31 +38,41 @@ namespace Hyper.UI.Glyphs
             {
                 Destroy(this);
             }
+
+            playerInput = EventSystem.current.GetComponent<PlayerInput>();
         }
 
         private void Update()
         {
-            foreach (var device in inputModule.actionsAsset.devices)
+            foreach (var device in playerInput.devices)
             {
-                if (device is Mouse mouse && mouse == Mouse.current)
+                DeviceType deviceType;
+
+                switch (device)
                 {
-                    CurrentDeviceType = DeviceType.Mouse;
+                    case Mouse mouse when mouse == Mouse.current:
+                        deviceType = DeviceType.Mouse;
+                        break;
+                    case Keyboard keyboard when keyboard == Keyboard.current:
+                        deviceType = DeviceType.Keyboard;
+                        break;
+                    case XInputController xInputController when xInputController == Gamepad.current:
+                        deviceType = DeviceType.XboxController;
+                        break;
+                    case DualShockGamepad dualShockGamepad when dualShockGamepad == Gamepad.current:
+                        deviceType = DeviceType.PlayStationController;
+                        break;
+                    case SwitchProControllerHID switchProControllerHID when switchProControllerHID == Gamepad.current:
+                        deviceType = DeviceType.SwitchController;
+                        break;
+                    default:
+                        continue;
                 }
-                else if (device is Keyboard keyboard && keyboard == Keyboard.current)
+
+                if (deviceType != currentDeviceType)
                 {
-                    CurrentDeviceType = DeviceType.Keyboard;
-                }
-                else if (device is XInputController xInputController && xInputController == Gamepad.current)
-                {
-                    CurrentDeviceType = DeviceType.XboxController;
-                }
-                else if (device is DualShockGamepad dualShockGamepad && dualShockGamepad == Gamepad.current)
-                {
-                    CurrentDeviceType = DeviceType.PlayStationController;
-                }
-                else if (device is SwitchProControllerHID switchProControllerHID && switchProControllerHID == Gamepad.current)
-                {
-                    CurrentDeviceType = DeviceType.SwitchController;
+                    currentDeviceType = deviceType;
+                    OnDeviceTypeChanged?.Invoke(deviceType);
                 }
             }
         }

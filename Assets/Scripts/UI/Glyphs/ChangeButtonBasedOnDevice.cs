@@ -9,14 +9,19 @@ namespace Hyper.UI.Glyphs
         public GameObject PlayStationControllerButtonImage;
         public GameObject SwitchControllerButtonImage;
 
-        private void Update()
+        private void Awake()
+        {
+            DeviceManager.Singleton.OnDeviceTypeChanged += OnDeviceTypeChanged;
+        }
+
+        private void OnDeviceTypeChanged(DeviceManager.DeviceType type)
         {
             var enableKeyboardPrompts = false;
             var enableXboxPrompts = false;
             var enablePlaystationPrompts = false;
             var enableSwitchPrompts = false;
 
-            switch (DeviceManager.Singleton.CurrentDeviceType)
+            switch (type)
             {
                 case DeviceManager.DeviceType.Mouse or DeviceManager.DeviceType.Keyboard:
                     enableKeyboardPrompts = true;

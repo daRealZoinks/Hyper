@@ -12261,6 +12261,7 @@ GameObject:
   - component: {fileID: 1038690825}
   - component: {fileID: 1038690824}
   - component: {fileID: 1038690823}
+  - component: {fileID: 1038690826}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -12329,6 +12330,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1038690826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038690822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 1038690823}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: UI
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1043607495
 GameObject:
   m_ObjectHideFlags: 0
@@ -12904,12 +12935,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1074318046}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7b7d4c2029dba14d94fba63226d2dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  inputModule: {fileID: 1038690823}
 --- !u!1 &1084286954
 GameObject:
   m_ObjectHideFlags: 0
@@ -22780,12 +22810,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1749074527}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -417.83298, y: -300, z: 0}
+  m_LocalScale: {x: 0.6772009, y: 0.6772009, z: 0.6772009}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1901080631}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1749074530
 MonoBehaviour:
@@ -24731,6 +24761,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1749074528}
   - {fileID: 1837050971}
   m_Father: {fileID: 1612965093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29032,6 +29063,5 @@ SceneRoots:
   - {fileID: 927082274}
   - {fileID: 2080753095}
   - {fileID: 1074318047}
-  - {fileID: 1749074528}
   - {fileID: 1612965093}
   - {fileID: 1038690825}
