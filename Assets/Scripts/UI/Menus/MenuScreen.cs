@@ -1,3 +1,4 @@
+using Hyper.UI.Glyphs;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,11 +22,15 @@ namespace Hyper.UI.Menus
 
         private void OnEnable()
         {
+            DeviceManager.Singleton.OnDeviceTypeChanged += OnDeviceTypeChanged;
+
             EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : selectables[0]).gameObject);
         }
 
         private void OnDisable()
         {
+            DeviceManager.Singleton.OnDeviceTypeChanged -= OnDeviceTypeChanged;
+
             if (!EventSystem.current) { return; }
 
             var currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
@@ -33,6 +38,18 @@ namespace Hyper.UI.Menus
             if (!currentSelectedGameObject) { return; }
 
             currentSelected = currentSelectedGameObject.GetComponent<Selectable>();
+        }
+
+        private void OnDeviceTypeChanged(DeviceManager.DeviceType deviceType)
+        {
+            if (deviceType == DeviceManager.DeviceType.Mouse || deviceType == DeviceManager.DeviceType.Keyboard)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : selectables[0]).gameObject);
+            }
         }
     }
 }
