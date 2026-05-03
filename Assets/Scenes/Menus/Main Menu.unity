@@ -5786,8 +5786,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  buttons:
-  - {fileID: 1931021511}
 --- !u!1 &554183470
 GameObject:
   m_ObjectHideFlags: 0
@@ -7489,11 +7487,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &625880269
 GameObject:
   m_ObjectHideFlags: 0
@@ -12826,11 +12819,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &1071759491
 GameObject:
   m_ObjectHideFlags: 0
@@ -14465,11 +14453,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 313930828}
-  - {fileID: 1112357139}
-  - {fileID: 30612530}
+  m_EditorClassIdentifier: Hyper.UI.Menus::Hyper.UI.Menus.MenuScreen
 --- !u!1 &1169512818
 GameObject:
   m_ObjectHideFlags: 0
@@ -15109,11 +15093,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &1229951481
 GameObject:
   m_ObjectHideFlags: 0
@@ -17115,11 +17094,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 748786807}
-  - {fileID: 1131798628}
-  - {fileID: 46098874}
-  - {fileID: 621232056}
 --- !u!1 &1356510246
 GameObject:
   m_ObjectHideFlags: 0
@@ -20191,10 +20165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 892079516}
-  - {fileID: 1153589413}
-  - {fileID: 1572755652}
 --- !u!1 &1582727056
 GameObject:
   m_ObjectHideFlags: 0
@@ -21553,11 +21523,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 1599238618}
-  - {fileID: 1511408353}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &1654134897
 GameObject:
   m_ObjectHideFlags: 0
@@ -26330,11 +26295,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 2137831189}
 --- !u!1 &2018379207
 GameObject:
   m_ObjectHideFlags: 0
@@ -26465,11 +26425,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698729906afe4ca42b795f0f813dfa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuScreen
-  buttons:
-  - {fileID: 86872019}
-  - {fileID: 551212445}
-  - {fileID: 1608729002}
-  - {fileID: 612250020}
 --- !u!1 &2029668683
 GameObject:
   m_ObjectHideFlags: 0
@@ -29063,5 +29018,5 @@ SceneRoots:
   - {fileID: 927082274}
   - {fileID: 2080753095}
   - {fileID: 1074318047}
-  - {fileID: 1612965093}
   - {fileID: 1038690825}
+  - {fileID: 1612965093}

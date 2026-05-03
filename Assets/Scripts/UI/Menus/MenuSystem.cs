@@ -40,7 +40,9 @@ namespace Hyper.UI.Menus
         {
             if (menuScreenStack.Count > 1)
             {
+                var oldMenuScreen = menuScreenStack.Peek();
                 menuScreenStack.Pop().gameObject.SetActive(false);
+                oldMenuScreen.currentSelected = null;
                 menuScreenStack.Peek().gameObject.SetActive(true);
             }
 
