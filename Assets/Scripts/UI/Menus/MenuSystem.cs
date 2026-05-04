@@ -56,9 +56,20 @@ namespace Hyper.UI.Menus
         {
             if (selectButton != null)
             {
-                selectButton.gameObject.SetActive(EventSystem.current.currentSelectedGameObject && menuScreenStack.Count > 1 &&
-                    DeviceManager.Singleton.currentDeviceType != DeviceManager.DeviceType.Mouse &&
-                    DeviceManager.Singleton.currentDeviceType != DeviceManager.DeviceType.Keyboard);
+                var isCurrentDeviceMouse = DeviceManager.Singleton.currentDeviceType == DeviceManager.DeviceType.Mouse;
+                var isCurrentDeviceKeyboard = DeviceManager.Singleton.currentDeviceType == DeviceManager.DeviceType.Keyboard;
+
+                if (isCurrentDeviceMouse || isCurrentDeviceKeyboard)
+                {
+                    selectButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    if (EventSystem.current.currentSelectedGameObject)
+                    {
+                        selectButton.gameObject.SetActive(menuScreenStack.Count > 1);
+                    }
+                }
             }
         }
 
