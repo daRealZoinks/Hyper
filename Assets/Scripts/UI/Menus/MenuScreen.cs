@@ -1,65 +1,60 @@
-using Hyper.UI.Glyphs;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 namespace Hyper.UI.Menus
 {
     public class MenuScreen : MonoBehaviour
     {
-        public List<Button> buttons;
+        private List<Selectable> selectables;
 
-        public Button firstButtonToSelect;
-
-        private Button _lastButtonSelected;
-
-        private InputSystemUIInputModule _inputSystemUIInputModule;
+        public Selectable currentSelected;
 
         private void Awake()
         {
-            var eventSystem = EventSystem.current;
+            selectables = GetComponentsInChildren<Selectable>().ToList();
 
-            _inputSystemUIInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
-
-            _inputSystemUIInputModule.move.action.performed += (_) =>
-            {
-                if (eventSystem.currentSelectedGameObject == null)
-                {
-                    (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
-                }
-
-                if (eventSystem && eventSystem.currentSelectedGameObject)
-                {
-                    var button = eventSystem.currentSelectedGameObject.GetComponent<Button>();
-
-                    if (buttons.Contains(button))
-                    {
-                        _lastButtonSelected = eventSystem.currentSelectedGameObject.GetComponent<Button>();
-                    }
-                }
-            };
+            EventSystem.current.SetSelectedGameObject(selectables[0].gameObject);
         }
 
         private void OnEnable()
         {
-            if (CursorManager.Singleton)
-            {
-                CursorManager.Singleton.UnlockAndShowCursor();
-            }
+            DeviceManager.Singleton.OnDeviceTypeChanged += OnDeviceTypeChanged;
 
-            if (DeviceManager.Singleton && DeviceManager.Singleton.CurrentDeviceType != DeviceManager.DeviceType.Mouse)
-            {
-                (_lastButtonSelected ? _lastButtonSelected : firstButtonToSelect).Select();
-            }
+            EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : selectables[0]).gameObject);
         }
 
         private void OnDisable()
         {
-            if (CursorManager.Singleton)
+            DeviceManager.Singleton.OnDeviceTypeChanged -= OnDeviceTypeChanged;
+
+            if (!EventSystem.current) { return; }
+
+            var currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+
+            if (!currentSelectedGameObject) { return; }
+
+            currentSelected = currentSelectedGameObject.GetComponent<Selectable>();
+        }
+
+        private void OnDeviceTypeChanged(DeviceManager.DeviceType deviceType)
+        {
+            if (deviceType == DeviceManager.DeviceType.Mouse || deviceType == DeviceManager.DeviceType.Keyboard)
             {
-                CursorManager.Singleton.LockAndHideCursor();
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+            else
+            {
+                if (currentSelected)
+                {
+                    EventSystem.current.SetSelectedGameObject(currentSelected.gameObject);
+                }
+                else
+                {
+                    EventSystem.current.SetSelectedGameObject(selectables[0].gameObject);
+                }
             }
         }
     }
