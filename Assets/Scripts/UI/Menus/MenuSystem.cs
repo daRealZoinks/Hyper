@@ -13,15 +13,18 @@ namespace Hyper.UI.Menus
         public MenuScreen titleScreen;
 
         public Button backButton;
+        public Button selectButton;
 
         private void Awake()
         {
             PushMenuScreen(titleScreen);
 
-            EventSystem.current.GetComponent<InputSystemUIInputModule>().cancel.action.started += (_) =>
-            {
-                PopMenuScreen();
-            };
+            EventSystem.current.GetComponent<InputSystemUIInputModule>().cancel.action.started += _ => PopMenuScreen();
+        }
+
+        private void Update()
+        {
+            UpdateSelectButtonVisibility();
         }
 
         public void PushMenuScreen(MenuScreen menuScreen)
@@ -33,7 +36,7 @@ namespace Hyper.UI.Menus
             menuScreenStack.Push(menuScreen);
             menuScreen.gameObject.SetActive(true);
 
-            UpdateBackButton();
+            UpdateBackButtonVisibility();
         }
 
         public void PopMenuScreen()
@@ -46,10 +49,20 @@ namespace Hyper.UI.Menus
                 menuScreenStack.Peek().gameObject.SetActive(true);
             }
 
-            UpdateBackButton();
+            UpdateBackButtonVisibility();
         }
 
-        private void UpdateBackButton()
+        private void UpdateSelectButtonVisibility()
+        {
+            if (selectButton != null)
+            {
+                selectButton.gameObject.SetActive(EventSystem.current.currentSelectedGameObject && menuScreenStack.Count > 1 &&
+                    DeviceManager.Singleton.currentDeviceType != DeviceManager.DeviceType.Mouse &&
+                    DeviceManager.Singleton.currentDeviceType != DeviceManager.DeviceType.Keyboard);
+            }
+        }
+
+        private void UpdateBackButtonVisibility()
         {
             if (backButton != null)
             {

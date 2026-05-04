@@ -6,7 +6,7 @@ using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Switch;
 using UnityEngine.InputSystem.XInput;
 
-namespace Hyper.UI.Glyphs
+namespace Hyper.UI
 {
     public class DeviceManager : MonoBehaviour
     {
@@ -23,7 +23,7 @@ namespace Hyper.UI.Glyphs
 
         public event Action<DeviceType> OnDeviceTypeChanged;
 
-        private DeviceType currentDeviceType;
+        public DeviceType currentDeviceType;
 
         private PlayerInput playerInput;
 

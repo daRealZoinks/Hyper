@@ -1,4 +1,3 @@
-using Hyper.UI.Glyphs;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -48,7 +47,14 @@ namespace Hyper.UI.Menus
             }
             else
             {
-                EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : selectables[0]).gameObject);
+                if (currentSelected)
+                {
+                    EventSystem.current.SetSelectedGameObject(currentSelected.gameObject);
+                }
+                else
+                {
+                    EventSystem.current.SetSelectedGameObject(selectables[0].gameObject);
+                }
             }
         }
     }
