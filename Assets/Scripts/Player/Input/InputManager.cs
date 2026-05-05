@@ -1,4 +1,3 @@
-using Hyper.HyperBalls;
 using Hyper.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,7 +7,7 @@ namespace Hyper.Player.Input
     [RequireComponent(typeof(RigidbodyCharacterController))]
     public class InputManager : MonoBehaviour
     {
-        public ThrowBall throwBall;
+        public BallThrower ballThrower;
 
         public GrapplingGun grapplingGun;
 
@@ -71,7 +70,7 @@ namespace Hyper.Player.Input
         {
             if (context.started)
             {
-                throwBall.InstantiateAndThrowBall();
+                ballThrower.ThrowBall();
             }
         }
     }
