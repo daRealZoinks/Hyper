@@ -18,15 +18,15 @@ public class ThrowingBall : MonoBehaviour
     {
         _originPlayerTransform = originPlayerTransform;
         _targetPlayerTransform = targetPlayerTransform;
-        
+
         _startPoint = _originPlayerTransform.position;
-        
+
         var middlePoint = (_startPoint + _targetPlayerTransform.position) * 0.5f;
         var arcHeight = Mathf.Pow(operationBase, Vector3.Distance(_startPoint, _targetPlayerTransform.position) / influence) - 1;
         _controlPoint = middlePoint + Vector3.up * arcHeight;
-        
+
         _endPoint = _targetPlayerTransform.position;
-        
+
         _elapsedTime = 0f;
         _isMoving = true;
     }
@@ -52,16 +52,13 @@ public class ThrowingBall : MonoBehaviour
         if (t >= 1f)
         {
             _isMoving = false;
+            Destroy(gameObject);
         }
     }
 
     private Vector3 EvaluateBezier(float t)
     {
         // Quadratic bezier curve: B(t) = (1-t)²P0 + 2(1-t)tP1 + t²P2
-        float oneMinusT = 1f - t;
-        float oneMinusTSq = oneMinusT * oneMinusT;
-        float tSq = t * t;
-
-        return oneMinusTSq * _startPoint + 2f * oneMinusT * t * _controlPoint + tSq * _endPoint;
+        return Mathf.Pow(1-t, 2) * _startPoint + 2 * (1 - t) * t * _controlPoint + Mathf.Pow(t, 2) * _endPoint;
     }
 }
