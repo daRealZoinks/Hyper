@@ -2,63 +2,55 @@ using UnityEngine;
 
 public class ThrowingBall : MonoBehaviour
 {
-    public float operationBase = 1.08f;
-    public float influence = 1f;
-    public float duration = 1f; // Time to complete the throw arc
+    public float operationBase = 1.11f;
+    public float archByDistance = 1.5f;
+    public float ballTravelDurationBasedOnDistance = 0.04f;
 
     private Transform _originPlayerTransform;
     private Transform _targetPlayerTransform;
-    private float _elapsedTime = 0f;
-    private Vector3 _startPoint;
+
+    private float _duration;
+    private float _arcHeight;
+
+    private float _elapsedTime;
     private Vector3 _controlPoint;
-    private Vector3 _endPoint;
-    private bool _isMoving = false;
 
     public void Initialize(Transform originPlayerTransform, Transform targetPlayerTransform)
     {
         _originPlayerTransform = originPlayerTransform;
         _targetPlayerTransform = targetPlayerTransform;
 
-        _startPoint = _originPlayerTransform.position;
+        _duration = Vector3.Distance(_originPlayerTransform.position, _targetPlayerTransform.position) * ballTravelDurationBasedOnDistance;
 
-        var middlePoint = (_startPoint + _targetPlayerTransform.position) * 0.5f;
-        var arcHeight = Mathf.Pow(operationBase, Vector3.Distance(_startPoint, _targetPlayerTransform.position) / influence) - 1;
-        _controlPoint = middlePoint + Vector3.up * arcHeight;
-
-        _endPoint = _targetPlayerTransform.position;
+        _arcHeight = Mathf.Pow(operationBase, Vector3.Distance(_originPlayerTransform.position, _targetPlayerTransform.position) / archByDistance) - 1;
 
         _elapsedTime = 0f;
-        _isMoving = true;
     }
 
     private void Update()
     {
-        if (_targetPlayerTransform == null || !_isMoving)
+        if (_targetPlayerTransform == null)
         {
             return;
         }
 
+        var middlePoint = (_originPlayerTransform.position + _targetPlayerTransform.position) * 0.5f;
+
+        _controlPoint = middlePoint + Vector3.up * _arcHeight;
+
         _elapsedTime += Time.deltaTime;
-        float t = Mathf.Clamp01(_elapsedTime / duration);
+        var t = Mathf.Clamp01(_elapsedTime / _duration);
 
-        // Evaluate the quadratic bezier curve
-        Vector3 newPosition = EvaluateBezier(t);
-        transform.position = newPosition;
-
-        // Draw the bezier curve for debugging
-        Debug.DrawLine(_startPoint, _controlPoint, Color.red);
-        Debug.DrawLine(_controlPoint, _endPoint, Color.red);
+        transform.position = EvaluateBezier(t, _originPlayerTransform.position, _controlPoint, _targetPlayerTransform.position);
 
         if (t >= 1f)
         {
-            _isMoving = false;
             Destroy(gameObject);
         }
     }
 
-    private Vector3 EvaluateBezier(float t)
+    private Vector3 EvaluateBezier(float t, Vector3 p0, Vector3 p1, Vector3 p2)
     {
-        // Quadratic bezier curve: B(t) = (1-t)²P0 + 2(1-t)tP1 + t²P2
-        return Mathf.Pow(1-t, 2) * _startPoint + 2 * (1 - t) * t * _controlPoint + Mathf.Pow(t, 2) * _endPoint;
+        return Mathf.Pow(1 - t, 2) * p0 + 2 * (1 - t) * t * p1 + Mathf.Pow(t, 2) * p2;
     }
 }

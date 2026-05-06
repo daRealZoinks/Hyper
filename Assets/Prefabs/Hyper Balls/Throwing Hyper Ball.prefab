@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a62542f7daa6854fba055aef9d0bf93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Hyper.HyperBalls::ThrowingBall
-  operationBase: 1.08
-  influence: 1.5
+  operationBase: 1.11
+  archByDistance: 1.5
+  ballTravelDurationBasedOnDistance: 0.04
 --- !u!1 &7449632516526574396
 GameObject:
   m_ObjectHideFlags: 0
