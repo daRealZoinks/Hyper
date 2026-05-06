@@ -368,7 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac2c235ebcb6df40b0589e237076cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  throwBall: {fileID: 0}
+  ballThrower: {fileID: 0}
   grapplingGun: {fileID: 3879712569780585620}
 --- !u!114 &2907560510715554554
 MonoBehaviour:

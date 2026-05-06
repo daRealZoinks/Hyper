@@ -6,12 +6,13 @@ using UnityEngine;
 public class BallThrower : MonoBehaviour
 {
     public float maxDistance = 40f;
-    public float ballSpeed = 20f;
 
     public float cooldown = 15f;
     public float selectionBoxRatio = 0.75f;
 
     public LayerMask characterLayerMask;
+    public RigidbodyCharacterController characterController;
+    public ThrowingBall throwingBallPrefab;
 
     private float _cooldownCounter = 0f;
 
@@ -36,7 +37,7 @@ public class BallThrower : MonoBehaviour
 
     private void OnGUI()
     {
-        // draw text for the candidate grapple point
+        // draw text for the candidate character
         if (_candidate != null)
         {
             var screenPoint = _camera.WorldToScreenPoint(_candidate.transform.position);
@@ -138,6 +139,7 @@ public class BallThrower : MonoBehaviour
 
     private void ExecuteThrowBall()
     {
-        Debug.Log($"Throwing ball at {_candidate.name}");
+        var throwingBall = Instantiate(throwingBallPrefab);
+        throwingBall.Initialize(characterController.transform, _candidate.transform);
     }
 }

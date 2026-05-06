@@ -8,26 +8,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 790441312844195359, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_ControllerManager.Controllers.Array.data[1].InputValue
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.99520904
-      objectReference: {fileID: 0}
-    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.0712735
-      objectReference: {fileID: 0}
-    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.06675523
-      objectReference: {fileID: 0}
-    - target: {fileID: 868990745374200185, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.004780783
-      objectReference: {fileID: 0}
     - target: {fileID: 2917036558841039201, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: ballThrower
       value: 
@@ -35,14 +15,6 @@ PrefabInstance:
     - target: {fileID: 3902320517130395597, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 4138915955
-      objectReference: {fileID: 0}
-    - target: {fileID: 5321516086130265500, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: PanAxis.Value
-      value: -7.674914
-      objectReference: {fileID: 0}
-    - target: {fileID: 5321516086130265500, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: TiltAxis.Value
-      value: -8.192671
       objectReference: {fileID: 0}
     - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_LocalPosition.x
@@ -84,29 +56,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7180242893125300934, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_ControllerManager.Controllers.Array.data[1].InputValue
-      value: -0
-      objectReference: {fileID: 0}
     - target: {fileID: 8020874733183147571, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
       propertyPath: m_Name
       value: Base Player Throwing Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.99520904
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.0712735
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.06675523
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534265408217820089, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.004780783
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -116,6 +68,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4617032615118839872}
   m_SourcePrefab: {fileID: 100100000, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+--- !u!114 &4459720308391743525 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2907560510715554554, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 1566585390371863263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
 --- !u!1 &8209502823130173350 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7229300285507892601, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
@@ -140,3 +103,5 @@ MonoBehaviour:
   characterLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  characterController: {fileID: 4459720308391743525}
+  throwingBallPrefab: {fileID: 7839901477086085371, guid: 492bda45b4b5f734a8ccb888a435d413, type: 3}
