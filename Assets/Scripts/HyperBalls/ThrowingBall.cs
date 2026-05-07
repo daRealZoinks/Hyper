@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ThrowingBall : MonoBehaviour
@@ -5,6 +6,10 @@ public class ThrowingBall : MonoBehaviour
     public float arcHeightBase = 1.11f;
     public float arcHeightDistanceDivisor = 1.5f;
     public float travelTimePerDistance = 0.04f;
+
+    public bool shouldSpinHaveRandomRange = true;
+
+    public event Action<Rigidbody, Rigidbody, float> OnTargetHit;
 
     private const float MaxSpinAngleDegrees = 45f;
     private const float SpinAngleDistanceDivisor = 40f;
@@ -49,6 +54,31 @@ public class ThrowingBall : MonoBehaviour
         _isInitialized = true;
     }
 
+    private void CalculateSpinAxis(Vector3 throwDirection, float throwDistance)
+    {
+        var normalizedDirection = throwDirection.normalized;
+        var spinAngle = MaxSpinAngleDegrees * throwDistance / SpinAngleDistanceDivisor;
+
+        _randomSpinAngle = UnityEngine.Random.Range(-spinAngle, spinAngle);
+
+        if (!shouldSpinHaveRandomRange)
+        {
+            if (_randomSpinAngle < 0f)
+            {
+                _randomSpinAngle = -spinAngle;
+            }
+            else
+            {
+                _randomSpinAngle = spinAngle;
+            }
+        }
+
+        var perpendicularAxis = Vector3.Cross(normalizedDirection, _originPlayerTransform.right);
+
+        perpendicularAxis = perpendicularAxis.normalized;
+        _spinAxis = (Quaternion.AngleAxis(_randomSpinAngle, normalizedDirection) * perpendicularAxis).normalized;
+    }
+
     private void Update()
     {
         if (!_isInitialized || _originPlayerTransform == null || _targetPlayerTransform == null)
@@ -66,20 +96,9 @@ public class ThrowingBall : MonoBehaviour
 
         if (trajectoryCompletion >= 1f)
         {
+            InvokeOnHitEvent();
             Destroy(gameObject);
         }
-    }
-
-    private void CalculateSpinAxis(Vector3 throwDirection, float throwDistance)
-    {
-        var normalizedDirection = throwDirection.normalized;
-        var spinAngle = MaxSpinAngleDegrees * throwDistance / SpinAngleDistanceDivisor;
-        _randomSpinAngle = Random.Range(-spinAngle, spinAngle);
-
-        var perpendicularAxis = Vector3.Cross(normalizedDirection, _originPlayerTransform.right);
-
-        perpendicularAxis = perpendicularAxis.normalized;
-        _spinAxis = (Quaternion.AngleAxis(_randomSpinAngle, normalizedDirection) * perpendicularAxis).normalized;
     }
 
     private Vector3 EvaluateQuadraticBezier(float t, Vector3 p0, Vector3 p1, Vector3 p2)
@@ -89,5 +108,13 @@ public class ThrowingBall : MonoBehaviour
         var tSq = t * t;
 
         return oneMintTSq * p0 + 2f * oneMintT * t * p1 + tSq * p2;
+    }
+
+    private void InvokeOnHitEvent()
+    {
+        var originPlayerRigidbody = _originPlayerTransform.GetComponent<Rigidbody>();
+        var targetPlayerRigidbody = _targetPlayerTransform.GetComponent<Rigidbody>();
+
+        OnTargetHit?.Invoke(originPlayerRigidbody, targetPlayerRigidbody, _randomSpinAngle);
     }
 }
