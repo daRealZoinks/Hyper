@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Hyper.HyperBalls
 {
     [RequireComponent(typeof(HyperBall))]
-    public class TeleportingHyperBall : MonoBehaviour
+    public class TeleportingHyperBallPrototype : MonoBehaviour
     {
         private HyperBall _hyperBall;
 
