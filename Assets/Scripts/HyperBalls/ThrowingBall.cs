@@ -20,7 +20,7 @@ public class ThrowingBall : MonoBehaviour
 
     private bool _isInitialized;
 
-    void Start()
+    private void Start()
     {
         Destroy(gameObject, 5f);
     }
@@ -69,6 +69,7 @@ public class ThrowingBall : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     private void CalculateSpinAxis(Vector3 throwDirection, float throwDistance)
     {
         var normalizedDirection = throwDirection.normalized;
