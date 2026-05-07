@@ -2,70 +2,91 @@ using UnityEngine;
 
 public class ThrowingBall : MonoBehaviour
 {
-    public float operationBase = 1.11f;
-    public float archByDistance = 1.5f;
-    public float ballTravelDurationBasedOnDistance = 0.04f;
+    public float arcHeightBase = 1.11f;
+    public float arcHeightDistanceDivisor = 1.5f;
+    public float travelTimePerDistance = 0.04f;
+
+    private const float MaxSpinAngleDegrees = 45f;
+    private const float SpinAngleDistanceDivisor = 40f;
 
     private Transform _originPlayerTransform;
     private Transform _targetPlayerTransform;
 
-    private float _duration;
+    private float _trajectorDuration;
     private float _arcHeight;
-    private float _randomSpin;
+    private float _randomSpinAngle;
     private Vector3 _spinAxis;
-
     private float _elapsedTime;
-    private Vector3 _controlPoint;
+
+    private bool _isInitialized;
+
+    void Start()
+    {
+        Destroy(gameObject, 5f);
+    }
 
     public void Initialize(Transform originPlayerTransform, Transform targetPlayerTransform)
     {
+        if (originPlayerTransform == null || targetPlayerTransform == null)
+        {
+            Debug.LogError("ThrowingBall.Initialize: Origin or target transform is null.", this);
+            Destroy(gameObject);
+            return;
+        }
+
         _originPlayerTransform = originPlayerTransform;
         _targetPlayerTransform = targetPlayerTransform;
 
-        _duration = Vector3.Distance(_originPlayerTransform.position, _targetPlayerTransform.position) * ballTravelDurationBasedOnDistance;
+        var throwDirection = _targetPlayerTransform.position - _originPlayerTransform.position;
+        var throwDistance = throwDirection.magnitude;
 
-        _arcHeight = Mathf.Pow(operationBase, Vector3.Distance(_originPlayerTransform.position, _targetPlayerTransform.position) / archByDistance) - 1;
+        _trajectorDuration = throwDistance * travelTimePerDistance;
+        _arcHeight = Mathf.Pow(arcHeightBase, throwDistance / arcHeightDistanceDivisor) - 1f;
 
-        var spinAngle = 45f * Vector3.Distance(_originPlayerTransform.position, _targetPlayerTransform.position) / 40f;
-
-        _randomSpin = Random.Range(-spinAngle, spinAngle);
-
-        Vector3 direction = (_targetPlayerTransform.position - _originPlayerTransform.position).normalized;
-        Vector3 perpendicular = Vector3.Cross(direction, _originPlayerTransform.right);
-        if (perpendicular == Vector3.zero)
-        {
-            perpendicular = Vector3.Cross(direction, Vector3.right);
-        }
-        perpendicular = perpendicular.normalized;
-        _spinAxis = (Quaternion.AngleAxis(_randomSpin, direction) * perpendicular).normalized;
+        CalculateSpinAxis(throwDirection, throwDistance);
 
         _elapsedTime = 0f;
+        _isInitialized = true;
     }
 
     private void Update()
     {
-        if (_targetPlayerTransform == null)
+        if (!_isInitialized || _originPlayerTransform == null || _targetPlayerTransform == null)
         {
             return;
         }
 
-        var middlePoint = (_originPlayerTransform.position + _targetPlayerTransform.position) * 0.5f;
-
-        _controlPoint = middlePoint + _spinAxis * _arcHeight;
-
         _elapsedTime += Time.deltaTime;
-        var t = Mathf.Clamp01(_elapsedTime / _duration);
+        var trajectoryCompletion = Mathf.Clamp01(_elapsedTime / _trajectorDuration);
 
-        transform.position = EvaluateBezier(t, _originPlayerTransform.position, _controlPoint, _targetPlayerTransform.position);
+        var midpoint = (_originPlayerTransform.position + _targetPlayerTransform.position) * 0.5f;
+        var controlPoint = midpoint + _spinAxis * _arcHeight;
 
-        if (t >= 1f)
+        transform.position = EvaluateQuadraticBezier(trajectoryCompletion, _originPlayerTransform.position, controlPoint, _targetPlayerTransform.position);
+
+        if (trajectoryCompletion >= 1f)
         {
             Destroy(gameObject);
         }
     }
-
-    private Vector3 EvaluateBezier(float t, Vector3 p0, Vector3 p1, Vector3 p2)
+    private void CalculateSpinAxis(Vector3 throwDirection, float throwDistance)
     {
-        return Mathf.Pow(1 - t, 2) * p0 + 2 * (1 - t) * t * p1 + Mathf.Pow(t, 2) * p2;
+        var normalizedDirection = throwDirection.normalized;
+        var spinAngle = MaxSpinAngleDegrees * throwDistance / SpinAngleDistanceDivisor;
+        _randomSpinAngle = Random.Range(-spinAngle, spinAngle);
+
+        var perpendicularAxis = Vector3.Cross(normalizedDirection, _originPlayerTransform.right);
+
+        perpendicularAxis = perpendicularAxis.normalized;
+        _spinAxis = (Quaternion.AngleAxis(_randomSpinAngle, normalizedDirection) * perpendicularAxis).normalized;
+    }
+
+    private Vector3 EvaluateQuadraticBezier(float t, Vector3 p0, Vector3 p1, Vector3 p2)
+    {
+        var oneMintT = 1f - t;
+        var oneMintTSq = oneMintT * oneMintT;
+        var tSq = t * t;
+
+        return oneMintTSq * p0 + 2f * oneMintT * t * p1 + tSq * p2;
     }
 }
