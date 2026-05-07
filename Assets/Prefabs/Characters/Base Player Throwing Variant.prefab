@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1566585390371863263
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2917036558841039201, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: ballThrower
+      value: 
+      objectReference: {fileID: 4617032615118839872}
+    - target: {fileID: 3902320517130395597, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 58323480
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896176556011013896, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8020874733183147571, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      propertyPath: m_Name
+      value: Base Player Throwing Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7229300285507892601, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4617032615118839872}
+  m_SourcePrefab: {fileID: 100100000, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+--- !u!114 &4459720308391743525 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2907560510715554554, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 1566585390371863263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
+--- !u!1 &8209502823130173350 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7229300285507892601, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+  m_PrefabInstance: {fileID: 1566585390371863263}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4617032615118839872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8209502823130173350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c3a974dacb9e0a4ab7774cfa1543f93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  maxDistance: 40
+  cooldown: 15
+  selectionBoxRatio: 0.75
+  characterLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  characterController: {fileID: 4459720308391743525}
+  throwingBallPrefab: {fileID: 7839901477086085371, guid: 492bda45b4b5f734a8ccb888a435d413, type: 3}

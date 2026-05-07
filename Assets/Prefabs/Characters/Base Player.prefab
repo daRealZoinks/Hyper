@@ -368,7 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac2c235ebcb6df40b0589e237076cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  throwBall: {fileID: 6448816616791665718}
+  ballThrower: {fileID: 0}
   grapplingGun: {fileID: 3879712569780585620}
 --- !u!114 &2907560510715554554
 MonoBehaviour:
@@ -976,7 +976,6 @@ GameObject:
   - component: {fileID: 1917017277497305251}
   - component: {fileID: 4176342853401186312}
   - component: {fileID: 3879712569780585620}
-  - component: {fileID: 6448816616791665718}
   - component: {fileID: 1041967068057076251}
   m_Layer: 3
   m_Name: Camera
@@ -1156,24 +1155,6 @@ MonoBehaviour:
   ignoreThisWhenCheckingForGrapplePointsLayerMask:
     serializedVersion: 2
     m_Bits: 247
---- !u!114 &6448816616791665718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7229300285507892601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4baede48820bd474b9dbc25977960bc6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThrowBall
-  ShowTopMostFoldoutHeaderGroup: 1
-  hyperBallPrefab: {fileID: 0}
-  playerRigidbody: {fileID: 665804745902072558}
-  throwPoint: {fileID: 414082079559515901}
-  throwForce: 20
-  throwInterval: 1
 --- !u!120 &1041967068057076251
 LineRenderer:
   serializedVersion: 3
