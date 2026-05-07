@@ -11,6 +11,8 @@ public class ThrowingBall : MonoBehaviour
 
     private float _duration;
     private float _arcHeight;
+    private float _randomSpin;
+    private Vector3 _spinAxis;
 
     private float _elapsedTime;
     private Vector3 _controlPoint;
@@ -24,6 +26,19 @@ public class ThrowingBall : MonoBehaviour
 
         _arcHeight = Mathf.Pow(operationBase, Vector3.Distance(_originPlayerTransform.position, _targetPlayerTransform.position) / archByDistance) - 1;
 
+        var spinAngle = 45f * Vector3.Distance(_originPlayerTransform.position, _targetPlayerTransform.position) / 40f;
+
+        _randomSpin = Random.Range(-spinAngle, spinAngle);
+
+        Vector3 direction = (_targetPlayerTransform.position - _originPlayerTransform.position).normalized;
+        Vector3 perpendicular = Vector3.Cross(direction, _originPlayerTransform.right);
+        if (perpendicular == Vector3.zero)
+        {
+            perpendicular = Vector3.Cross(direction, Vector3.right);
+        }
+        perpendicular = perpendicular.normalized;
+        _spinAxis = (Quaternion.AngleAxis(_randomSpin, direction) * perpendicular).normalized;
+
         _elapsedTime = 0f;
     }
 
@@ -36,7 +51,7 @@ public class ThrowingBall : MonoBehaviour
 
         var middlePoint = (_originPlayerTransform.position + _targetPlayerTransform.position) * 0.5f;
 
-        _controlPoint = middlePoint + Vector3.up * _arcHeight;
+        _controlPoint = middlePoint + _spinAxis * _arcHeight;
 
         _elapsedTime += Time.deltaTime;
         var t = Mathf.Clamp01(_elapsedTime / _duration);
