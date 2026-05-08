@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Hyper.HyperBalls
 {
     [RequireComponent(typeof(HyperBall))]
-    public class YoyoHyperBall : MonoBehaviour
+    public class YoyoHyperBallPrototype : MonoBehaviour
     {
         public YoyoLine yoyoLinePrefab;
 
