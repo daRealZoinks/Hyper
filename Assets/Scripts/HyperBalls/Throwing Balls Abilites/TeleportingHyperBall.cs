@@ -8,7 +8,7 @@ public class TeleportingHyperBall : MonoBehaviour
         GetComponent<ThrowingBall>().OnTargetHit += ThrowingBall_OnTargetHit;
     }
 
-    private void ThrowingBall_OnTargetHit(Rigidbody origin, Rigidbody target, float arg3)
+    private void ThrowingBall_OnTargetHit(Rigidbody origin, Rigidbody target, float _)
     {
         (origin.position, target.position) = (target.position, origin.position);
     }
