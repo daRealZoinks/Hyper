@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(ThrowingBall))]
 public class YoyoHyperBall : MonoBehaviour
 {
     private void Start()
