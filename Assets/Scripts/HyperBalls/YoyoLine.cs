@@ -1,19 +1,56 @@
 using Hyper.Player;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Hyper.HyperBalls
 {
     public class YoyoLine : MonoBehaviour
     {
-        public float speed = 30f;
+        public float speed = 25f;
         public float rangeToDisengage = 3f;
         public float maxLifetime = 10f;
+
+        public float transitionDuration = 0.5f;
+
+        public float puttingPlayerInFrontOfTargetDuration = 0.2f;
+
         public LineRenderer lineRenderer;
 
-        public Vector3? TargetPoint { private get; set; } = null;
-        public RigidbodyCharacterController TargetCharacterController { private get; set; }
-        public Rigidbody OwningPlayerRigidbody { private get; set; }
+        public Rigidbody OwnerRigidbody
+        {
+            private get
+            {
+                return _ownerRigidbody;
+            }
+            set
+            {
+                _ownerRigidbody = value;
+                ownerRigidbodyCharacterController = _ownerRigidbody.GetComponent<RigidbodyCharacterController>();
+                StartGrappling();
+            }
+        }
+        public Rigidbody TargetRigidbody
+        {
+            private get
+            {
+                return _targetRigidbody;
+            }
+            set
+            {
+                _targetRigidbody = value;
+                targetRigidbodyCharacterController = _targetRigidbody.GetComponent<RigidbodyCharacterController>();
+                StartGrappling();
+            }
+        }
 
+        private float _transitionElapsedTime;
+        private bool _disengaging;
+
+        private RigidbodyCharacterController ownerRigidbodyCharacterController;
+        private RigidbodyCharacterController targetRigidbodyCharacterController;
+
+        private Rigidbody _ownerRigidbody;
+        private Rigidbody _targetRigidbody;
 
         private void Awake()
         {
@@ -22,58 +59,79 @@ namespace Hyper.HyperBalls
 
         private void LateUpdate()
         {
-            if (TargetPoint.HasValue)
+            if (TargetRigidbody)
             {
-                lineRenderer.SetPosition(0, TargetPoint.Value - transform.position);
-                lineRenderer.SetPosition(1, OwningPlayerRigidbody.position - transform.position);
-            }
-
-            if (TargetCharacterController)
-            {
-                var targetRigidbody = TargetCharacterController.GetComponent<Rigidbody>();
-                lineRenderer.SetPosition(0, targetRigidbody.position - transform.position);
-                lineRenderer.SetPosition(1, OwningPlayerRigidbody.position - transform.position);
+                lineRenderer.SetPosition(0, TargetRigidbody.position - transform.position);
+                lineRenderer.SetPosition(1, OwnerRigidbody.position - transform.position);
             }
         }
 
         private void FixedUpdate()
         {
-            if (TargetPoint.HasValue)
+            if (OwnerRigidbody && TargetRigidbody && !_disengaging)
             {
-                var owningPlayerRigidbodyCharacterController = OwningPlayerRigidbody.GetComponent<RigidbodyCharacterController>();
-                var toTarget = TargetPoint.Value - OwningPlayerRigidbody.position;
+                var toTarget = TargetRigidbody.position - OwnerRigidbody.position;
+
+                if (_transitionElapsedTime < transitionDuration)
+                {
+                    _transitionElapsedTime += Time.fixedDeltaTime;
+                }
+
+                var transitionProgress = Mathf.Clamp01(_transitionElapsedTime / transitionDuration);
 
                 if (toTarget.magnitude > rangeToDisengage)
                 {
-                    owningPlayerRigidbodyCharacterController.useGravity = false;
-                    OwningPlayerRigidbody.linearVelocity = toTarget.normalized * speed;
+                    OwnerRigidbody.linearVelocity = Vector3.Lerp(OwnerRigidbody.linearVelocity, toTarget.normalized * speed, transitionProgress);
+                    TargetRigidbody.linearVelocity = Vector3.Lerp(TargetRigidbody.linearVelocity, -toTarget.normalized * speed, transitionProgress);
                 }
                 else
                 {
-                    owningPlayerRigidbodyCharacterController.useGravity = true;
-                    Destroy(gameObject);
+                    Disengage();
                 }
             }
+        }
 
-            if (TargetCharacterController)
+        private void OnDestroy()
+        {
+            ownerRigidbodyCharacterController.useGravity = true;
+            targetRigidbodyCharacterController.useGravity = true;
+        }
+
+        private async void Disengage()
+        {
+            _disengaging = true;
+
+            lineRenderer.enabled = false;
+
+            var ownerInitialPosition = OwnerRigidbody.position;
+            var targetInitialPosition = TargetRigidbody.position;
+
+            var finalOwnerPosition = targetInitialPosition - (ownerInitialPosition - targetInitialPosition).normalized * 2;
+
+            var puttingPlayerInFrontOfTargetElapsedTime = 0f;
+
+            var ownerCapsuleCollider = ownerRigidbodyCharacterController.GetComponent<CapsuleCollider>();
+            ownerCapsuleCollider.enabled = false;
+
+            while (puttingPlayerInFrontOfTargetElapsedTime < puttingPlayerInFrontOfTargetDuration)
             {
-                var owningPlayerRigidbodyCharacterController = OwningPlayerRigidbody.GetComponent<RigidbodyCharacterController>();
-                var targetRigidbody = TargetCharacterController.GetComponent<Rigidbody>();
-                var toTarget = targetRigidbody.position - OwningPlayerRigidbody.position;
+                puttingPlayerInFrontOfTargetElapsedTime += Time.deltaTime;
+                var t = Mathf.Clamp01(puttingPlayerInFrontOfTargetElapsedTime / puttingPlayerInFrontOfTargetDuration);
+                OwnerRigidbody.position = Vector3.Lerp(ownerInitialPosition, finalOwnerPosition, t);
+                await Task.Yield();
+            }
 
-                if (toTarget.magnitude > rangeToDisengage)
-                {
-                    owningPlayerRigidbodyCharacterController.useGravity = false;
-                    TargetCharacterController.useGravity = false;
-                    OwningPlayerRigidbody.linearVelocity = toTarget.normalized * speed;
-                    targetRigidbody.linearVelocity = -toTarget.normalized * speed;
-                }
-                else
-                {
-                    owningPlayerRigidbodyCharacterController.useGravity = true;
-                    TargetCharacterController.useGravity = true;
-                    Destroy(gameObject);
-                }
+            ownerCapsuleCollider.enabled = true;
+
+            Destroy(gameObject);
+        }
+
+        private void StartGrappling()
+        {
+            if (ownerRigidbodyCharacterController && targetRigidbodyCharacterController)
+            {
+                ownerRigidbodyCharacterController.useGravity = false;
+                targetRigidbodyCharacterController.useGravity = false;
             }
         }
     }
