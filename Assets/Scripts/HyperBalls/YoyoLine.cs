@@ -113,12 +113,15 @@ namespace Hyper.HyperBalls
             var ownerCapsuleCollider = ownerRigidbodyCharacterController.GetComponent<CapsuleCollider>();
             ownerCapsuleCollider.enabled = false;
 
-            while (puttingPlayerInFrontOfTargetElapsedTime < puttingPlayerInFrontOfTargetDuration)
+            if (!Physics.Raycast(targetInitialPosition, (finalOwnerPosition - targetInitialPosition).normalized, out _, (finalOwnerPosition - targetInitialPosition).magnitude))
             {
-                puttingPlayerInFrontOfTargetElapsedTime += Time.deltaTime;
-                var t = Mathf.Clamp01(puttingPlayerInFrontOfTargetElapsedTime / puttingPlayerInFrontOfTargetDuration);
-                OwnerRigidbody.position = Vector3.Lerp(ownerInitialPosition, finalOwnerPosition, t);
-                await Task.Yield();
+                while (puttingPlayerInFrontOfTargetElapsedTime < puttingPlayerInFrontOfTargetDuration)
+                {
+                    puttingPlayerInFrontOfTargetElapsedTime += Time.deltaTime;
+                    var t = Mathf.Clamp01(puttingPlayerInFrontOfTargetElapsedTime / puttingPlayerInFrontOfTargetDuration);
+                    OwnerRigidbody.position = Vector3.Lerp(ownerInitialPosition, finalOwnerPosition, t);
+                    await Task.Yield();
+                }
             }
 
             ownerCapsuleCollider.enabled = true;
