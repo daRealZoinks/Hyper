@@ -130,7 +130,7 @@ PrefabInstance:
     - target: {fileID: 230284506121091019, guid: 4d4a3a4731d14384594dd03bb855a0d7, type: 3}
       propertyPath: playerNetworkObject
       value: 
-      objectReference: {fileID: 4109542464219842200, guid: cca22b54cd49caa43be9912036f023b6, type: 3}
+      objectReference: {fileID: 7138914839195268682, guid: bf9e5805031ed1544a8eee58edd10cee, type: 3}
     - target: {fileID: 4938810793255806061, guid: 4d4a3a4731d14384594dd03bb855a0d7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

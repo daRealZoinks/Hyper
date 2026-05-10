@@ -9,12 +9,13 @@ public class ThrowingBall : MonoBehaviour
 
     public bool shouldSpinHaveRandomRange = true;
 
+    public Transform OriginPlayerTransform { get; private set; }
+
     public event Action<Rigidbody, Rigidbody, float> OnTargetHit;
 
     private const float MaxSpinAngleDegrees = 45f;
     private const float SpinAngleDistanceDivisor = 40f;
 
-    private Transform _originPlayerTransform;
     private Transform _targetPlayerTransform;
 
     private float _trajectorDuration;
@@ -39,10 +40,10 @@ public class ThrowingBall : MonoBehaviour
             return;
         }
 
-        _originPlayerTransform = originPlayerTransform;
+        this.OriginPlayerTransform = originPlayerTransform;
         _targetPlayerTransform = targetPlayerTransform;
 
-        var throwDirection = _targetPlayerTransform.position - _originPlayerTransform.position;
+        var throwDirection = _targetPlayerTransform.position - this.OriginPlayerTransform.position;
         var throwDistance = throwDirection.magnitude;
 
         _trajectorDuration = throwDistance * travelTimePerDistance;
@@ -73,7 +74,7 @@ public class ThrowingBall : MonoBehaviour
             }
         }
 
-        var perpendicularAxis = Vector3.Cross(normalizedDirection, _originPlayerTransform.right);
+        var perpendicularAxis = Vector3.Cross(normalizedDirection, OriginPlayerTransform.right);
 
         perpendicularAxis = perpendicularAxis.normalized;
         _spinAxis = (Quaternion.AngleAxis(_randomSpinAngle, normalizedDirection) * perpendicularAxis).normalized;
@@ -81,7 +82,7 @@ public class ThrowingBall : MonoBehaviour
 
     private void Update()
     {
-        if (!_isInitialized || _originPlayerTransform == null || _targetPlayerTransform == null)
+        if (!_isInitialized || OriginPlayerTransform == null || _targetPlayerTransform == null)
         {
             return;
         }
@@ -89,10 +90,10 @@ public class ThrowingBall : MonoBehaviour
         _elapsedTime += Time.deltaTime;
         var trajectoryCompletion = Mathf.Clamp01(_elapsedTime / _trajectorDuration);
 
-        var midpoint = (_originPlayerTransform.position + _targetPlayerTransform.position) * 0.5f;
+        var midpoint = (OriginPlayerTransform.position + _targetPlayerTransform.position) * 0.5f;
         var controlPoint = midpoint + _spinAxis * _arcHeight;
 
-        transform.position = EvaluateQuadraticBezier(trajectoryCompletion, _originPlayerTransform.position, controlPoint, _targetPlayerTransform.position);
+        transform.position = EvaluateQuadraticBezier(trajectoryCompletion, OriginPlayerTransform.position, controlPoint, _targetPlayerTransform.position);
 
         if (trajectoryCompletion >= 1f)
         {
@@ -112,7 +113,7 @@ public class ThrowingBall : MonoBehaviour
 
     private void InvokeOnHitEvent()
     {
-        var originPlayerRigidbody = _originPlayerTransform.GetComponent<Rigidbody>();
+        var originPlayerRigidbody = OriginPlayerTransform.GetComponent<Rigidbody>();
         var targetPlayerRigidbody = _targetPlayerTransform.GetComponent<Rigidbody>();
 
         OnTargetHit?.Invoke(originPlayerRigidbody, targetPlayerRigidbody, _randomSpinAngle);

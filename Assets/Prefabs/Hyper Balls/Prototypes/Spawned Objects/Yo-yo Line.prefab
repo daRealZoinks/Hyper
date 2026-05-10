@@ -154,8 +154,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b69a84bc3ed001c4d8e3cf428e6c248a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Hyper.Player::Hyper.Player.YoyoLine
-  speed: 30
+  m_EditorClassIdentifier: Hyper.HyperBalls::Hyper.HyperBalls.YoyoLine
+  speed: 25
   rangeToDisengage: 3
   maxLifetime: 10
+  transitionDuration: 0.5
+  puttingPlayerInFrontOfTargetDuration: 0.2
   lineRenderer: {fileID: 3476975570177047909}
