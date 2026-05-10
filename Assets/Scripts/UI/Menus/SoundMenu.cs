@@ -12,21 +12,35 @@ public class SoundMenu : MonoBehaviour
     public AudioMixerGroup musicMixerGroup;
     public AudioMixerGroup sfxMixerGroup;
 
-    const float MinDb = -80f;
+    private const float MinDb = -80f;
+
+    private void Start()
+    {
+        var masterVolume = PlayerPrefs.GetFloat("MasterVolume", 20f);
+        var musicVolume = PlayerPrefs.GetFloat("MusicVolume", 20f);
+        var sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 20f);
+
+        masterVolumeSlider.value = masterVolume;
+        musicVolumeSlider.value = musicVolume;
+        sfxVolumeSlider.value = sfxVolume;
+    }
 
     public void UpdateMasterVolume(float value)
     {
         masterMixerGroup.audioMixer.SetFloat("MasterVolume", ConvertSliderToDb(value));
+        PlayerPrefs.SetFloat("MasterVolume", value);
     }
 
     public void UpdateMusicVolume(float value)
     {
         musicMixerGroup.audioMixer.SetFloat("MusicVolume", ConvertSliderToDb(value));
+        PlayerPrefs.SetFloat("MusicVolume", value);
     }
 
     public void UpdateSFXVolume(float value)
     {
         sfxMixerGroup.audioMixer.SetFloat("SFXVolume", ConvertSliderToDb(value));
+        PlayerPrefs.SetFloat("SFXVolume", value);
     }
 
     private float ConvertSliderToDb(float sliderValue)
