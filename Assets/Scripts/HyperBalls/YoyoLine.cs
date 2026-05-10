@@ -113,7 +113,7 @@ namespace Hyper.HyperBalls
             var ownerCapsuleCollider = ownerRigidbodyCharacterController.GetComponent<CapsuleCollider>();
             ownerCapsuleCollider.enabled = false;
 
-            if (!Physics.Raycast(targetInitialPosition, (finalOwnerPosition - targetInitialPosition).normalized, out _, (finalOwnerPosition - targetInitialPosition).magnitude))
+            if (!Physics.Raycast(targetInitialPosition, (ownerInitialPosition - targetInitialPosition).normalized, Vector3.Distance(targetInitialPosition, ownerInitialPosition)))
             {
                 while (puttingPlayerInFrontOfTargetElapsedTime < puttingPlayerInFrontOfTargetDuration)
                 {
