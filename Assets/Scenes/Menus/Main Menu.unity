@@ -5468,7 +5468,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 963717298}
-  - component: {fileID: 963717299}
   - component: {fileID: 963717300}
   - component: {fileID: 963717303}
   - component: {fileID: 963717304}
@@ -5498,28 +5497,8 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -370, y: -270}
-  m_SizeDelta: {x: 363.292, y: 34.18289}
+  m_SizeDelta: {x: 392.7502, y: 34.1829}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &963717299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963717297}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
-  m_IgnoreLayout: 1
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &963717300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5541,7 +5520,7 @@ MonoBehaviour:
   m_Spacing: 25
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -6476,6 +6455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7b7d4c2029dba14d94fba63226d2dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  currentDeviceType: 0
 --- !u!1 &1112357137
 GameObject:
   m_ObjectHideFlags: 0
@@ -6610,7 +6590,6 @@ GameObject:
   - component: {fileID: 1115484048}
   - component: {fileID: 1115484047}
   - component: {fileID: 1115484050}
-  - component: {fileID: 1115484051}
   m_Layer: 5
   m_Name: Select Button
   m_TagString: Untagged
@@ -6750,20 +6729,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1115484051
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1115484045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
-  m_HorizontalFit: 1
-  m_VerticalFit: 0
 --- !u!1 &1131798626
 GameObject:
   m_ObjectHideFlags: 0
@@ -9115,10 +9080,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1356510247}
   - component: {fileID: 1356510250}
-  - component: {fileID: 1356510251}
   - component: {fileID: 1356510249}
   - component: {fileID: 1356510248}
-  - component: {fileID: 1356510252}
+  - component: {fileID: 1356510251}
   m_Layer: 5
   m_Name: Back Button
   m_TagString: Untagged
@@ -9270,20 +9234,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1356510252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356510246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
-  m_HorizontalFit: 1
-  m_VerticalFit: 0
 --- !u!1 &1393117767
 GameObject:
   m_ObjectHideFlags: 0
