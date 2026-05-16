@@ -1,43 +1,86 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Selector : MonoBehaviour
+namespace Hyper.UI
 {
-    public Button leftButton;
-    public Button rightButton;
-    public TextMeshProUGUI textMeshPro;
-
-    public List<string> options = new() { "Option A", "Option B", "Option C" };
-    private int currentIndex = 0;
-
-    public void LeftButton()
+    public class Selector<T> : MonoBehaviour
     {
-        currentIndex--;
+        public Button leftButton;
+        public Button rightButton;
+        public TextMeshProUGUI textMeshPro;
 
-        if (currentIndex < 0)
+        public List<T> options = new();
+
+        public event Action<T> OnSelectionChanged;
+
+        public T CurrentValue => options.Count > 0 ? options[CurrentIndex] : default;
+        public int CurrentIndex { get; private set; } = 0;
+
+        private void OnEnable()
         {
-            currentIndex = options.Count - 1;
+            leftButton.onClick.AddListener(LeftButton);
+            rightButton.onClick.AddListener(RightButton);
         }
 
-        textMeshPro.text = options[currentIndex];
-    }
-
-    public void RightButton()
-    {
-        currentIndex++;
-
-        if (currentIndex >= options.Count)
+        private void OnDisable()
         {
-            currentIndex = 0;
+            leftButton.onClick.RemoveListener(LeftButton);
+            rightButton.onClick.RemoveListener(RightButton);
         }
 
-        textMeshPro.text = options[currentIndex];
-    }
+        private void Start()
+        {
+            if (options.Count == 0)
+            {
+                Debug.LogWarning($"Selector on {gameObject.name} has no options configured", this);
+                return;
+            }
 
-    private void Start()
-    {
-        textMeshPro.text = options[currentIndex];
+            UpdateDisplay();
+        }
+
+        public void LeftButton()
+        {
+            if (options.Count == 0) return;
+
+            CurrentIndex = (CurrentIndex - 1 + options.Count) % options.Count;
+            UpdateDisplay();
+        }
+
+        public void RightButton()
+        {
+            if (options.Count == 0) return;
+
+            CurrentIndex = (CurrentIndex + 1) % options.Count;
+            UpdateDisplay();
+        }
+
+        public void SetValue(T value)
+        {
+            int index = options.IndexOf(value);
+            if (index >= 0)
+            {
+                CurrentIndex = index;
+                UpdateDisplay();
+            }
+        }
+
+        public void SetIndex(int index)
+        {
+            if (index >= 0 && index < options.Count)
+            {
+                CurrentIndex = index;
+                UpdateDisplay();
+            }
+        }
+
+        private void UpdateDisplay()
+        {
+            textMeshPro.text = CurrentValue?.ToString() ?? "";
+            OnSelectionChanged?.Invoke(CurrentValue);
+        }
     }
 }
