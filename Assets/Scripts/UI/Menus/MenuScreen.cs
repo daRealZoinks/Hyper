@@ -30,13 +30,15 @@ namespace Hyper.UI.Menus
         {
             DeviceManager.Singleton.OnDeviceTypeChanged -= OnDeviceTypeChanged;
 
-            if (!EventSystem.current) { return; }
+            if (EventSystem.current)
+            {
+                var currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
 
-            var currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-
-            if (!currentSelectedGameObject) { return; }
-
-            currentSelected = currentSelectedGameObject.GetComponent<Selectable>();
+                if (currentSelectedGameObject)
+                {
+                    currentSelected = currentSelectedGameObject.GetComponent<Selectable>();
+                }
+            }
         }
 
         private void OnDeviceTypeChanged(DeviceManager.DeviceType deviceType)

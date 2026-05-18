@@ -6,25 +6,27 @@ using UnityEngine.UI;
 
 namespace Hyper.UI.Menus
 {
+    [RequireComponent(typeof(GameSettingsManager))]
     public class MenuSystem : MonoBehaviour
     {
-        private readonly Stack<MenuScreen> menuScreenStack = new();
-
         public MenuScreen titleScreen;
+        public MenuScreen singlePlayerCharacterMenuScreen;
 
         public Button backButton;
         public Button selectButton;
+
+        private readonly Stack<MenuScreen> menuScreenStack = new();
+        private GameSettingsManager _gameSettingsManager;
 
         private void Awake()
         {
             PushMenuScreen(titleScreen);
 
-            EventSystem.current.GetComponent<InputSystemUIInputModule>().cancel.action.started += _ => PopMenuScreen();
-        }
+            _gameSettingsManager = GetComponent<GameSettingsManager>();
 
-        private void Update()
-        {
-            UpdateSelectButtonVisibility();
+            EventSystem.current.GetComponent<InputSystemUIInputModule>().cancel.action.started += _ => PopMenuScreen();
+
+            DeviceManager.Singleton.OnDeviceTypeChanged += UpdateSelectButtonVisibility;
         }
 
         public void PushMenuScreen(MenuScreen menuScreen)
@@ -37,6 +39,7 @@ namespace Hyper.UI.Menus
             menuScreen.gameObject.SetActive(true);
 
             UpdateBackButtonVisibility();
+            UpdateSelectButtonVisibility(DeviceManager.Singleton.currentDeviceType);
         }
 
         public void PopMenuScreen()
@@ -50,14 +53,29 @@ namespace Hyper.UI.Menus
             }
 
             UpdateBackButtonVisibility();
+            UpdateSelectButtonVisibility(DeviceManager.Singleton.currentDeviceType);
         }
 
-        private void UpdateSelectButtonVisibility()
+        public void GameModeSelected()
+        {
+            switch (_gameSettingsManager.networkMode)
+            {
+                case GameSettingsManager.NetworkMode.SinglePlayer:
+                    PushMenuScreen(singlePlayerCharacterMenuScreen);
+                    break;
+                case GameSettingsManager.NetworkMode.LocalMultiplayer:
+                    break;
+                case GameSettingsManager.NetworkMode.Online:
+                    break;
+            }
+        }
+
+        private void UpdateSelectButtonVisibility(DeviceManager.DeviceType deviceType)
         {
             if (selectButton != null)
             {
-                var isCurrentDeviceMouse = DeviceManager.Singleton.currentDeviceType == DeviceManager.DeviceType.Mouse;
-                var isCurrentDeviceKeyboard = DeviceManager.Singleton.currentDeviceType == DeviceManager.DeviceType.Keyboard;
+                var isCurrentDeviceMouse = deviceType == DeviceManager.DeviceType.Mouse;
+                var isCurrentDeviceKeyboard = deviceType == DeviceManager.DeviceType.Keyboard;
 
                 if (isCurrentDeviceMouse || isCurrentDeviceKeyboard)
                 {
@@ -65,10 +83,7 @@ namespace Hyper.UI.Menus
                 }
                 else
                 {
-                    if (EventSystem.current.currentSelectedGameObject)
-                    {
-                        selectButton.gameObject.SetActive(menuScreenStack.Count > 1);
-                    }
+                    selectButton.gameObject.SetActive(menuScreenStack.Count > 1);
                 }
             }
         }
