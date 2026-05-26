@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Hyper.UI.Menus
 {
-    public class CharacterSelectScreen : MonoBehaviour
+    public class SinglePlayerCharacterSelectScreen : MonoBehaviour
     {
         public Image characterProfilePicture;
         public TextMeshProUGUI characterName;
