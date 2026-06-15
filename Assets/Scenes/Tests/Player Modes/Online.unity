@@ -170,7 +170,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 119175072}
-    PlayerPrefab: {fileID: 8020874733183147571, guid: 9bee82ddb0a2e8f4fac3bcdb85ec5d87, type: 3}
+    PlayerPrefab: {fileID: 8859282015789769964, guid: 27b903fe51365164ca41ff3df87b6181, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 87b058ff63b8997429ff83884191a14f, type: 2}
@@ -221,7 +221,9 @@ MonoBehaviour:
   ConnectionData:
     Address: 127.0.0.1
     Port: 7777
+    WebSocketPath: /
     ServerListenAddress: 127.0.0.1
+    ClientBindPort: 0
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
@@ -238,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62380725a3c51be4f8b74c5a7025a974, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  mapInfo: {fileID: 11400000, guid: eebc0ce80382d5343a5dc62ffc8252c6, type: 2}
 --- !u!114 &119175074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,7 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Multiplayer.Tools.NetworkSimulator.Runtime::Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulator
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 8726098285628751967
+    rid: 3053941174037119212
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 0
@@ -262,7 +265,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 8726098285628751967
+    - rid: 3053941174037119212
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
         <Name>k__BackingField: None

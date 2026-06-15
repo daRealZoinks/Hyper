@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Hyper.UI.Menus
+namespace Hyper.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "HyperCharacterInfo", menuName = "ScriptableObjects/HyperCharacterInfo", order = 1)]
     public class HyperCharacterInfo : ScriptableObject

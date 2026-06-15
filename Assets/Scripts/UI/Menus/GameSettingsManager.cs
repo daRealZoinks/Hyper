@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Hyper.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
