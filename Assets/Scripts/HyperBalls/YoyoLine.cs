@@ -93,8 +93,8 @@ namespace Hyper.HyperBalls
 
         private void OnDestroy()
         {
-            ownerRigidbodyCharacterController.useGravity = true;
-            targetRigidbodyCharacterController.useGravity = true;
+            ownerRigidbodyCharacterController.UseGravity = true;
+            targetRigidbodyCharacterController.UseGravity = true;
         }
 
         private async void Disengage()
@@ -133,8 +133,8 @@ namespace Hyper.HyperBalls
         {
             if (ownerRigidbodyCharacterController && targetRigidbodyCharacterController)
             {
-                ownerRigidbodyCharacterController.useGravity = false;
-                targetRigidbodyCharacterController.useGravity = false;
+                ownerRigidbodyCharacterController.UseGravity = false;
+                targetRigidbodyCharacterController.UseGravity = false;
             }
         }
     }

@@ -382,36 +382,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
-  acceleration: 90
-  topSpeed: 13
-  deceleration: 180
-  airControl: 0.25
-  airBreak: 0
-  jumpHeight: 2
-  coyoteTime: 0.15
-  jumpBufferTime: 0.15
-  wallRunDetectionAngleThreshold: 0.9
-  wallStickForce: 7
-  wallRunLandBoost: 2
-  wallRunGravityResistanceForce: 10
-  wallJumpAngleFromWallNormal: 25
-  wallJumpHeight: 1.5
-  wallJumpBoost: 1
-  slidingDownForce: 5
-  slidingTurnSpeed: 0.2
-  slidingCapsuleColliderHeight: 1
-  slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
-  slidingCameraTrackingTargetPosition: {x: 0, y: 0.5, z: 0}
-  frontWallDetectionAngleThreshold: 0.9
-  maxMantleDuration: 0.35
-  mantleBoost: 2
-  wallClimbMaxHeight: 4
-  useGravity: 1
-  gravityScale: 1.5
-  slopeLimit: 45
-  groundCheckLayerMask:
+  <Acceleration>k__BackingField: 90
+  <TopSpeed>k__BackingField: 13
+  <Deceleration>k__BackingField: 180
+  <AirControl>k__BackingField: 0.25
+  <AirBreak>k__BackingField: 0
+  <JumpHeight>k__BackingField: 2
+  <CoyoteTime>k__BackingField: 0.15
+  <JumpBufferTime>k__BackingField: 0.15
+  <WallRunDetectionAngleThreshold>k__BackingField: 0.9
+  <WallStickForce>k__BackingField: 7
+  <WallRunLandBoost>k__BackingField: 2
+  <WallRunGravityResistanceForce>k__BackingField: 10
+  <WallJumpAngleFromWallNormal>k__BackingField: 25
+  <WallJumpHeight>k__BackingField: 1.5
+  <WallJumpBoost>k__BackingField: 1
+  <SlidingDownForce>k__BackingField: 5
+  <SlidingTurnSpeed>k__BackingField: 0.2
+  <SlidingCapsuleColliderHeight>k__BackingField: 1
+  <SlidingCapsuleColliderCenter>k__BackingField: {x: 0, y: 0.5, z: 0}
+  <SlidingCameraTrackingTargetPosition>k__BackingField: {x: 0, y: 0.5, z: 0}
+  <FrontWallDetectionAngleThreshold>k__BackingField: 0.9
+  <MaxMantleDuration>k__BackingField: 0.35
+  <MantleBoost>k__BackingField: 2
+  <WallClimbMaxHeight>k__BackingField: 4
+  <UseGravity>k__BackingField: 1
+  <GravityScale>k__BackingField: 1.5
+  <SlopeLimit>k__BackingField: 45
+  <GroundCheckLayerMask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 0
   OnLanded:
     m_PersistentCalls:
       m_Calls:
@@ -451,8 +451,8 @@ MonoBehaviour:
   OnWallClimb:
     m_PersistentCalls:
       m_Calls: []
-  _camera: {fileID: 7681188787058825366}
-  _cameraTrackingTarget: {fileID: 6216556272576259190}
+  camera: {fileID: 7681188787058825366}
+  cameraTrackingTarget: {fileID: 6216556272576259190}
   _isWallRunningOnRightWall: 0
   _isWallRunningOnLeftWall: 0
 --- !u!114 &451494572285065196
@@ -1403,7 +1403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3643188166
+  GlobalObjectIdHash: 3469513237
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

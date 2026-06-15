@@ -27,7 +27,7 @@ public class CameraBobbingManager : MonoBehaviour
                 z = rigidbody.linearVelocity.z
             };
 
-            var speed = rigidbodyHorizontalVelocity.magnitude / rigidbodyCharacterController.topSpeed;
+            var speed = rigidbodyHorizontalVelocity.magnitude / rigidbodyCharacterController.TopSpeed;
             intensity = Mathf.Clamp(speed, 0f, 1f);
         }
 
