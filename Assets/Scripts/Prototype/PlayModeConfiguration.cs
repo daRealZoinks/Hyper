@@ -1,12 +1,12 @@
+using Hyper.ScriptableObjects;
 using Unity.Multiplayer;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayModeConfiguration : MonoBehaviour
 {
-    public SceneAsset sceneAsset;
+    public MapInfo mapInfo;
 
     private void Awake()
     {
@@ -14,7 +14,7 @@ public class PlayModeConfiguration : MonoBehaviour
         {
             if (MultiplayerRolesManager.ActiveMultiplayerRoleMask.HasFlag(MultiplayerRoleFlags.Server))
             {
-                NetworkManager.Singleton.SceneManager.LoadScene(sceneAsset.name, LoadSceneMode.Additive);
+                NetworkManager.Singleton.SceneManager.LoadScene(mapInfo.mapScene.name, LoadSceneMode.Additive);
             }
         };
     }

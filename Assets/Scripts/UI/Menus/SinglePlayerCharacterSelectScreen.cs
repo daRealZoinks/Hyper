@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Hyper.ScriptableObjects;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
