@@ -1,5 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Cinemachine;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,14 +9,14 @@ namespace Hyper.Player
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class RigidbodyCharacterController : MonoBehaviour
+    public class RigidbodyCharacterController : NetworkBehaviour
     {
         [field: Header("Movement Settings")]
         [field: SerializeField] public float Acceleration { get; private set; } = 90f;
         [field: SerializeField] public float TopSpeed { get; private set; } = 13f;
         [field: SerializeField] public float Deceleration { get; private set; } = 180f;
-        [field: SerializeField] public float AirControl { get; private set; } = 0.25f;
-        [field: SerializeField] public float AirBreak { get; private set; } = 0f;
+        [field: SerializeField][field: Range(0f, 1f)] public float AirControl { get; private set; } = 0.25f;
+        [field: SerializeField][field: Range(0f, 1f)] public float AirBreak { get; private set; } = 0f;
 
         [field: Header("Jump Settings")]
         [field: SerializeField] public float JumpHeight { get; private set; } = 2f;
@@ -68,8 +70,7 @@ namespace Hyper.Player
         public UnityEvent OnWallClimb;
 
         [Header("References")]
-        [SerializeField] private new Camera camera;
-        [SerializeField] private Transform cameraTrackingTarget;
+        [SerializeField] private CinemachineCamera cinemachineCamera;
 
         public Vector2 MoveInput { private get; set; }
         public bool Sliding { private get; set; }
@@ -136,7 +137,7 @@ namespace Hyper.Player
 
         private void Start()
         {
-            _cameraTrackingTargetOriginalPosition = cameraTrackingTarget.localPosition;
+            _cameraTrackingTargetOriginalPosition = cinemachineCamera.Target.TrackingTarget.localPosition;
 
             _capsuleColliderOriginalHeight = _capsuleCollider.height;
             _capsuleColliderOriginalCenter = _capsuleCollider.center;
@@ -188,6 +189,15 @@ namespace Hyper.Player
                 ApplyWallRunGravityResistanceForce();
                 ApplyWallStickForce();
             }
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            NetworkManager.NetworkTickSystem.Tick += NetworkTickSystem_Tick;
+        }
+
+        private void NetworkTickSystem_Tick()
+        {
         }
 
         private void GroundCheck()
@@ -424,7 +434,7 @@ namespace Hyper.Player
 
         private void UpdateRotationBasedOnCamera()
         {
-            var cameraYaw = camera.transform.rotation.eulerAngles.y;
+            var cameraYaw = cinemachineCamera.transform.rotation.eulerAngles.y;
             _rigidbody.rotation = Quaternion.Euler(0f, cameraYaw, 0f);
         }
 
@@ -605,14 +615,14 @@ namespace Hyper.Player
         private void StartSliding()
         {
             IsSliding = true;
-            cameraTrackingTarget.localPosition = SlidingCameraTrackingTargetPosition;
+            cinemachineCamera.Target.TrackingTarget.localPosition = SlidingCameraTrackingTargetPosition;
             _capsuleCollider.height = SlidingCapsuleColliderHeight;
             _capsuleCollider.center = SlidingCapsuleColliderCenter;
         }
 
         private void StopSliding()
         {
-            cameraTrackingTarget.localPosition = _cameraTrackingTargetOriginalPosition;
+            cinemachineCamera.Target.TrackingTarget.localPosition = _cameraTrackingTargetOriginalPosition;
             _capsuleCollider.height = _capsuleColliderOriginalHeight;
             _capsuleCollider.center = _capsuleColliderOriginalCenter;
             IsSliding = false;

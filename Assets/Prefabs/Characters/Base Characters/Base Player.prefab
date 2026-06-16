@@ -106,7 +106,6 @@ GameObject:
   - component: {fileID: 2907560510715554554}
   - component: {fileID: 451494572285065196}
   - component: {fileID: 9120795128593380099}
-  - component: {fileID: 8582168105653550514}
   - component: {fileID: 670716625378304606}
   m_Layer: 3
   m_Name: Player
@@ -382,6 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
+  ShowTopMostFoldoutHeaderGroup: 1
   <Acceleration>k__BackingField: 90
   <TopSpeed>k__BackingField: 13
   <Deceleration>k__BackingField: 180
@@ -411,7 +411,7 @@ MonoBehaviour:
   <SlopeLimit>k__BackingField: 45
   <GroundCheckLayerMask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   OnLanded:
     m_PersistentCalls:
       m_Calls:
@@ -451,6 +451,7 @@ MonoBehaviour:
   OnWallClimb:
     m_PersistentCalls:
       m_Calls: []
+  cinemachineCamera: {fileID: 6677576525999248474}
   camera: {fileID: 7681188787058825366}
   cameraTrackingTarget: {fileID: 6216556272576259190}
   _isWallRunningOnRightWall: 0
@@ -480,23 +481,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Respawn
   respawnHeight: -80
---- !u!114 &8582168105653550514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684836292335276868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1b559400845c1b48a9308b653d08404, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AdvancedNetworkRigidbody
-  ShowTopMostFoldoutHeaderGroup: 1
-  positionSmoothingFactor: 0.1
-  rotationSmoothingFactor: 0.1
-  teleportEnabled: 1
-  teleportIfDistanceGreaterThan: 10
 --- !u!114 &670716625378304606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,7 +712,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7171026161743700207}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.0815557, y: -0.27056107, z: -0.023009988, w: 0.9589661}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -806,7 +790,7 @@ MonoBehaviour:
   ReferenceFrame: 0
   RecenterTarget: 0
   PanAxis:
-    Value: 0
+    Value: -31.511585
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -816,7 +800,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 0
+    Value: -9.722096
     Center: 0
     Range: {x: -90, y: 90}
     Wrap: 0
@@ -870,7 +854,7 @@ MonoBehaviour:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -1
         CancelDeltaTime: 0
-      InputValue: 0
+      InputValue: -0
       Driver:
         AccelTime: 0
         DecelTime: 0
@@ -911,7 +895,7 @@ MonoBehaviour:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -3
         CancelDeltaTime: 0
-      InputValue: 0
+      InputValue: -0
       Driver:
         AccelTime: 0.75
         DecelTime: 0.15
@@ -992,7 +976,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7229300285507892601}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.0815557, y: -0.27056107, z: -0.023009988, w: 0.9589661}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
