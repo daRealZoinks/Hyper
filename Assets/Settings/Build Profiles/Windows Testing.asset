@@ -32,10 +32,6 @@ MonoBehaviour:
     m_path: Assets/Scenes/Tests/Maps/Grapple Hook Test.unity
   - m_enabled: 0
     m_path: Assets/Scenes/Maps/Map2.unity
-  - m_enabled: 0
-    m_path: Assets/Scenes/Tests/Player Modes/Single Player.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/Tests/Player Modes/Online.unity
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

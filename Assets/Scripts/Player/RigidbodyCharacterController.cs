@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Unity.Cinemachine;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +8,7 @@ namespace Hyper.Player
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class RigidbodyCharacterController : NetworkBehaviour
+    public class RigidbodyCharacterController : MonoBehaviour
     {
         [field: Header("Movement Settings")]
         [field: SerializeField] public float Acceleration { get; private set; } = 90f;
@@ -189,15 +188,6 @@ namespace Hyper.Player
                 ApplyWallRunGravityResistanceForce();
                 ApplyWallStickForce();
             }
-        }
-
-        public override void OnNetworkSpawn()
-        {
-            NetworkManager.NetworkTickSystem.Tick += NetworkTickSystem_Tick;
-        }
-
-        private void NetworkTickSystem_Tick()
-        {
         }
 
         private void GroundCheck()
