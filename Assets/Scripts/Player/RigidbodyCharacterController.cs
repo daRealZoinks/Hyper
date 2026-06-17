@@ -1,5 +1,5 @@
+using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
@@ -318,7 +318,7 @@ namespace Hyper.Player
 
                     if (!IsMantling)
                     {
-                        Mantle(hit, closestHitToCenter.normal, _rigidbody.linearVelocity);
+                        StartCoroutine(MantleCoroutine(hit, closestHitToCenter.normal, _rigidbody.linearVelocity));
                     }
 
                     OnMantle?.Invoke();
@@ -618,10 +618,9 @@ namespace Hyper.Player
             IsSliding = false;
         }
 
-        private async void Mantle(RaycastHit raycastHit, Vector3 forwardWallNormal, Vector3 linearVelocity)
+        private IEnumerator MantleCoroutine(RaycastHit raycastHit, Vector3 forwardWallNormal, Vector3 linearVelocity)
         {
             var currentAirHeight = CurrentAirHeightBasedOnVelocity(linearVelocity);
-
             var isWallClimbingBeforeMantle = IsWallClimbing;
 
             IsMantling = true;
@@ -632,14 +631,20 @@ namespace Hyper.Player
             var mantleStart = transform.position;
             var mantleEnd = raycastHit.point;
             var distance = (mantleEnd - mantleStart).magnitude;
-            var mantleDuration = Mathf.Min(distance / linearVelocity.magnitude, MaxMantleDuration);
+
+            var speed = linearVelocity.magnitude;
+            var mantleDuration = MaxMantleDuration;
+            if (speed != 0)
+            {
+                mantleDuration = Mathf.Min(distance / speed, MaxMantleDuration);
+            }
 
             while (mantleElapsedTime < mantleDuration)
             {
                 mantleElapsedTime += Time.deltaTime;
                 var t = Mathf.Clamp01(mantleElapsedTime / mantleDuration);
                 transform.position = Vector3.Lerp(mantleStart, mantleEnd, t);
-                await Task.Yield();
+                yield return null;
             }
 
             IsMantling = false;
