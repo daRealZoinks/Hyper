@@ -1,58 +1,57 @@
+using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Hyper.Player
 {
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CapsuleCollider))]
     public class RigidbodyCharacterController : MonoBehaviour
     {
-        // public variables
-        [Header("Movement Settings")]
-        public float acceleration = 60f;
-        public float topSpeed = 8f;
-        public float deceleration = 120f;
+        [field: Header("Movement Settings")]
+        [field: SerializeField] public float Acceleration { get; private set; } = 90f;
+        [field: SerializeField] public float TopSpeed { get; private set; } = 13f;
+        [field: SerializeField] public float Deceleration { get; private set; } = 180f;
+        [field: SerializeField][field: Range(0f, 1f)] public float AirControl { get; private set; } = 0.25f;
+        [field: SerializeField][field: Range(0f, 1f)] public float AirBreak { get; private set; } = 0f;
 
-        public float airControl = 0.25f;
-        public float airBreak = 0f;
+        [field: Header("Jump Settings")]
+        [field: SerializeField] public float JumpHeight { get; private set; } = 2f;
+        [field: SerializeField] public float CoyoteTime { get; private set; } = 0.15f;
+        [field: SerializeField] public float JumpBufferTime { get; private set; } = 0.15f;
 
-        [Header("Jump Settings")]
-        public float jumpHeight = 2f;
-        public float coyoteTime = 0.15f;
-        public float jumpBufferTime = 0.15f;
+        [field: Header("Wall Running Settings")]
+        [field: SerializeField] public float WallRunDetectionAngleThreshold { get; private set; } = 0.9f;
+        [field: SerializeField] public float WallStickForce { get; private set; } = 7f;
+        [field: SerializeField] public float WallRunLandBoost { get; private set; } = 2f;
+        [field: SerializeField] public float WallRunGravityResistanceForce { get; private set; } = 10f;
 
-        [Header("Wall Running Settings")]
-        public float wallRunDetectionAngleThreshold = 0.9f;
-        public float wallStickForce = 7f;
-        public float wallRunLandBoost = 2f;
-        public float wallRunGravityResistanceForce = 10f;
+        [field: Header("Wall Jump Settings")]
+        [field: SerializeField] public float WallJumpAngleFromWallNormal { get; private set; } = 25f;
+        [field: SerializeField] public float WallJumpHeight { get; private set; } = 1.5f;
+        [field: SerializeField] public float WallJumpBoost { get; private set; } = 1f;
 
-        [Header("Wall Jump Settings")]
-        public float wallJumpAngleFromWallNormal = 25f;
-        public float wallJumpHeight = 1.5f;
-        public float wallJumpBoost = 3f;
+        [field: Header("Sliding Settings")]
+        [field: SerializeField] public float SlidingDownForce { get; private set; } = 5f;
+        [field: SerializeField] public float SlidingTurnSpeed { get; private set; } = 0.2f;
+        [field: SerializeField] public float SlidingCapsuleColliderHeight { get; private set; } = 1f;
+        [field: SerializeField] public Vector3 SlidingCapsuleColliderCenter { get; private set; } = new(0f, 0.5f, 0f);
+        [field: SerializeField] public Vector3 SlidingCameraTrackingTargetPosition { get; private set; } = new(0f, 0.5f, 0f);
 
-        [Header("Sliding Settings")]
-        public float slidingDownForce = 5f;
-        public float slidingTurnSpeed = 0.2f;
-        public float slidingCapsuleColliderHeight = 1f;
-        public Vector3 slidingCapsuleColliderCenter = new(0f, 0.5f, 0f);
-        public Vector3 slidingCameraTrackingTargetPosition = new(0f, 0.5f, 0f);
+        [field: Header("Mantling and Wall Climbing Settings")]
+        [field: SerializeField] public float FrontWallDetectionAngleThreshold { get; private set; } = 0.9f;
+        [field: SerializeField] public float MaxMantleDuration { get; private set; } = 0.35f;
+        [field: SerializeField] public float MantleBoost { get; private set; } = 2f;
+        [field: SerializeField] public float WallClimbMaxHeight { get; private set; } = 4f;
 
-        [Header("Mantling and Wall Climbing Settings")]
-        public float frontWallDetectionAngleThreshold = 0.9f;
-        public float maxMantleDuration = 0.35f;
-        public float mantleBoost = 3f;
-        public float wallClimbMaxHeight = 4f;
+        [field: Header("General Settings")]
+        [field: SerializeField] public bool UseGravity { get; set; } = true;
+        [field: SerializeField] public float GravityScale { get; private set; } = 1.5f;
+        [field: SerializeField] public float SlopeLimit { get; private set; } = 45f;
+        [field: SerializeField] public LayerMask GroundCheckLayerMask { get; private set; }
 
-        [Header("General Settings")]
-        public bool useGravity = true;
-        public float gravityScale = 1.5f;
-        public float slopeLimit = 45f;
-        public LayerMask groundCheckLayerMask;
-
-        // public events
         [Header("Events")]
         public UnityEvent<float> OnLanded;
         public UnityEvent OnJump;
@@ -69,14 +68,9 @@ namespace Hyper.Player
 
         public UnityEvent OnWallClimb;
 
-        // private references to other objects
         [Header("References")]
-        [SerializeField]
-        private Camera _camera;
-        [SerializeField]
-        private Transform _cameraTrackingTarget;
+        [SerializeField] private CinemachineCamera cinemachineCamera;
 
-        // public properties
         public Vector2 MoveInput { private get; set; }
         public bool Sliding { private get; set; }
 
@@ -98,7 +92,9 @@ namespace Hyper.Player
         public bool IsGrounded { get; set; }
 
         public bool IsWallRunningOnRightWall => _isWallRunningOnRightWall;
+        public bool _isWallRunningOnRightWall;
         public bool IsWallRunningOnLeftWall => _isWallRunningOnLeftWall;
+        public bool _isWallRunningOnLeftWall;
 
         public bool IsWallRunning => _isWallRunningOnLeftWall || _isWallRunningOnRightWall;
 
@@ -117,9 +113,6 @@ namespace Hyper.Player
         private bool _isTouchingWallOnRight;
         private bool _isTouchingWallOnLeft;
 
-        public bool _isWallRunningOnRightWall;
-        public bool _isWallRunningOnLeftWall;
-
         private Vector3 _wallContactNormal;
         private Collider _wallRunningWall;
         private Collider _lastWallRunningWall;
@@ -132,17 +125,19 @@ namespace Hyper.Player
         private bool _hasWallClimbedSinceLastNegativeVelocity = false;
         private Vector3 _linearVelocityBeforeClimb;
 
-        // private references to components
         private Rigidbody _rigidbody;
         private CapsuleCollider _capsuleCollider;
 
         private void Awake()
         {
-            _cameraTrackingTargetOriginalPosition = _cameraTrackingTarget.localPosition;
-
             _rigidbody = GetComponent<Rigidbody>();
-
             _capsuleCollider = GetComponent<CapsuleCollider>();
+        }
+
+        private void Start()
+        {
+            _cameraTrackingTargetOriginalPosition = cinemachineCamera.Target.TrackingTarget.localPosition;
+
             _capsuleColliderOriginalHeight = _capsuleCollider.height;
             _capsuleColliderOriginalCenter = _capsuleCollider.center;
         }
@@ -164,7 +159,7 @@ namespace Hyper.Player
 
             if (!IsMantling)
             {
-                ApplyCustomGravity(gravityScale);
+                ApplyCustomGravity(GravityScale);
             }
 
             if (IsGrounded)
@@ -206,7 +201,7 @@ namespace Hyper.Player
 
             var results = new RaycastHit[5];
 
-            var sphereCastHitsCount = Physics.SphereCastNonAlloc(ray, radius, results, maxDistance, groundCheckLayerMask);
+            var sphereCastHitsCount = Physics.SphereCastNonAlloc(ray, radius, results, maxDistance, GroundCheckLayerMask);
 
             if (sphereCastHitsCount <= 0)
             {
@@ -230,7 +225,7 @@ namespace Hyper.Player
 
             var groundNormalAngle = Vector3.Angle(closestHitToCenter.normal, Vector3.up);
 
-            if (groundNormalAngle > slopeLimit)
+            if (groundNormalAngle > SlopeLimit)
             {
                 IsGrounded = false;
                 return;
@@ -238,7 +233,7 @@ namespace Hyper.Player
 
             ray = new Ray(closestHitToCenter.point + Vector3.up, Vector3.down);
 
-            sphereCastHitsCount = Physics.RaycastNonAlloc(ray, results, 2f, groundCheckLayerMask);
+            sphereCastHitsCount = Physics.RaycastNonAlloc(ray, results, 2f, GroundCheckLayerMask);
 
             if (sphereCastHitsCount <= 0)
             {
@@ -267,7 +262,7 @@ namespace Hyper.Player
             {
                 IsGrounded = true;
                 OnLanded?.Invoke(Mathf.Abs(_rigidbody.linearVelocity.y));
-                _coyoteTimeCounter = coyoteTime;
+                _coyoteTimeCounter = CoyoteTime;
             }
         }
 
@@ -276,8 +271,8 @@ namespace Hyper.Player
             var upperBoxCastHitsResults = new RaycastHit[5];
             var lowerBoxCastHitsResults = new RaycastHit[5];
 
-            var upperBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.5f, new Vector3(0.25f, 0.25f, 0.25f), transform.forward, upperBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
-            var lowerBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + Vector3.up * _capsuleCollider.radius, new Vector3(0.25f, 0.1f, 0.25f), transform.forward, lowerBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, groundCheckLayerMask);
+            var upperBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.5f, new Vector3(0.25f, 0.25f, 0.25f), transform.forward, upperBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, GroundCheckLayerMask);
+            var lowerBoxCastHitsNumber = Physics.BoxCastNonAlloc(_rigidbody.position + Vector3.up * _capsuleCollider.radius, new Vector3(0.25f, 0.1f, 0.25f), transform.forward, lowerBoxCastHitsResults, Quaternion.LookRotation(transform.forward), _capsuleCollider.radius + 0.25f, GroundCheckLayerMask);
 
             if (upperBoxCastHitsNumber == 0 && lowerBoxCastHitsNumber > 0)
             {
@@ -296,7 +291,7 @@ namespace Hyper.Player
 
                     var positionOfMantlingRaycastHits = new RaycastHit[5];
 
-                    var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, 2f, groundCheckLayerMask);
+                    var positionOfMantlingRaycastHitsNumber = Physics.RaycastNonAlloc(positionOfMantlingRay, positionOfMantlingRaycastHits, 2f, GroundCheckLayerMask);
 
                     Debug.DrawLine(positionOfMantlingRay.origin, positionOfMantlingRay.origin + positionOfMantlingRay.direction * 2, Color.red, 2f);
 
@@ -323,7 +318,7 @@ namespace Hyper.Player
 
                     if (!IsMantling)
                     {
-                        Mantle(hit, closestHitToCenter.normal, _rigidbody.linearVelocity);
+                        StartCoroutine(MantleCoroutine(hit, closestHitToCenter.normal, _rigidbody.linearVelocity));
                     }
 
                     OnMantle?.Invoke();
@@ -335,7 +330,7 @@ namespace Hyper.Player
         {
             var checkRay = new Ray(_rigidbody.position + _capsuleCollider.center + Vector3.up * 0.1f, transform.forward);
 
-            var raycastHitsNumber = Physics.RaycastNonAlloc(checkRay, new RaycastHit[1], _capsuleCollider.radius + 0.1f, groundCheckLayerMask);
+            var raycastHitsNumber = Physics.RaycastNonAlloc(checkRay, new RaycastHit[1], _capsuleCollider.radius + 0.1f, GroundCheckLayerMask);
 
             _isTouchingWallInFront = raycastHitsNumber > 0;
 
@@ -373,7 +368,7 @@ namespace Hyper.Player
 
             var results = new RaycastHit[5];
 
-            var raycastHitsCount = Physics.RaycastNonAlloc(ray, results, maxDistance, groundCheckLayerMask);
+            var raycastHitsCount = Physics.RaycastNonAlloc(ray, results, maxDistance, GroundCheckLayerMask);
 
             var validHits = results
                     .Take(raycastHitsCount)
@@ -397,7 +392,7 @@ namespace Hyper.Player
                     isWallRunningOnWall = true;
 
                     var forwardDirectionAlongSideWall = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
-                    _rigidbody.AddForce(forwardDirectionAlongSideWall * wallRunLandBoost, ForceMode.VelocityChange);
+                    _rigidbody.AddForce(forwardDirectionAlongSideWall * WallRunLandBoost, ForceMode.VelocityChange);
 
                     onStartedWallrunning?.Invoke();
                 }
@@ -424,12 +419,12 @@ namespace Hyper.Player
 
         public void Jump()
         {
-            _jumpBufferCounter = jumpBufferTime;
+            _jumpBufferCounter = JumpBufferTime;
         }
 
         private void UpdateRotationBasedOnCamera()
         {
-            var cameraYaw = _camera.transform.rotation.eulerAngles.y;
+            var cameraYaw = cinemachineCamera.transform.rotation.eulerAngles.y;
             _rigidbody.rotation = Quaternion.Euler(0f, cameraYaw, 0f);
         }
 
@@ -443,11 +438,11 @@ namespace Hyper.Player
                 z = _rigidbody.linearVelocity.z
             };
 
-            var horizontalClampedVelocity = horizontalRigidbodyVelocity.normalized * Mathf.Clamp01(horizontalRigidbodyVelocity.magnitude / topSpeed);
+            var horizontalClampedVelocity = horizontalRigidbodyVelocity.normalized * Mathf.Clamp01(horizontalRigidbodyVelocity.magnitude / TopSpeed);
 
             var finalForce = inputDirection - horizontalClampedVelocity;
 
-            finalForce *= inputDirection != Vector3.zero ? acceleration : deceleration;
+            finalForce *= inputDirection != Vector3.zero ? Acceleration : Deceleration;
 
             if (IsGrounded)
             {
@@ -455,7 +450,7 @@ namespace Hyper.Player
             }
             else
             {
-                finalForce *= inputDirection != Vector3.zero ? airControl : airBreak;
+                finalForce *= inputDirection != Vector3.zero ? AirControl : AirBreak;
             }
 
             _rigidbody.AddForce(finalForce, ForceMode.Acceleration);
@@ -482,13 +477,13 @@ namespace Hyper.Player
         {
             if (_rigidbody.linearVelocity.y < 0)
             {
-                _rigidbody.AddForce(Vector3.up * wallRunGravityResistanceForce, ForceMode.Acceleration);
+                _rigidbody.AddForce(Vector3.up * WallRunGravityResistanceForce, ForceMode.Acceleration);
             }
         }
 
         private void ApplyWallStickForce()
         {
-            _rigidbody.AddForce(-_wallContactNormal * wallStickForce, ForceMode.Acceleration);
+            _rigidbody.AddForce(-_wallContactNormal * WallStickForce, ForceMode.Acceleration);
         }
 
         private void UpdateJumpBufferCounter()
@@ -537,7 +532,7 @@ namespace Hyper.Player
 
         private void ExecuteGroundJump()
         {
-            var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * gravityScale * jumpHeight);
+            var jumpForce = Vector3.up * Mathf.Sqrt(-2f * Physics.gravity.y * GravityScale * JumpHeight);
 
             if (_rigidbody.linearVelocity.y < 0)
             {
@@ -553,11 +548,11 @@ namespace Hyper.Player
 
         private void ExecuteWallJump()
         {
-            var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * gravityScale * wallJumpHeight);
+            var jumpForce = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * GravityScale * WallJumpHeight);
 
             var normalized = Vector3.ProjectOnPlane(transform.forward, _wallContactNormal).normalized;
 
-            var vector3 = Vector3.Slerp(normalized, _wallContactNormal, wallJumpAngleFromWallNormal / 90f);
+            var vector3 = Vector3.Slerp(normalized, _wallContactNormal, WallJumpAngleFromWallNormal / 90f);
 
             var playerHorizontalMagnitude = new Vector3()
             {
@@ -565,7 +560,7 @@ namespace Hyper.Player
                 z = _rigidbody.linearVelocity.z
             }.magnitude;
 
-            var playerNewVelocity = vector3 * (playerHorizontalMagnitude + wallJumpBoost);
+            var playerNewVelocity = vector3 * (playerHorizontalMagnitude + WallJumpBoost);
 
             _rigidbody.linearVelocity = playerNewVelocity + jumpForce;
         }
@@ -579,7 +574,7 @@ namespace Hyper.Player
                     StartSliding();
                 }
 
-                _rigidbody.AddForce(Vector3.down * (slidingDownForce + (IsGrounded ? -Physics.gravity.y * gravityScale : 0)), ForceMode.Acceleration);
+                _rigidbody.AddForce(Vector3.down * (SlidingDownForce + (IsGrounded ? -Physics.gravity.y * GravityScale : 0)), ForceMode.Acceleration);
 
                 var horizontalVelocity = new Vector3
                 {
@@ -589,7 +584,7 @@ namespace Hyper.Player
 
                 var desiredDirection = (transform.right * MoveInput.x + transform.forward * MoveInput.y).normalized;
                 var projectedDesiredDirection = Vector3.ProjectOnPlane(desiredDirection, groundNormal).normalized;
-                var newHorizontalVelocity = Vector3.Slerp(horizontalVelocity.normalized, projectedDesiredDirection, MoveInput.magnitude * slidingTurnSpeed * Time.fixedDeltaTime) * horizontalVelocity.magnitude;
+                var newHorizontalVelocity = Vector3.Slerp(horizontalVelocity.normalized, projectedDesiredDirection, MoveInput.magnitude * SlidingTurnSpeed * Time.fixedDeltaTime) * horizontalVelocity.magnitude;
 
                 _rigidbody.linearVelocity = new Vector3
                 {
@@ -610,23 +605,22 @@ namespace Hyper.Player
         private void StartSliding()
         {
             IsSliding = true;
-            _cameraTrackingTarget.localPosition = slidingCameraTrackingTargetPosition;
-            _capsuleCollider.height = slidingCapsuleColliderHeight;
-            _capsuleCollider.center = slidingCapsuleColliderCenter;
+            cinemachineCamera.Target.TrackingTarget.localPosition = SlidingCameraTrackingTargetPosition;
+            _capsuleCollider.height = SlidingCapsuleColliderHeight;
+            _capsuleCollider.center = SlidingCapsuleColliderCenter;
         }
 
         private void StopSliding()
         {
-            _cameraTrackingTarget.localPosition = _cameraTrackingTargetOriginalPosition;
+            cinemachineCamera.Target.TrackingTarget.localPosition = _cameraTrackingTargetOriginalPosition;
             _capsuleCollider.height = _capsuleColliderOriginalHeight;
             _capsuleCollider.center = _capsuleColliderOriginalCenter;
             IsSliding = false;
         }
 
-        private async void Mantle(RaycastHit raycastHit, Vector3 forwardWallNormal, Vector3 linearVelocity)
+        private IEnumerator MantleCoroutine(RaycastHit raycastHit, Vector3 forwardWallNormal, Vector3 linearVelocity)
         {
             var currentAirHeight = CurrentAirHeightBasedOnVelocity(linearVelocity);
-
             var isWallClimbingBeforeMantle = IsWallClimbing;
 
             IsMantling = true;
@@ -637,14 +631,20 @@ namespace Hyper.Player
             var mantleStart = transform.position;
             var mantleEnd = raycastHit.point;
             var distance = (mantleEnd - mantleStart).magnitude;
-            var mantleDuration = Mathf.Min(distance / linearVelocity.magnitude, maxMantleDuration);
+
+            var speed = linearVelocity.magnitude;
+            var mantleDuration = MaxMantleDuration;
+            if (speed != 0)
+            {
+                mantleDuration = Mathf.Min(distance / speed, MaxMantleDuration);
+            }
 
             while (mantleElapsedTime < mantleDuration)
             {
                 mantleElapsedTime += Time.deltaTime;
                 var t = Mathf.Clamp01(mantleElapsedTime / mantleDuration);
                 transform.position = Vector3.Lerp(mantleStart, mantleEnd, t);
-                await Task.Yield();
+                yield return null;
             }
 
             IsMantling = false;
@@ -660,7 +660,7 @@ namespace Hyper.Player
 
                 if (currentAirHeight < 0)
                 {
-                    _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+                    _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + MantleBoost);
                 }
                 else
                 {
@@ -675,7 +675,7 @@ namespace Hyper.Player
                     z = linearVelocity.z
                 };
 
-                _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + mantleBoost);
+                _rigidbody.linearVelocity = -forwardWallNormal * (oldHorizontalLinearVelocity.magnitude + MantleBoost);
             }
 
             transform.position = mantleEnd;
@@ -690,11 +690,11 @@ namespace Hyper.Player
                 currentAirHeight = 0;
             }
 
-            var heightDifference = wallClimbMaxHeight - currentAirHeight;
+            var heightDifference = WallClimbMaxHeight - currentAirHeight;
 
             if (heightDifference > 0)
             {
-                var upwardForce = Mathf.Sqrt(2 * -(Physics.gravity.y * gravityScale) * heightDifference);
+                var upwardForce = Mathf.Sqrt(2 * -(Physics.gravity.y * GravityScale) * heightDifference);
                 var forceToAdd = upwardForce - _rigidbody.linearVelocity.y;
                 return forceToAdd > 0f ? forceToAdd : 0f;
             }
@@ -705,8 +705,8 @@ namespace Hyper.Player
         private float CurrentAirHeightBasedOnVelocity(Vector3 linearVelocity)
         {
             var upwardsVelocity = linearVelocity.y;
-            var gravity = Physics.gravity.y * gravityScale;
-            return jumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
+            var gravity = Physics.gravity.y * GravityScale;
+            return JumpHeight - Mathf.Pow(upwardsVelocity, 2) / (2 * -gravity);
         }
     }
 }

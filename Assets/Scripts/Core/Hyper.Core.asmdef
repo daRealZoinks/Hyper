@@ -2,7 +2,8 @@
     "name": "Hyper.Core",
     "rootNamespace": "",
     "references": [
-        "GUID:c697c6b855fcf1b41b43fd44db397d9c"
+        "GUID:c697c6b855fcf1b41b43fd44db397d9c",
+        "GUID:1491147abca9d7d4bb7105af628b223e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

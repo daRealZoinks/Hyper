@@ -106,7 +106,6 @@ GameObject:
   - component: {fileID: 2907560510715554554}
   - component: {fileID: 451494572285065196}
   - component: {fileID: 9120795128593380099}
-  - component: {fileID: 8582168105653550514}
   - component: {fileID: 670716625378304606}
   m_Layer: 3
   m_Name: Player
@@ -382,36 +381,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becdf0ebc433e674f9419bd04b6fad2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RigidbodyCharacterController
-  acceleration: 90
-  topSpeed: 13
-  deceleration: 180
-  airControl: 0.25
-  airBreak: 0
-  jumpHeight: 2
-  coyoteTime: 0.15
-  jumpBufferTime: 0.15
-  wallRunDetectionAngleThreshold: 0.9
-  wallStickForce: 7
-  wallRunLandBoost: 2
-  wallRunGravityResistanceForce: 10
-  wallJumpAngleFromWallNormal: 25
-  wallJumpHeight: 1.5
-  wallJumpBoost: 1
-  slidingDownForce: 5
-  slidingTurnSpeed: 0.2
-  slidingCapsuleColliderHeight: 1
-  slidingCapsuleColliderCenter: {x: 0, y: 0.5, z: 0}
-  slidingCameraTrackingTargetPosition: {x: 0, y: 0.5, z: 0}
-  frontWallDetectionAngleThreshold: 0.9
-  maxMantleDuration: 0.35
-  mantleBoost: 2
-  wallClimbMaxHeight: 4
-  useGravity: 1
-  gravityScale: 1.5
-  slopeLimit: 45
-  groundCheckLayerMask:
+  <Acceleration>k__BackingField: 90
+  <TopSpeed>k__BackingField: 13
+  <Deceleration>k__BackingField: 180
+  <AirControl>k__BackingField: 0.25
+  <AirBreak>k__BackingField: 0
+  <JumpHeight>k__BackingField: 2
+  <CoyoteTime>k__BackingField: 0.15
+  <JumpBufferTime>k__BackingField: 0.15
+  <WallRunDetectionAngleThreshold>k__BackingField: 0.9
+  <WallStickForce>k__BackingField: 7
+  <WallRunLandBoost>k__BackingField: 2
+  <WallRunGravityResistanceForce>k__BackingField: 10
+  <WallJumpAngleFromWallNormal>k__BackingField: 25
+  <WallJumpHeight>k__BackingField: 1.5
+  <WallJumpBoost>k__BackingField: 1
+  <SlidingDownForce>k__BackingField: 5
+  <SlidingTurnSpeed>k__BackingField: 0.2
+  <SlidingCapsuleColliderHeight>k__BackingField: 1
+  <SlidingCapsuleColliderCenter>k__BackingField: {x: 0, y: 0.5, z: 0}
+  <SlidingCameraTrackingTargetPosition>k__BackingField: {x: 0, y: 0.5, z: 0}
+  <FrontWallDetectionAngleThreshold>k__BackingField: 0.9
+  <MaxMantleDuration>k__BackingField: 0.35
+  <MantleBoost>k__BackingField: 2
+  <WallClimbMaxHeight>k__BackingField: 4
+  <UseGravity>k__BackingField: 1
+  <GravityScale>k__BackingField: 1.5
+  <SlopeLimit>k__BackingField: 45
+  <GroundCheckLayerMask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 256
   OnLanded:
     m_PersistentCalls:
       m_Calls:
@@ -451,8 +450,7 @@ MonoBehaviour:
   OnWallClimb:
     m_PersistentCalls:
       m_Calls: []
-  _camera: {fileID: 7681188787058825366}
-  _cameraTrackingTarget: {fileID: 6216556272576259190}
+  cinemachineCamera: {fileID: 6677576525999248474}
   _isWallRunningOnRightWall: 0
   _isWallRunningOnLeftWall: 0
 --- !u!114 &451494572285065196
@@ -480,23 +478,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Respawn
   respawnHeight: -80
---- !u!114 &8582168105653550514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684836292335276868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1b559400845c1b48a9308b653d08404, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AdvancedNetworkRigidbody
-  ShowTopMostFoldoutHeaderGroup: 1
-  positionSmoothingFactor: 0.1
-  rotationSmoothingFactor: 0.1
-  teleportEnabled: 1
-  teleportIfDistanceGreaterThan: 10
 --- !u!114 &670716625378304606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -870,7 +851,7 @@ MonoBehaviour:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -1
         CancelDeltaTime: 0
-      InputValue: 0
+      InputValue: -0
       Driver:
         AccelTime: 0
         DecelTime: 0
@@ -911,7 +892,7 @@ MonoBehaviour:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -3
         CancelDeltaTime: 0
-      InputValue: 0
+      InputValue: -0
       Driver:
         AccelTime: 0.75
         DecelTime: 0.15
@@ -1364,8 +1345,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5896176556011013896}
-  - component: {fileID: 3902320517130395597}
-  - component: {fileID: 1160304534055563568}
   m_Layer: 3
   m_Name: Base Player
   m_TagString: Player
@@ -1391,122 +1370,6 @@ Transform:
   - {fileID: 8534265408217820089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3902320517130395597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8020874733183147571}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3643188166
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &1160304534055563568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8020874733183147571}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df448495f032f7842a6dd62bddc441bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerStatus
-  ShowTopMostFoldoutHeaderGroup: 1
-  OnNetworkSpawnIfOwner:
-    m_PersistentCalls:
-      m_Calls: []
-  OnNetworkSpawnIfNotOwner:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3242451747582740897}
-        m_TargetAssemblyTypeName: UnityEngine.InputSystem.PlayerInput, Unity.InputSystem
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2917036558841039201}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2907560510715554554}
-        m_TargetAssemblyTypeName: RigidbodyCharacterController, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7681188787058825366}
-        m_TargetAssemblyTypeName: UnityEngine.Camera, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7171026161743700207}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4176342853401186312}
-        m_TargetAssemblyTypeName: Unity.Cinemachine.CinemachineBrain, Unity.Cinemachine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &8283519582828704787
 GameObject:
   m_ObjectHideFlags: 0

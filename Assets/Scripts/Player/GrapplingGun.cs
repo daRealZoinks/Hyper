@@ -170,7 +170,7 @@ public class GrapplingGun : MonoBehaviour
 
         _springJoint.spring = spring;
         _springJoint.damper = damper;
-        _springJoint.massScale = _playerRigidbody.mass * characterController.gravityScale * massScale;
+        _springJoint.massScale = _playerRigidbody.mass * characterController.GravityScale * massScale;
 
         _lineRenderer.enabled = true;
     }

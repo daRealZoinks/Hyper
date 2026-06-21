@@ -20,7 +20,7 @@ namespace Hyper.Core
                         var jumpVector = new Vector3()
                         {
                             x = jumpForce.x,
-                            y = Mathf.Sqrt(2 * Physics.gravity.magnitude * rigidbodyCharacterController.gravityScale * jumpForce.y),
+                            y = Mathf.Sqrt(2 * Physics.gravity.magnitude * rigidbodyCharacterController.GravityScale * jumpForce.y),
                             z = jumpForce.z
                         };
 
