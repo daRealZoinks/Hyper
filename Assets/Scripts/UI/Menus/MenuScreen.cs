@@ -16,14 +16,20 @@ namespace Hyper.UI.Menus
         {
             selectables = GetComponentsInChildren<Selectable>().ToList();
 
-            EventSystem.current.SetSelectedGameObject(selectables[0].gameObject);
+            if (selectables.Count != 0)
+            {
+                EventSystem.current.SetSelectedGameObject(selectables[0].gameObject);
+            }
         }
 
         private void OnEnable()
         {
             DeviceManager.Singleton.OnDeviceTypeChanged += OnDeviceTypeChanged;
 
-            EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : selectables[0]).gameObject);
+            if (selectables.Count != 0)
+            {
+                EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : selectables[0]).gameObject);
+            }
         }
 
         private void OnDisable()

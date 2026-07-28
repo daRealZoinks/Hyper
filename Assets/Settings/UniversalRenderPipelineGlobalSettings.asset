@@ -83,6 +83,7 @@ MonoBehaviour:
       - rid: 229275228331048964
       - rid: 229275228331048966
       - rid: 229275228331048967
+      - rid: 3518523093595979778
       - rid: 4457128136435826689
   m_AssetVersion: 10
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}

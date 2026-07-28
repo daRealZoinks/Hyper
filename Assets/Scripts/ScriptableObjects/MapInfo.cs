@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 namespace Hyper.ScriptableObjects
@@ -7,6 +6,6 @@ namespace Hyper.ScriptableObjects
     public class MapInfo : ScriptableObject
     {
         public string mapName;
-        public SceneAsset mapScene;
+        //public SceneAsset mapScene;
     }
 }
