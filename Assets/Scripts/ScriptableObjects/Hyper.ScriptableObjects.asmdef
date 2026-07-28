@@ -1,3 +1,16 @@
 {
-	"name": "Hyper.ScriptableObjects"
+    "name": "Hyper.ScriptableObjects",
+    "rootNamespace": "",
+    "references": [
+        "GUID:214c0945bb158c940aada223f3223ee8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

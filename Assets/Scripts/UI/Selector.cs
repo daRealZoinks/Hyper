@@ -12,11 +12,12 @@ namespace Hyper.UI
         public Button rightButton;
         public TextMeshProUGUI textMeshPro;
 
-        public List<T> options = new();
+        //public List<T> options = new();
+        public List<KeyValuePair<T, string>> options = new();
 
         public event Action<T> OnSelectionChanged;
 
-        public T CurrentValue => options.Count > 0 ? options[CurrentIndex] : default;
+        public KeyValuePair<T, string> CurrentValue => options.Count > 0 ? options[CurrentIndex] : default;
         public int CurrentIndex { get; private set; } = 0;
 
         private void OnEnable()
@@ -60,7 +61,7 @@ namespace Hyper.UI
 
         public void SetValue(T value)
         {
-            int index = options.IndexOf(value);
+            int index = options.FindIndex(kvp => kvp.Key.Equals(value));
             if (index >= 0)
             {
                 CurrentIndex = index;
@@ -79,8 +80,8 @@ namespace Hyper.UI
 
         private void UpdateDisplay()
         {
-            textMeshPro.text = CurrentValue?.ToString() ?? "";
-            OnSelectionChanged?.Invoke(CurrentValue);
+            textMeshPro.text = CurrentValue.Value ?? "";
+            OnSelectionChanged?.Invoke(CurrentValue.Key);
         }
     }
 }

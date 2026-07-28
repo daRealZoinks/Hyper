@@ -33,7 +33,10 @@ public class DisplayMenu : MonoBehaviour
             }
         }
 
-        resolutionSelector.options.AddRange(resolutions);
+        foreach (var resolution in resolutions)
+        {
+            resolutionSelector.options.Add(new KeyValuePair<Tuple<int, int>, string>(resolution, $"{resolution.Item1} x {resolution.Item2}"));
+        }
 
         resolutionSelector.SetValue(new(Screen.currentResolution.width, Screen.currentResolution.height));
 
@@ -60,7 +63,10 @@ public class DisplayMenu : MonoBehaviour
             }
         }
 
-        refreshRateSelector.options.AddRange(refreshRates);
+        foreach (var refreshRate in refreshRates)
+        {
+            refreshRateSelector.options.Add(new KeyValuePair<RefreshRate, string>(refreshRate, $"{refreshRate.value}hz"));
+        }
 
         refreshRateSelector.SetValue(Screen.currentResolution.refreshRateRatio);
 
@@ -72,17 +78,19 @@ public class DisplayMenu : MonoBehaviour
 
     private void SetupWindowModeSelector()
     {
-        FullScreenMode[] windowModes =
+        List<KeyValuePair<FullScreenMode, string>> windowModes = new()
         {
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-            FullScreenMode.ExclusiveFullScreen,
+            new (FullScreenMode.ExclusiveFullScreen, "Fullscreen"),
 #endif
-            FullScreenMode.FullScreenWindow,
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-            //FullScreenMode.MaximizedWindow,
-#endif
-            FullScreenMode.Windowed,
+            new (FullScreenMode.FullScreenWindow, "Borderless Windowed"),
+            new (FullScreenMode.Windowed, "Windowed"),
         };
+
+        foreach (var windowMode in windowModes)
+        {
+            windowModeSelector.options.Add(new KeyValuePair<FullScreenMode, string>(windowMode.Key, windowMode.Value));
+        }
 
         windowModeSelector.options.AddRange(windowModes);
 
