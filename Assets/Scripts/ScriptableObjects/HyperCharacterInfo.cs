@@ -7,5 +7,6 @@ namespace Hyper.ScriptableObjects
     {
         public string characterName;
         public Sprite characterProfilePicture;
+        public GameObject characterPrefab;
     }
 }

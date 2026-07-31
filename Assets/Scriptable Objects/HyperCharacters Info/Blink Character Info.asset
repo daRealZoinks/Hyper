@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HyperCharacterInfo
   characterName: Blink
   characterProfilePicture: {fileID: 0}
+  characterPrefab: {fileID: 6944563675214251878, guid: cca22b54cd49caa43be9912036f023b6, type: 3}

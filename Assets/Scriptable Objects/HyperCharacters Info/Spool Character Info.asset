@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HyperCharacterInfo
   characterName: Spool
   characterProfilePicture: {fileID: 0}
+  characterPrefab: {fileID: 4213832132015994804, guid: bf9e5805031ed1544a8eee58edd10cee, type: 3}

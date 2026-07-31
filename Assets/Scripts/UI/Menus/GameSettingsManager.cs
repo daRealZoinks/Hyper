@@ -1,6 +1,6 @@
+using Hyper.ScriptableObjects;
 using System;
 using System.Collections.Generic;
-using Hyper.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,16 +8,6 @@ namespace Hyper.UI.Menus
 {
     public class GameSettingsManager : MonoBehaviour
     {
-        [Serializable]
-        public enum NetworkMode
-        {
-            SinglePlayer,
-            LocalMultiplayer,
-            Online,
-        }
-
-        public NetworkMode networkMode;
-
         [Serializable]
         public class PlayerProfile
         {
@@ -37,27 +27,7 @@ namespace Hyper.UI.Menus
 
         public GameMode gameMode;
 
-        public List<Scene> scenes;
-
-        private void SetNetworkMode(NetworkMode networkMode)
-        {
-            this.networkMode = networkMode;
-        }
-
-        public void SetNetworkModeSinglePlayer()
-        {
-            SetNetworkMode(NetworkMode.SinglePlayer);
-        }
-
-        public void SetNetworkModeLocalMultiplayer()
-        {
-            SetNetworkMode(NetworkMode.LocalMultiplayer);
-        }
-
-        public void SetNetworkModeOnline()
-        {
-            SetNetworkMode(NetworkMode.Online);
-        }
+        public List<string> scenes;
 
         private void SetGameMode(GameMode gameMode)
         {
@@ -77,6 +47,16 @@ namespace Hyper.UI.Menus
         public void SetGameModeKnockout()
         {
             SetGameMode(GameMode.Knockout);
+        }
+
+
+        public void StartGame()
+        {
+            // load with some test values, i just wanna make sure this works
+            gameMode = GameMode.SingleRace;
+            SceneManager.LoadScene(7);
+
+            //playerProfiles[0].characterInfo.characterPrefab;
         }
     }
 }

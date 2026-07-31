@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HyperCharacterInfo
   characterName: Brock
   characterProfilePicture: {fileID: 0}
+  characterPrefab: {fileID: 5520024066517160165, guid: e99bf94eb55bb524aa75bd2d53d0f59a, type: 3}

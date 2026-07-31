@@ -357,11 +357,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1612965094}
         m_TargetAssemblyTypeName: Hyper.UI.Menus.MenuSystem, Hyper.UI.Menus
-        m_MethodName: GameModeSelected
-        m_Mode: 1
+        m_MethodName: PushMenuScreen
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 4518183748486205368}
+          m_ObjectArgumentAssemblyTypeName: Hyper.UI.Menus.MenuScreen, Hyper.UI.Menus
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2064,11 +2064,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1612965094}
         m_TargetAssemblyTypeName: Hyper.UI.Menus.MenuSystem, Hyper.UI.Menus
-        m_MethodName: GameModeSelected
-        m_Mode: 1
+        m_MethodName: PushMenuScreen
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 4518183748486205368}
+          m_ObjectArgumentAssemblyTypeName: Hyper.UI.Menus.MenuScreen, Hyper.UI.Menus
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -6849,11 +6849,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1612965094}
         m_TargetAssemblyTypeName: Hyper.UI.Menus.MenuSystem, Hyper.UI.Menus
-        m_MethodName: GameModeSelected
-        m_Mode: 1
+        m_MethodName: PushMenuScreen
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 4518183748486205368}
+          m_ObjectArgumentAssemblyTypeName: Hyper.UI.Menus.MenuScreen, Hyper.UI.Menus
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -11039,10 +11039,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61871158cd1693043a022f998dcaa75e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  networkMode: 0
-  playerProfiles: []
+  playerProfiles:
+  - name: Player 1
+    characterInfo: {fileID: 11400000, guid: 43762d649b7d8cc4f96229329da52a84, type: 2}
   gameMode: 0
-  scenes: []
+  scenes:
+  - Scenes/Maps/Map 1
+  - Scenes/Maps/Map 2
+  - Scenes/Maps/Map 3
 --- !u!1 &1648675550
 GameObject:
   m_ObjectHideFlags: 0
@@ -15292,8 +15296,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb740fc785d58d544b99d6b044e40557, type: 2}
   - {fileID: 11400000, guid: 43762d649b7d8cc4f96229329da52a84, type: 2}
   - {fileID: 11400000, guid: 93fa7bc469c853c46a0de359ba446aa7, type: 2}
-  - {fileID: 11400000, guid: a64c48ede411aa144987d9bdb43d728b, type: 2}
-  - {fileID: 11400000, guid: faf5a8b6928c1754b91e6ac459a47ecd, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   nextCharacterButton: {fileID: 102600555007676543}
   previousCharacterButton: {fileID: 7574936036886138332}
 --- !u!114 &4518183748486205368
@@ -16215,13 +16219,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1612965094}
-        m_TargetAssemblyTypeName: Hyper.UI.Menus.MenuSystem, Hyper.UI.Menus
-        m_MethodName: PushMenuScreen
-        m_Mode: 2
+      - m_Target: {fileID: 1612965095}
+        m_TargetAssemblyTypeName: Hyper.UI.Menus.GameSettingsManager, Hyper.UI.Menus
+        m_MethodName: StartGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: Hyper.UI.Menus.MenuScreen, Hyper.UI.Menus
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

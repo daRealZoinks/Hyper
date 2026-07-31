@@ -56,20 +56,6 @@ namespace Hyper.UI.Menus
             UpdateSelectButtonVisibility(DeviceManager.Singleton.currentDeviceType);
         }
 
-        public void GameModeSelected()
-        {
-            switch (_gameSettingsManager.networkMode)
-            {
-                case GameSettingsManager.NetworkMode.SinglePlayer:
-                    PushMenuScreen(singlePlayerCharacterMenuScreen);
-                    break;
-                case GameSettingsManager.NetworkMode.LocalMultiplayer:
-                    break;
-                case GameSettingsManager.NetworkMode.Online:
-                    break;
-            }
-        }
-
         private void UpdateSelectButtonVisibility(DeviceManager.DeviceType deviceType)
         {
             if (selectButton != null)

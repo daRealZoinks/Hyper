@@ -22,16 +22,28 @@ MonoBehaviour:
   m_Scenes:
   - m_enabled: 1
     m_path: Assets/Scenes/Menus/Main Menu.unity
-  - m_enabled: 0
-    m_path: Assets/Scenes/Tests/Maps/Playground.unity
-  - m_enabled: 0
+  - m_enabled: 1
     m_path: Assets/Scenes/Tests/Maps/Visual Test.unity
-  - m_enabled: 0
-    m_path: Assets/Scenes/Maps/Map1.unity
-  - m_enabled: 0
+  - m_enabled: 1
     m_path: Assets/Scenes/Tests/Maps/Grapple Hook Test.unity
-  - m_enabled: 0
+  - m_enabled: 1
+    m_path: Assets/Scenes/Tests/Test Map.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Tests/Maps/Playground.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Tests/Maps/Tutorial.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Tests/Player Modes/Local.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Maps/Map1.unity
+  - m_enabled: 1
     m_path: Assets/Scenes/Maps/Map2.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Maps/Map3.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Tests/Maps/Test Level.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Tests/Maps/Test Level 2.unity
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
