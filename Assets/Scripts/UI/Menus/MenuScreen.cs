@@ -8,17 +8,19 @@ namespace Hyper.UI.Menus
 {
     public class MenuScreen : MonoBehaviour
     {
-        private List<Selectable> selectables;
+        public bool showButtonPrompts;
 
-        public Selectable currentSelected;
+        [HideInInspector] public Selectable currentSelected;
+
+        private List<Selectable> _selectables;
 
         private void Awake()
         {
-            selectables = GetComponentsInChildren<Selectable>().ToList();
+            _selectables = GetComponentsInChildren<Selectable>().ToList();
 
-            if (selectables.Count != 0)
+            if (_selectables.Count != 0)
             {
-                EventSystem.current.SetSelectedGameObject(selectables[0].gameObject);
+                EventSystem.current.SetSelectedGameObject(_selectables[0].gameObject);
             }
         }
 
@@ -26,9 +28,9 @@ namespace Hyper.UI.Menus
         {
             DeviceManager.Singleton.OnDeviceTypeChanged += OnDeviceTypeChanged;
 
-            if (selectables.Count != 0)
+            if (_selectables.Count != 0)
             {
-                EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : selectables[0]).gameObject);
+                EventSystem.current.SetSelectedGameObject((currentSelected ? currentSelected : _selectables[0]).gameObject);
             }
         }
 
@@ -61,7 +63,7 @@ namespace Hyper.UI.Menus
                 }
                 else
                 {
-                    EventSystem.current.SetSelectedGameObject(selectables[0].gameObject);
+                    EventSystem.current.SetSelectedGameObject(_selectables[0].gameObject);
                 }
             }
         }

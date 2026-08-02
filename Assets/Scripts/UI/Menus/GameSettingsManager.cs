@@ -27,7 +27,10 @@ namespace Hyper.UI.Menus
 
         public GameMode gameMode;
 
-        public List<string> scenes;
+        [HideInInspector]
+        public MapInfo map;
+
+        //public List<string> scenes;
 
         private void SetGameMode(GameMode gameMode)
         {
@@ -49,12 +52,17 @@ namespace Hyper.UI.Menus
             SetGameMode(GameMode.Knockout);
         }
 
+        public void SetMap(MapInfo map)
+        {
+            this.map = map;
+        }
 
         public void StartGame()
         {
             // load with some test values, i just wanna make sure this works
             gameMode = GameMode.SingleRace;
-            SceneManager.LoadScene(7);
+            SceneManager.LoadScene(map.mapName);
+            //SceneManager.LoadSceneAsync(7, LoadSceneMode.Additive);
 
             //playerProfiles[0].characterInfo.characterPrefab;
         }
