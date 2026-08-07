@@ -1,6 +1,5 @@
 using Hyper.ScriptableObjects;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,15 +7,6 @@ namespace Hyper.UI.Menus
 {
     public class GameSettingsManager : MonoBehaviour
     {
-        [Serializable]
-        public class PlayerProfile
-        {
-            public string name;
-            public HyperCharacterInfo characterInfo;
-        }
-
-        public List<PlayerProfile> playerProfiles;
-
         [Serializable]
         public enum GameMode
         {
