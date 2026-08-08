@@ -343,13 +343,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1612965095}
+      - m_Target: {fileID: 1559771410}
         m_TargetAssemblyTypeName: Hyper.UI.Menus.GameSettingsManager, Hyper.UI.Menus
         m_MethodName: SetGameModeKnockout
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1612965094}
+        m_TargetAssemblyTypeName: Hyper.UI.Menus.MenuSystem, Hyper.UI.Menus
+        m_MethodName: PushMenuScreen
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 210732714}
+          m_ObjectArgumentAssemblyTypeName: Hyper.UI.Menus.MenuScreen, Hyper.UI.Menus
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -909,6 +921,10 @@ PrefabInstance:
     - target: {fileID: 4355831587867786292, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Name
       value: Selector
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
@@ -1488,7 +1504,7 @@ MonoBehaviour:
   onMapSelected:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1612965095}
+      - m_Target: {fileID: 1559771410}
         m_TargetAssemblyTypeName: Hyper.UI.Menus.GameSettingsManager, Hyper.UI.Menus
         m_MethodName: StartGame
         m_Mode: 1
@@ -1500,6 +1516,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  gameSettingsManager: {fileID: 1559771410}
 --- !u!1 &221747425
 GameObject:
   m_ObjectHideFlags: 0
@@ -1866,6 +1883,10 @@ PrefabInstance:
     - target: {fileID: 4355831587867786292, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Name
       value: Selector
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
@@ -2247,7 +2268,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1612965095}
+      - m_Target: {fileID: 1559771410}
         m_TargetAssemblyTypeName: Hyper.UI.Menus.GameSettingsManager, Hyper.UI.Menus
         m_MethodName: SetGameModeGrandPrix
         m_Mode: 1
@@ -2862,6 +2883,10 @@ PrefabInstance:
     - target: {fileID: 6404287379565437017, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
@@ -3934,7 +3959,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 153.72685, y: -28.194132}
+  m_AnchoredPosition: {x: 153.72685, y: -28.19413}
   m_SizeDelta: {x: 307.4537, y: 56.388264}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &651708915
@@ -4086,6 +4111,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Selector
       objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -4233,6 +4262,10 @@ PrefabInstance:
     - target: {fileID: 4355831587867786292, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Name
       value: Selector
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
@@ -5699,6 +5732,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Selector
       objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -6589,7 +6626,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1612965095}
+      - m_Target: {fileID: 1559771410}
         m_TargetAssemblyTypeName: Hyper.UI.Menus.GameSettingsManager, Hyper.UI.Menus
         m_MethodName: SetGameModeSingleRace
         m_Mode: 1
@@ -6984,6 +7021,10 @@ PrefabInstance:
     - target: {fileID: 4355831587867786292, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Name
       value: Selector
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
@@ -9195,7 +9236,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 279.68616, y: -27.570898}
+  m_AnchoredPosition: {x: 279.68616, y: -27.5709}
   m_SizeDelta: {x: 559.3723, y: 41.9257}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1511408351
@@ -9468,6 +9509,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528309655}
   m_CullTransparentMesh: 1
+--- !u!1 &1559771408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1559771411}
+  - component: {fileID: 1559771410}
+  m_Layer: 0
+  m_Name: Game Settings Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1559771410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559771408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61871158cd1693043a022f998dcaa75e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  gameMode: 0
+  mapInfo: {fileID: 0}
+--- !u!4 &1559771411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559771408}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.04417, y: 3.71427, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1574323392
 GameObject:
   m_ObjectHideFlags: 0
@@ -10239,7 +10326,6 @@ GameObject:
   - component: {fileID: 1612965091}
   - component: {fileID: 1612965090}
   - component: {fileID: 1612965094}
-  - component: {fileID: 1612965095}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -10357,20 +10443,6 @@ MonoBehaviour:
   titleScreen: {fileID: 552517020}
   backButton: {fileID: 1356510248}
   selectButton: {fileID: 1115484047}
---- !u!114 &1612965095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612965089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61871158cd1693043a022f998dcaa75e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  gameMode: 0
-  map: {fileID: 0}
 --- !u!1 &1648675550
 GameObject:
   m_ObjectHideFlags: 0
@@ -11036,6 +11108,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Selector
       objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -11204,6 +11280,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Selector
       objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -11329,7 +11409,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 267.15796, y: -28.529507}
+  m_AnchoredPosition: {x: 267.15796, y: -28.52951}
   m_SizeDelta: {x: 534.3159, y: 56.3883}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1846984210
@@ -12227,6 +12307,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Selector
       objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -12430,6 +12514,10 @@ PrefabInstance:
     - target: {fileID: 4355831587867786292, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Name
       value: Selector
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
@@ -13092,7 +13180,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 398.1963, y: -27.524433}
+  m_AnchoredPosition: {x: 398.1963, y: -27.524437}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2137831189
@@ -13398,6 +13486,10 @@ PrefabInstance:
     - target: {fileID: 4355831587867786292, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Name
       value: Selector
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960209947284055448, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7515318697515514538, guid: b1e1825ebeda1e64abe81f36892d205d, type: 3}
       propertyPath: m_Pivot.x
@@ -14120,4 +14212,5 @@ SceneRoots:
   - {fileID: 1074318047}
   - {fileID: 1382124045}
   - {fileID: 1038690825}
+  - {fileID: 1559771411}
   - {fileID: 1612965093}

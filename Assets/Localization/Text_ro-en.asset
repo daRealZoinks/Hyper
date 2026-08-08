@@ -17,7 +17,15 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: e82034d8ac573a34f8399c3e6e359c31, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 360295780352
+    m_Localized: "Pres ESC tu egzit d\u0103 gheim"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 184055320576
+    m_Localized: "U\u0102RC IN PROGRES - PRI-ALFA BILD"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

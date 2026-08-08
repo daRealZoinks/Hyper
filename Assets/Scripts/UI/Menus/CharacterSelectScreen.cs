@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using Hyper.ScriptableObjects;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,17 +20,20 @@ namespace Hyper.UI.Menus
         private bool _isReady;
         private int _currentCharacterIndex;
 
+        public Action OnReadyChanged;
+
         public bool IsReady
         {
             get
             {
                 return _isReady;
             }
-            set
+            private set
             {
                 _isReady = value;
                 nextCharacterButton.interactable = !_isReady;
                 previousCharacterButton.interactable = !_isReady;
+                OnReadyChanged?.Invoke();
             }
         }
 

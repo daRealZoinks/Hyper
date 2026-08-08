@@ -13,13 +13,14 @@ public class MapMenuManager : MonoBehaviour
 
     public UnityEvent onMapSelected;
 
+    [SerializeField] private GameSettingsManager gameSettingsManager;
+
     private GridLayoutGroup _mapIconGridLayoutGroup;
-    private GameSettingsManager _gameSettingsManager;
 
     private void Awake()
     {
         _mapIconGridLayoutGroup = GetComponentInChildren<GridLayoutGroup>();
-        _gameSettingsManager = FindAnyObjectByType<GameSettingsManager>();
+        gameSettingsManager = FindAnyObjectByType<GameSettingsManager>();
 
         foreach (var map in maps)
         {
@@ -27,7 +28,7 @@ public class MapMenuManager : MonoBehaviour
             button.Initialize(map);
             button.GetComponent<Button>().onClick.AddListener(() =>
             {
-                _gameSettingsManager.SetMap(map);
+                gameSettingsManager.SetMap(map);
                 onMapSelected.Invoke();
             });
         }

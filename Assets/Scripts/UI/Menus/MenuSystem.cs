@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 namespace Hyper.UI.Menus
 {
-    [RequireComponent(typeof(GameSettingsManager))]
     public class MenuSystem : MonoBehaviour
     {
         public MenuScreen titleScreen;

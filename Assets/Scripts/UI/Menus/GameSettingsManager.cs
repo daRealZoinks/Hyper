@@ -17,12 +17,19 @@ namespace Hyper.UI.Menus
 
         public GameMode gameMode;
 
+        public string characterSelectMenuSceneName = "Character Select Menu Test";
+
         [HideInInspector]
-        public MapInfo map;
+        public MapInfo mapInfo;
 
-        //public List<string> scenes;
+        // TODO: grand prix
 
-        private void SetGameMode(GameMode gameMode)
+        private void Awake()
+        {
+            DontDestroyOnLoad(this);
+        }
+
+        public void SetGameMode(GameMode gameMode)
         {
             this.gameMode = gameMode;
         }
@@ -44,17 +51,24 @@ namespace Hyper.UI.Menus
 
         public void SetMap(MapInfo map)
         {
-            this.map = map;
+            mapInfo = map;
         }
 
         public void StartGame()
         {
-            // load with some test values, i just wanna make sure this works
-            gameMode = GameMode.SingleRace;
-            SceneManager.LoadScene(map.mapName);
-            //SceneManager.LoadSceneAsync(7, LoadSceneMode.Additive);
-
-            //playerProfiles[0].characterInfo.characterPrefab;
+            switch (gameMode)
+            {
+                case GameMode.GrandPrix:
+                    // TODO: Implement Grand Prix mode logic
+                    break;
+                case GameMode.SingleRace or GameMode.Knockout:
+                    SceneManager.LoadScene(characterSelectMenuSceneName);
+                    SceneManager.LoadScene(mapInfo.mapName, LoadSceneMode.Additive);
+                    break;
+                default:
+                    Debug.LogError("Invalid game mode selected.");
+                    break;
+            }
         }
     }
 }

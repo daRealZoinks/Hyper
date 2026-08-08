@@ -32,7 +32,6 @@ namespace Hyper.UI
             if (Singleton == null)
             {
                 Singleton = this;
-                DontDestroyOnLoad(this);
             }
             else
             {
