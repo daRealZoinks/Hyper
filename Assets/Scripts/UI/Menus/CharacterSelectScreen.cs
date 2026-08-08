@@ -22,6 +22,8 @@ namespace Hyper.UI.Menus
 
         public Action OnReadyChanged;
 
+        public HyperCharacterInfo selectedCharacter;
+
         public bool IsReady
         {
             get
@@ -69,6 +71,8 @@ namespace Hyper.UI.Menus
 
         public void ToggleReady()
         {
+            selectedCharacter = hyperCharacterInfo[_currentCharacterIndex];
+
             IsReady = !IsReady;
         }
 
@@ -79,22 +83,6 @@ namespace Hyper.UI.Menus
                 var value = context.ReadValue<Vector2>();
                 _currentCharacterIndex = (_currentCharacterIndex + (int)value.normalized.x + hyperCharacterInfo.Count) % hyperCharacterInfo.Count;
                 UpdateCharacterDisplay();
-            }
-        }
-
-        public void ReadyUp(InputAction.CallbackContext context)
-        {
-            if (context.started)
-            {
-                IsReady = true;
-            }
-        }
-
-        public void Unready(InputAction.CallbackContext context)
-        {
-            if (context.started)
-            {
-                IsReady = false;
             }
         }
     }

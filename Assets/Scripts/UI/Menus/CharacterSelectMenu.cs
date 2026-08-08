@@ -21,7 +21,25 @@ namespace Hyper.UI.Menus
             OnAllPlayersReady += () =>
             {
                 Debug.Log("All players are ready!");
-                // You can add additional logic here to transition to the next scene or start the game.
+
+                foreach (var player in players)
+                {
+                    var characterSelectScreen = player.GetComponent<CharacterSelectScreen>();
+
+                    if (player.devices.Count == 1)
+                    {
+                        PlayerInput.Instantiate(characterSelectScreen.selectedCharacter.characterPrefab, player.playerIndex, player.currentControlScheme, player.splitScreenIndex, player.devices[0]);
+                    }
+                    else
+                    {
+                        if (player.devices.Count == 2)
+                        {
+                            {
+                                PlayerInput.Instantiate(characterSelectScreen.selectedCharacter.characterPrefab, player.playerIndex, player.currentControlScheme, player.splitScreenIndex, player.devices[0], player.devices[1]);
+                            }
+                        }
+                    }
+                }
             };
         }
 

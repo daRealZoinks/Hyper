@@ -150,9 +150,9 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4518183747296690518}
-        m_TargetAssemblyTypeName: CharacterSelectScreen, Assembly-CSharp
-        m_MethodName: ReadyUp
-        m_Mode: 0
+        m_TargetAssemblyTypeName: Hyper.UI.Menus.CharacterSelectScreen, Hyper.UI.Menus
+        m_MethodName: ToggleReady
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -164,19 +164,7 @@ MonoBehaviour:
     m_ActionId: 7607c7b6-cd76-4816-beef-bd0341cfe950
     m_ActionName: 'UI/Submit[/Keyboard/enter,/DualSenseGamepadHID/buttonSouth]'
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4518183747296690518}
-        m_TargetAssemblyTypeName: CharacterSelectScreen, Assembly-CSharp
-        m_MethodName: Unready
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 15cef263-9014-4fd5-94d9-4e4a6234a6ef
     m_ActionName: 'UI/Cancel[/Keyboard/escape,/DualSenseGamepadHID/buttonEast]'
   - m_PersistentCalls:
@@ -224,6 +212,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 93fa7bc469c853c46a0de359ba446aa7, type: 2}
   nextCharacterButton: {fileID: 102600554070089374}
   previousCharacterButton: {fileID: 7574936037827396413}
+  selectedCharacter: {fileID: 0}
 --- !u!1 &1203941126742631509
 GameObject:
   m_ObjectHideFlags: 0
