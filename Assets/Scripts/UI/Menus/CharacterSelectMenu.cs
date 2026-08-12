@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Hyper.UI.Menus
@@ -20,26 +21,16 @@ namespace Hyper.UI.Menus
 
             OnAllPlayersReady += () =>
             {
-                Debug.Log("All players are ready!");
+                GetComponentInChildren<PlayerInputManager>().DisableJoining();
 
                 foreach (var player in players)
                 {
                     var characterSelectScreen = player.GetComponent<CharacterSelectScreen>();
 
-                    if (player.devices.Count == 1)
-                    {
-                        PlayerInput.Instantiate(characterSelectScreen.selectedCharacter.characterPrefab, player.playerIndex, player.currentControlScheme, player.splitScreenIndex, player.devices[0]);
-                    }
-                    else
-                    {
-                        if (player.devices.Count == 2)
-                        {
-                            {
-                                PlayerInput.Instantiate(characterSelectScreen.selectedCharacter.characterPrefab, player.playerIndex, player.currentControlScheme, player.splitScreenIndex, player.devices[0], player.devices[1]);
-                            }
-                        }
-                    }
+                    PlayerSettingsManager.players.Add(player, characterSelectScreen.selectedCharacter);
                 }
+
+                SceneManager.LoadScene("Map1");
             };
         }
 

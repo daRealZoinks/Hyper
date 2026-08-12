@@ -35,6 +35,8 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/Tests/Player Modes/Local.unity
   - m_enabled: 1
+    m_path: Assets/Scenes/Menus/Character Select Menu Test.unity
+  - m_enabled: 1
     m_path: Assets/Scenes/Maps/Map1.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Maps/Map2.unity
